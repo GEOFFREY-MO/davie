@@ -68,18 +68,18 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <div className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-accent" />
-                <span className="text-sm">+254 700 000 000</span>
-              </div>
+                             <div className="flex items-center space-x-2">
+                 <Phone className="h-4 w-4 text-accent" />
+                 <span className="text-sm">+254 751 030 250</span>
+               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-accent" />
                 <span className="text-sm">info@davietech.com</span>
               </div>
-              <div className="flex items-start space-x-2">
-                <MapPin className="h-4 w-4 text-accent mt-0.5" />
-                <span className="text-sm">Nairobi, Kenya</span>
-              </div>
+                             <div className="flex items-start space-x-2">
+                 <MapPin className="h-4 w-4 text-accent mt-0.5" />
+                 <span className="text-sm">Old Batian Building, Nairobi</span>
+               </div>
             </div>
           </div>
         </div>

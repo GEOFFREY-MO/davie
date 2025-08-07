@@ -175,26 +175,27 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3">
-                  <Phone className="h-5 w-5 text-[#00FFEF] mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold">Phone</h3>
-                    <p className="text-gray-300">+254 700 000 000</p>
-                    <p className="text-gray-300">+254 733 000 000</p>
-                  </div>
-                </div>
+                                 <div className="flex items-start space-x-3">
+                   <Phone className="h-5 w-5 text-[#00FFEF] mt-1 flex-shrink-0" />
+                   <div>
+                     <h3 className="font-semibold">Phone</h3>
+                     <p className="text-gray-300">+254 751 030 250</p>
+                     <p className="text-gray-300">+254 725 172 596</p>
+                   </div>
+                 </div>
 
-                <div className="flex items-start space-x-3">
-                  <MapPin className="h-5 w-5 text-[#00FFEF] mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold">Address</h3>
-                    <p className="text-gray-300">
-                                           DAVIETECH Plaza, Westlands<br />
-                     Nairobi, Kenya<br />
-                     P.O. Box 00000-00100
-                    </p>
-                  </div>
-                </div>
+                                 <div className="flex items-start space-x-3">
+                   <MapPin className="h-5 w-5 text-[#00FFEF] mt-1 flex-shrink-0" />
+                   <div>
+                     <h3 className="font-semibold">Address</h3>
+                     <p className="text-gray-300">
+                       Old Batian Building,<br />
+                       Along Gakere Road<br />
+                       Opposite Club Zillion<br />
+                       Nairobi, Kenya
+                     </p>
+                   </div>
+                 </div>
 
                 <div className="flex items-start space-x-3">
                   <Clock className="h-5 w-5 text-[#00FFEF] mt-1 flex-shrink-0" />
@@ -274,7 +275,7 @@ export default function ContactPage() {
                   <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                                      <p className="text-gray-300">Interactive map will be displayed here</p>
                    <p className="text-sm text-gray-400 mt-2">
-                     DAVIETECH Plaza, Westlands, Nairobi, Kenya
+                     Old Batian Building, Along Gakere Road, Opposite Club Zillion, Nairobi, Kenya
                    </p>
                 </div>
               </div>
