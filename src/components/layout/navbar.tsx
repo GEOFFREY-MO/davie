@@ -22,7 +22,7 @@ export function Navbar() {
                          <div className="w-8 h-8 bg-[hsl(var(--color-accent))] rounded-lg flex items-center justify-center">
                <span className="text-[hsl(var(--color-accent-foreground))] font-bold text-lg">D</span>
             </div>
-            <span className="text-xl font-bold">Davie</span>
+                                <span className="text-xl font-bold">DAVIETECH</span>
           </Link>
 
           {/* Desktop Navigation */}

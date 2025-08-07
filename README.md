@@ -1,6 +1,6 @@
-# Davie Ecommerce Web App
+# DAVIETECH - Your One-Stop Tech Hub
 
-A full-featured, visually stunning ecommerce web application built with Next.js 14, TypeScript, Tailwind CSS, and shadcn/ui components.
+A full-featured, visually stunning ecommerce web application for technology products, built with Next.js 14, TypeScript, Tailwind CSS, and shadcn/ui components.
 
 ## 🎯 Features
 
@@ -90,7 +90,7 @@ A full-featured, visually stunning ecommerce web application built with Next.js 
 ## 🔐 Admin Access
 
 ### Demo Credentials
-- **Email**: admin@davie.com
+- **Email**: admin@davietech.com
 - **Password**: admin123
 
 ### Access Admin Panel
@@ -219,7 +219,7 @@ This project is licensed under the MIT License.
 
 For support and questions:
 - Create an issue in the repository
-- Contact: info@davie.com
+- Contact: info@davietech.com
 
 ---
 

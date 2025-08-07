@@ -12,10 +12,10 @@ export function Footer() {
               <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
                 <span className="text-accent-foreground font-bold text-lg">D</span>
               </div>
-              <span className="text-xl font-bold">Davie</span>
+              <span className="text-xl font-bold">DAVIETECH</span>
             </div>
             <p className="text-primary-foreground/80 mb-4 max-w-md">
-              Your premier destination for quality products. We bring you the best shopping experience with secure payments and fast delivery across Kenya.
+              YOUR ONE-STOP TECH HUB! Your premier destination for quality technology products. We bring you the best shopping experience with secure payments and fast delivery across Kenya.
             </p>
             <div className="flex space-x-4">
               <Link href="#" className="hover:text-accent transition-colors duration-200">
@@ -67,7 +67,7 @@ export function Footer() {
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-accent" />
-                <span className="text-sm">info@davie.com</span>
+                <span className="text-sm">info@davietech.com</span>
               </div>
               <div className="flex items-start space-x-2">
                 <MapPin className="h-4 w-4 text-accent mt-0.5" />
@@ -80,7 +80,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white/20 mt-8 pt-8 text-center">
           <p className="text-primary-foreground/60 text-sm">
-            © 2024 Davie Ecommerce. All rights reserved.
+            © 2024 DAVIETECH. All rights reserved.
           </p>
         </div>
       </div>

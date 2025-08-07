@@ -56,7 +56,7 @@ export default function AdminLoginPage() {
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-lg">D</span>
               </div>
-              <span className="text-2xl font-bold text-primary">Davie Admin</span>
+              <span className="text-2xl font-bold text-primary">DAVIETECH Admin</span>
             </div>
             <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
             <CardDescription>
@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@davie.com"
+                    placeholder="admin@davietech.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10 input-focus"
@@ -124,7 +124,7 @@ export default function AdminLoginPage() {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
-                Demo credentials: admin@davie.com / admin123
+                Demo credentials: admin@davietech.com / admin123
               </p>
             </div>
           </CardContent>

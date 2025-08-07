@@ -21,12 +21,12 @@ export function HeroSection() {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Discover Amazing
-                <span className="block text-[hsl(var(--color-accent))]">Products</span>
-                at Davie
+                Welcome to
+                <span className="block text-[hsl(var(--color-accent))]">DAVIETECH</span>
+                YOUR ONE-STOP TECH HUB!
               </h1>
                              <p className="text-xl text-[hsl(var(--color-primary-foreground)/0.9)] max-w-lg">
-                Your premier destination for quality products. Shop with confidence knowing you're getting the best deals and fastest delivery.
+                Your premier destination for quality technology products. Shop with confidence knowing you're getting the best deals and fastest delivery.
               </p>
             </div>
 

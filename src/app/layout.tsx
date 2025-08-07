@@ -7,10 +7,10 @@ import { AuthProvider } from '@/components/providers/auth-provider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Davie Ecommerce - Premium Shopping Experience',
-  description: 'Discover amazing products at Davie Ecommerce. Shop the latest trends with secure payments and fast delivery.',
-  keywords: 'ecommerce, shopping, online store, davie, kenya',
-  authors: [{ name: 'Davie Ecommerce' }],
+  title: 'DAVIETECH - Your One-Stop Tech Hub',
+  description: 'Discover amazing tech products at DAVIETECH. Shop the latest technology with secure payments and fast delivery.',
+  keywords: 'ecommerce, shopping, online store, davietech, kenya, technology, tech hub',
+  authors: [{ name: 'DAVIETECH' }],
 }
 
 export const viewport = {

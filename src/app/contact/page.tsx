@@ -170,8 +170,8 @@ export default function ContactPage() {
                   <Mail className="h-5 w-5 text-[#00FFEF] mt-1 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold">Email</h3>
-                    <p className="text-gray-300">info@davie.com</p>
-                    <p className="text-gray-300">support@davie.com</p>
+                                         <p className="text-gray-300">info@davietech.com</p>
+                     <p className="text-gray-300">support@davietech.com</p>
                   </div>
                 </div>
 
@@ -189,9 +189,9 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-semibold">Address</h3>
                     <p className="text-gray-300">
-                      Davie Plaza, Westlands<br />
-                      Nairobi, Kenya<br />
-                      P.O. Box 00000-00100
+                                           DAVIETECH Plaza, Westlands<br />
+                     Nairobi, Kenya<br />
+                     P.O. Box 00000-00100
                     </p>
                   </div>
                 </div>
@@ -272,10 +272,10 @@ export default function ContactPage() {
               <div className="bg-gray-800 rounded-lg h-64 flex items-center justify-center">
                 <div className="text-center">
                   <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-300">Interactive map will be displayed here</p>
-                  <p className="text-sm text-gray-400 mt-2">
-                    Davie Plaza, Westlands, Nairobi, Kenya
-                  </p>
+                                     <p className="text-gray-300">Interactive map will be displayed here</p>
+                   <p className="text-sm text-gray-400 mt-2">
+                     DAVIETECH Plaza, Westlands, Nairobi, Kenya
+                   </p>
                 </div>
               </div>
             </CardContent>
