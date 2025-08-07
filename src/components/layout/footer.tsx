@@ -56,11 +56,16 @@ export function Footer() {
                   Contact
                 </Link>
               </li>
-              <li>
-                <Link href="/cart" className="hover:text-accent transition-colors duration-200">
-                  Cart
-                </Link>
-              </li>
+                             <li>
+                 <Link href="/cart" className="hover:text-accent transition-colors duration-200">
+                   Cart
+                 </Link>
+               </li>
+               <li>
+                 <Link href="/admin/login" className="hover:text-accent transition-colors duration-200">
+                   Admin Login
+                 </Link>
+               </li>
             </ul>
           </div>
 
