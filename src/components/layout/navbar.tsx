@@ -77,14 +77,7 @@ export function Navbar() {
               </Button>
             </Link>
 
-            {/* Admin Link (only show if logged in as admin) */}
-            {session?.user?.role === 'ADMIN' && (
-              <Link href="/admin/dashboard">
-                <Button variant="ghost" size="sm">
-                  Admin
-                </Button>
-              </Link>
-            )}
+            {/* Admin access removed for security - access via direct URL only */}
 
             {/* Mobile Menu Button */}
             <Button
