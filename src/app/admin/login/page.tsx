@@ -30,8 +30,8 @@ export default function AdminLoginPage() {
       })
 
       if (result?.error) {
-        toast.error('Invalid credentials', {
-          description: 'Please check your email and password.',
+        toast.error('Access denied', {
+          description: 'Invalid credentials or unauthorized access.',
         })
       } else {
         toast.success('Login successful!', {
@@ -40,8 +40,8 @@ export default function AdminLoginPage() {
         router.push('/admin/dashboard')
       }
     } catch (error) {
-      toast.error('Login failed', {
-        description: 'An unexpected error occurred.',
+      toast.error('Access denied', {
+        description: 'Unauthorized access attempt.',
       })
     } finally {
       setIsLoading(false)
@@ -129,11 +129,11 @@ export default function AdminLoginPage() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-muted-foreground">
-                Demo credentials: admin@davietech.com / admin123
-              </p>
-            </div>
+                         <div className="mt-6 text-center">
+               <p className="text-sm text-muted-foreground">
+                 Contact administrator for access credentials
+               </p>
+             </div>
           </CardContent>
         </Card>
       </div>
