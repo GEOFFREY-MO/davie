@@ -16,6 +16,7 @@ import {
   Clock
 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 // Mock data for demonstration
 const mockStats = {
@@ -91,14 +92,26 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-[#08153A] text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
-                DAVIETECH Admin Dashboard
-              </h1>
-              <p className="text-blue-100 mt-2">Welcome back, {session.user?.name} 👋</p>
+            <div className="flex items-center space-x-4">
+              {/* Logo */}
+              <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                <Image
+                  src="/davietech-logo.jpg"
+                  alt="DAVIETECH Logo"
+                  width={48}
+                  height={48}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white">
+                  DAVIETECH Admin Dashboard
+                </h1>
+                <p className="text-gray-300 mt-1">Welcome back, {session.user?.name} 👋</p>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <Link href="/">
