@@ -22,6 +22,7 @@ import {
   List
 } from 'lucide-react'
 import { toast } from 'sonner'
+import Image from 'next/image'
 
 interface Product {
   id: string
@@ -221,25 +222,44 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header */}
-      <div className="bg-primary text-primary-foreground">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-[#08153A] text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">Enhanced Product Management</h1>
-              <p className="text-primary-foreground/80">Full CRUD operations for products</p>
+            <div className="flex items-center space-x-4">
+              {/* Logo */}
+              <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                <Image
+                  src="/davietech-logo.jpg"
+                  alt="DAVIETECH Logo"
+                  width={48}
+                  height={48}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white">Enhanced Product Management</h1>
+                <p className="text-gray-300 mt-1">Full CRUD operations for products</p>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Button onClick={() => router.push('/admin/dashboard')}>
+              <Button 
+                onClick={() => router.push('/admin/dashboard')}
+                variant="outline" 
+                className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300"
+              >
                 Back to Dashboard
               </Button>
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button onClick={() => {
-                    setEditingProduct(null)
-                    resetForm()
-                  }}>
+                  <Button 
+                    onClick={() => {
+                      setEditingProduct(null)
+                      resetForm()
+                    }}
+                    className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
                     <Plus className="h-4 w-4 mr-2" />
                     Add Product
                   </Button>
@@ -355,25 +375,25 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Filters & Search</CardTitle>
+        <Card className="mb-6 bg-white border-0 shadow-lg">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle className="text-xl font-bold text-gray-800">Filters & Search</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-200 focus:border-blue-500 focus:ring-blue-500">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -384,7 +404,7 @@ export default function AdminProductsPage() {
                   <SelectItem value="Sports & Fitness">Sports & Fitness</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="text-sm text-muted-foreground flex items-center">
+              <div className="text-sm text-gray-600 flex items-center">
                 <Filter className="h-4 w-4 mr-2" />
                 {filteredProducts.length} of {products.length} products
               </div>
@@ -393,6 +413,7 @@ export default function AdminProductsPage() {
                   variant={viewMode === 'grid' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('grid')}
+                  className={viewMode === 'grid' ? 'bg-blue-600 hover:bg-blue-700' : 'border-gray-200 hover:bg-gray-50'}
                 >
                   <Grid className="h-4 w-4" />
                 </Button>
@@ -400,6 +421,7 @@ export default function AdminProductsPage() {
                   variant={viewMode === 'list' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('list')}
+                  className={viewMode === 'list' ? 'bg-blue-600 hover:bg-blue-700' : 'border-gray-200 hover:bg-gray-50'}
                 >
                   <List className="h-4 w-4" />
                 </Button>
@@ -412,39 +434,44 @@ export default function AdminProductsPage() {
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map((product) => (
-              <Card key={product.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
+              <Card key={product.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <CardHeader className="border-b border-gray-100">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{product.name}</CardTitle>
+                    <CardTitle className="text-lg text-gray-800">{product.name}</CardTitle>
                     <div className="flex space-x-1">
-                      {product.featured && <Badge variant="secondary">Featured</Badge>}
-                      {product.bestSeller && <Badge>Best Seller</Badge>}
+                      {product.featured && <Badge variant="secondary" className="bg-purple-100 text-purple-800">Featured</Badge>}
+                      {product.bestSeller && <Badge className="bg-green-100 text-green-800">Best Seller</Badge>}
                     </div>
                   </div>
-                  <CardDescription>{product.category}</CardDescription>
+                  <CardDescription className="text-gray-600">{product.category}</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                   <div className="space-y-4">
-                    <div className="aspect-square bg-muted rounded-lg overflow-hidden">
+                    <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden shadow-md">
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                     <div className="space-y-2">
-                      <p className="text-sm text-muted-foreground line-clamp-2">
+                      <p className="text-sm text-gray-600 line-clamp-2">
                         {product.description}
                       </p>
                       <div className="flex justify-between items-center">
-                        <span className="font-semibold">KES {product.price.toLocaleString()}</span>
-                        <span className="text-sm text-muted-foreground">
+                        <span className="font-bold text-gray-900 text-lg">KES {product.price.toLocaleString()}</span>
+                        <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                           Stock: {product.stock}
                         </span>
                       </div>
                     </div>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleEditProduct(product)} className="flex-1">
+                    <div className="flex space-x-2 pt-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => handleEditProduct(product)} 
+                        className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
+                      >
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
                       </Button>
@@ -452,7 +479,7 @@ export default function AdminProductsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => handleDeleteProduct(product.id)}
-                        className="text-destructive hover:text-destructive"
+                        className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -465,44 +492,49 @@ export default function AdminProductsPage() {
         ) : (
           <div className="space-y-4">
             {filteredProducts.map((product) => (
-              <Card key={product.id}>
-                <CardContent className="p-4">
+              <Card key={product.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
                   <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-muted rounded-lg overflow-hidden flex-shrink-0">
+                    <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 shadow-md">
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="font-medium truncate">{product.name}</h4>
-                          <p className="text-sm text-muted-foreground">{product.category}</p>
+                          <h4 className="font-semibold text-gray-800 truncate">{product.name}</h4>
+                          <p className="text-sm text-gray-600">{product.category}</p>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span className="font-semibold">KES {product.price.toLocaleString()}</span>
-                          <span className="text-sm text-muted-foreground">Stock: {product.stock}</span>
+                          <span className="font-bold text-gray-900">KES {product.price.toLocaleString()}</span>
+                          <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Stock: {product.stock}</span>
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
+                      <p className="text-sm text-gray-600 line-clamp-1 mt-1">
                         {product.description}
                       </p>
                       <div className="flex items-center space-x-2 mt-2">
-                        {product.featured && <Badge variant="secondary" className="text-xs">Featured</Badge>}
-                        {product.bestSeller && <Badge className="text-xs">Best Seller</Badge>}
+                        {product.featured && <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-800">Featured</Badge>}
+                        {product.bestSeller && <Badge className="text-xs bg-green-100 text-green-800">Best Seller</Badge>}
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleEditProduct(product)}>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => handleEditProduct(product)}
+                        className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleDeleteProduct(product.id)}
-                        className="text-destructive hover:text-destructive"
+                        className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -515,22 +547,25 @@ export default function AdminProductsPage() {
         )}
 
         {filteredProducts.length === 0 && (
-          <Card>
+          <Card className="bg-white border-0 shadow-lg">
             <CardContent className="text-center py-12">
-              <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No products found</h3>
-              <p className="text-muted-foreground mb-4">
+              <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2 text-gray-800">No products found</h3>
+              <p className="text-gray-600 mb-4">
                 {searchTerm || selectedCategory !== 'all' 
                   ? 'Try adjusting your search or filters'
                   : 'Get started by adding your first product'
                 }
               </p>
               {!searchTerm && selectedCategory === 'all' && (
-                <Button onClick={() => {
-                  setEditingProduct(null)
-                  resetForm()
-                  setIsModalOpen(true)
-                }}>
+                <Button 
+                  onClick={() => {
+                    setEditingProduct(null)
+                    resetForm()
+                    setIsModalOpen(true)
+                  }}
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Product
                 </Button>
