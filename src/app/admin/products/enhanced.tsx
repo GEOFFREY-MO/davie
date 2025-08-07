@@ -35,7 +35,7 @@ interface Product {
   bestSeller: boolean
 }
 
-export default function AdminProductsPage() {
+export default function EnhancedProductsPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
