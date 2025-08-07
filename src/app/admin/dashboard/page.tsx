@@ -78,29 +78,31 @@ export default function AdminDashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white shadow-md'
       case 'processing':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-gradient-to-r from-blue-400 to-blue-500 text-white shadow-md'
       case 'delivered':
-        return 'bg-green-100 text-green-800'
+        return 'bg-gradient-to-r from-green-400 to-green-500 text-white shadow-md'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gradient-to-r from-gray-400 to-gray-500 text-white shadow-md'
     }
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header */}
-      <div className="bg-primary text-primary-foreground">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">DAVIETECH Admin Dashboard</h1>
-              <p className="text-primary-foreground/80">Welcome back, {session.user?.name}</p>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                DAVIETECH Admin Dashboard
+              </h1>
+              <p className="text-blue-100 mt-2">Welcome back, {session.user?.name} 👋</p>
             </div>
             <div className="flex items-center space-x-4">
               <Link href="/">
-                <Button variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+                <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300">
                   View Store
                 </Button>
               </Link>
@@ -112,54 +114,62 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-gray-700">Total Sales</CardTitle>
+              <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center">
+                <DollarSign className="h-5 w-5 text-white" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">KES {mockStats.totalSales.toLocaleString()}</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-green-600">+12%</span> from last month
+              <div className="text-3xl font-bold text-gray-900">KES {mockStats.totalSales.toLocaleString()}</div>
+              <p className="text-xs text-gray-600 mt-2">
+                <span className="text-green-600 font-semibold">+12%</span> from last month
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-gray-700">Total Orders</CardTitle>
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
+                <Package className="h-5 w-5 text-white" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{mockStats.totalOrders}</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-green-600">+8%</span> from last month
+              <div className="text-3xl font-bold text-gray-900">{mockStats.totalOrders}</div>
+              <p className="text-xs text-gray-600 mt-2">
+                <span className="text-green-600 font-semibold">+8%</span> from last month
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Products</CardTitle>
-              <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-gray-700">Total Products</CardTitle>
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
+                <ShoppingBag className="h-5 w-5 text-white" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{mockStats.totalProducts}</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-green-600">+5%</span> from last month
+              <div className="text-3xl font-bold text-gray-900">{mockStats.totalProducts}</div>
+              <p className="text-xs text-gray-600 mt-2">
+                <span className="text-green-600 font-semibold">+5%</span> from last month
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-gray-700">Total Customers</CardTitle>
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center">
+                <Users className="h-5 w-5 text-white" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{mockStats.totalCustomers}</div>
-              <p className="text-xs text-muted-foreground">
-                <span className="text-green-600">+15%</span> from last month
+              <div className="text-3xl font-bold text-gray-900">{mockStats.totalCustomers}</div>
+              <p className="text-xs text-gray-600 mt-2">
+                <span className="text-green-600 font-semibold">+15%</span> from last month
               </p>
             </CardContent>
           </Card>
@@ -168,15 +178,15 @@ export default function AdminDashboard() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Link href="/admin/products">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Plus className="h-6 w-6 text-primary" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Plus className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Add Product</h3>
-                    <p className="text-sm text-muted-foreground">Create new product</p>
+                    <h3 className="font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">Add Product</h3>
+                    <p className="text-sm text-gray-600">Create new product</p>
                   </div>
                 </div>
               </CardContent>
@@ -184,15 +194,15 @@ export default function AdminDashboard() {
           </Link>
 
           <Link href="/admin/orders">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
-                    <Package className="h-6 w-6 text-accent" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Package className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Manage Orders</h3>
-                    <p className="text-sm text-muted-foreground">View all orders</p>
+                    <h3 className="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">Manage Orders</h3>
+                    <p className="text-sm text-gray-600">View all orders</p>
                   </div>
                 </div>
               </CardContent>
@@ -200,15 +210,15 @@ export default function AdminDashboard() {
           </Link>
 
           <Link href="/admin/offers">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-[#10B981]/10 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="h-6 w-6 text-[#10B981]" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <TrendingUp className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Manage Offers</h3>
-                    <p className="text-sm text-muted-foreground">Create promotions</p>
+                    <h3 className="font-semibold text-gray-800 group-hover:text-purple-600 transition-colors duration-300">Manage Offers</h3>
+                    <p className="text-sm text-gray-600">Create promotions</p>
                   </div>
                 </div>
               </CardContent>
@@ -216,15 +226,15 @@ export default function AdminDashboard() {
           </Link>
 
           <Link href="/">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
-                    <Eye className="h-6 w-6 text-muted-foreground" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Eye className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">View Store</h3>
-                    <p className="text-sm text-muted-foreground">Go to storefront</p>
+                    <h3 className="font-semibold text-gray-800 group-hover:text-gray-600 transition-colors duration-300">View Store</h3>
+                    <p className="text-sm text-gray-600">Go to storefront</p>
                   </div>
                 </div>
               </CardContent>
@@ -233,37 +243,39 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Orders */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Orders</CardTitle>
-            <CardDescription>Latest orders from customers</CardDescription>
+        <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-lg">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle className="text-xl font-bold text-gray-800">Recent Orders</CardTitle>
+            <CardDescription className="text-gray-600">Latest orders from customers</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="space-y-4">
               {mockRecentOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={order.id} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-xl hover:bg-gray-100/50 transition-colors duration-300">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <Package className="h-5 w-5 text-primary" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
+                      <Package className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-medium">{order.customerName}</h4>
-                      <p className="text-sm text-muted-foreground">Order #{order.id}</p>
+                      <h4 className="font-semibold text-gray-800">{order.customerName}</h4>
+                      <p className="text-sm text-gray-600">Order #{order.id}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <span className="font-semibold">KES {order.total.toLocaleString()}</span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                    <span className="font-bold text-gray-900">KES {order.total.toLocaleString()}</span>
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}>
                       {order.status}
                     </span>
-                    <span className="text-sm text-muted-foreground">{order.date}</span>
+                    <span className="text-sm text-gray-500">{order.date}</span>
                   </div>
                 </div>
               ))}
             </div>
             <div className="mt-6 text-center">
               <Link href="/admin/orders">
-                <Button variant="outline">View All Orders</Button>
+                <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  View All Orders
+                </Button>
               </Link>
             </div>
           </CardContent>
