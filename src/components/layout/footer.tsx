@@ -86,9 +86,9 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/20 mt-8 pt-8 text-center">
-          <p className="text-primary-foreground/60 text-sm">
-            © 2024 DAVIETECH. All rights reserved.
-          </p>
+                     <p className="text-primary-foreground/60 text-sm">
+             © 2025 DAVIETECH. All rights reserved.
+           </p>
         </div>
       </div>
     </footer>
