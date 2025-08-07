@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ShoppingBag, Truck, Shield } from 'lucide-react'
 
@@ -82,11 +83,17 @@ export function HeroSection() {
           <div className="relative">
             <div className="relative z-10">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                <div className="text-center space-y-4">
-                                     <div className="w-20 h-20 bg-[hsl(var(--color-accent))] rounded-full mx-auto flex items-center justify-center">
-                     <ShoppingBag className="h-10 w-10 text-[hsl(var(--color-accent-foreground))]" />
-                   </div>
-                   <h3 className="text-2xl font-bold">Start Shopping</h3>
+                                <div className="text-center space-y-4">
+                  <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center overflow-hidden">
+                    <Image
+                      src="/davietech-logo.jpg"
+                      alt="DAVIETECH Logo"
+                      width={80}
+                      height={80}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <h3 className="text-2xl font-bold">Start Shopping</h3>
                    <p className="text-[hsl(var(--color-primary-foreground)/0.8)]">
                      Browse our collection of premium products
                    </p>

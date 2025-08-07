@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Lock, Mail, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
+import Image from 'next/image'
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('')
@@ -52,9 +53,15 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md">
         <Card className="shadow-2xl border-0">
           <CardHeader className="text-center pb-6">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">D</span>
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                <Image
+                  src="/davietech-logo.jpg"
+                  alt="DAVIETECH Logo"
+                  width={48}
+                  height={48}
+                  className="object-cover w-full h-full"
+                />
               </div>
               <span className="text-2xl font-bold text-primary">DAVIETECH Admin</span>
             </div>

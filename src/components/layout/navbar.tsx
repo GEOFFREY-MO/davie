@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { ShoppingCart, Menu, X, Search } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -17,12 +18,18 @@ export function Navbar() {
          <nav className="fixed top-0 left-0 right-0 z-50 bg-[#08153A] text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-                         <div className="w-8 h-8 bg-[hsl(var(--color-accent))] rounded-lg flex items-center justify-center">
-               <span className="text-[hsl(var(--color-accent-foreground))] font-bold text-lg">D</span>
+                    {/* Logo */}
+          <Link href="/" className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
+              <Image
+                src="/davietech-logo.jpg"
+                alt="DAVIETECH Logo"
+                width={40}
+                height={40}
+                className="object-cover w-full h-full"
+              />
             </div>
-                                <span className="text-xl font-bold">DAVIETECH</span>
+            <span className="text-xl font-bold">DAVIETECH</span>
           </Link>
 
           {/* Desktop Navigation */}
