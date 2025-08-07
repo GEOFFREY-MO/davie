@@ -192,7 +192,7 @@ export default function ContactPage() {
                        Old Batian Building,<br />
                        Along Gakere Road<br />
                        Opposite Club Zillion<br />
-                       Nairobi, Kenya
+                       Nyeri, Kenya
                      </p>
                    </div>
                  </div>
@@ -275,7 +275,7 @@ export default function ContactPage() {
                   <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                                      <p className="text-gray-300">Interactive map will be displayed here</p>
                    <p className="text-sm text-gray-400 mt-2">
-                     Old Batian Building, Along Gakere Road, Opposite Club Zillion, Nairobi, Kenya
+                     Old Batian Building, Along Gakere Road, Opposite Club Zillion, Nyeri, Kenya
                    </p>
                 </div>
               </div>

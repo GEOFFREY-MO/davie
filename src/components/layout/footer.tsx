@@ -78,7 +78,7 @@ export function Footer() {
               </div>
                              <div className="flex items-start space-x-2">
                  <MapPin className="h-4 w-4 text-accent mt-0.5" />
-                 <span className="text-sm">Old Batian Building, Nairobi</span>
+                 <span className="text-sm">Old Batian Building, Nyeri</span>
                </div>
             </div>
           </div>
