@@ -7,338 +7,255 @@ import { ProductCard } from '@/components/product/product-card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Filter, Grid, List, Search, SlidersHorizontal } from 'lucide-react'
-import { Product } from '@/types'
-import { toast } from 'sonner'
+import { Grid, List, Search, Filter } from 'lucide-react'
 
-// Mock data for demonstration
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Wireless Bluetooth Headphones',
-    description: 'Premium wireless headphones with noise cancellation and 30-hour battery life.',
-    price: 15000,
-    category: 'Electronics',
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-    stock: 25,
-    featured: true,
-    bestSeller: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '2',
-    name: 'Smart Fitness Watch',
-    description: 'Advanced fitness tracking with heart rate monitor and GPS.',
-    price: 25000,
-    category: 'Electronics',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
-    stock: 15,
-    featured: true,
-    bestSeller: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '3',
-    name: 'Premium Coffee Maker',
-    description: 'Automatic coffee maker with programmable settings and thermal carafe.',
-    price: 12000,
-    category: 'Home & Kitchen',
-    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=400&fit=crop',
-    stock: 8,
-    featured: false,
-    bestSeller: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '4',
-    name: 'Organic Cotton T-Shirt',
-    description: 'Comfortable and sustainable cotton t-shirt in various colors.',
-    price: 2500,
-    category: 'Fashion',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
-    stock: 50,
-    featured: false,
-    bestSeller: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '5',
-    name: 'Portable Bluetooth Speaker',
-    description: 'Waterproof portable speaker with 360-degree sound and 20-hour battery.',
-    price: 8000,
-    category: 'Electronics',
-    image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop',
-    stock: 30,
-    featured: true,
-    bestSeller: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '6',
-    name: 'Stainless Steel Water Bottle',
-    description: 'Insulated water bottle that keeps drinks cold for 24 hours.',
-    price: 3500,
-    category: 'Home & Kitchen',
-    image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop',
-    stock: 100,
-    featured: false,
-    bestSeller: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '7',
-    name: 'Wireless Gaming Mouse',
-    description: 'High-precision gaming mouse with customizable RGB lighting.',
-    price: 12000,
-    category: 'Electronics',
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop',
-    stock: 20,
-    featured: false,
-    bestSeller: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '8',
-    name: 'Yoga Mat Premium',
-    description: 'Non-slip yoga mat made from eco-friendly materials.',
-    price: 4500,
-    category: 'Sports',
-    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=400&fit=crop',
-    stock: 35,
-    featured: false,
-    bestSeller: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-]
-
-const categories = ['All', 'Electronics', 'Fashion', 'Home & Kitchen', 'Sports']
-const sortOptions = [
-  { value: 'newest', label: 'Newest First' },
-  { value: 'oldest', label: 'Oldest First' },
-  { value: 'price-low', label: 'Price: Low to High' },
-  { value: 'price-high', label: 'Price: High to Low' },
-  { value: 'name', label: 'Name A-Z' },
-]
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  category: string
+  image: string
+  stock: number
+  featured: boolean
+  bestSeller: boolean
+}
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(mockProducts)
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(mockProducts)
+  const [products, setProducts] = useState<Product[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const [sortBy, setSortBy] = useState('newest')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [sortOrder, setSortOrder] = useState('name')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [showFilters, setShowFilters] = useState(false)
-  const productsPerPage = 8
 
-  const handleAddToCart = (product: Product) => {
-    toast.success(`${product.name} added to cart!`, {
-      description: `Price: KES ${product.price.toLocaleString()}`,
-    })
-  }
-
-  // Filter and sort products
   useEffect(() => {
-    let filtered = products.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           product.description.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory
-      return matchesSearch && matchesCategory
-    })
+    // Mock data - replace with actual API call
+    const mockProducts: Product[] = [
+      {
+        id: '1',
+        name: 'Premium Wireless Headphones',
+        description: 'High-quality wireless headphones with noise cancellation and premium sound quality.',
+        price: 15000,
+        category: 'Electronics',
+        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+        stock: 25,
+        featured: true,
+        bestSeller: true,
+      },
+      {
+        id: '2',
+        name: 'Smart Fitness Watch',
+        description: 'Advanced fitness tracking with heart rate monitoring and GPS capabilities.',
+        price: 25000,
+        category: 'Electronics',
+        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
+        stock: 15,
+        featured: true,
+        bestSeller: true,
+      },
+      {
+        id: '3',
+        name: 'Designer Leather Bag',
+        description: 'Handcrafted leather bag with premium materials and elegant design.',
+        price: 8500,
+        category: 'Fashion',
+        image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop',
+        stock: 30,
+        featured: true,
+        bestSeller: false,
+      },
+      {
+        id: '4',
+        name: 'Organic Coffee Beans',
+        description: 'Premium organic coffee beans sourced from the finest regions.',
+        price: 1200,
+        category: 'Food & Beverages',
+        image: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&h=400&fit=crop',
+        stock: 50,
+        featured: false,
+        bestSeller: true,
+      },
+      {
+        id: '5',
+        name: 'Wireless Bluetooth Speaker',
+        description: 'Portable Bluetooth speaker with 360-degree sound and waterproof design.',
+        price: 8000,
+        category: 'Electronics',
+        image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop',
+        stock: 20,
+        featured: true,
+        bestSeller: false,
+      },
+      {
+        id: '6',
+        name: 'Premium Yoga Mat',
+        description: 'Non-slip yoga mat made from eco-friendly materials for your practice.',
+        price: 3500,
+        category: 'Sports & Fitness',
+        image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=400&fit=crop',
+        stock: 40,
+        featured: false,
+        bestSeller: true,
+      },
+    ]
+    setProducts(mockProducts)
+    setFilteredProducts(mockProducts)
+  }, [])
 
-    // Sort products
-    switch (sortBy) {
-      case 'newest':
-        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        break
-      case 'oldest':
-        filtered.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-        break
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price)
-        break
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price)
-        break
-      case 'name':
-        filtered.sort((a, b) => a.name.localeCompare(b.name))
-        break
+  useEffect(() => {
+    let filtered = products
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     }
 
-    setFilteredProducts(filtered)
-    setCurrentPage(1)
-  }, [products, searchTerm, selectedCategory, sortBy])
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(product => product.category === selectedCategory)
+    }
 
-  // Pagination
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
-  const startIndex = (currentPage - 1) * productsPerPage
-  const endIndex = startIndex + productsPerPage
-  const currentProducts = filteredProducts.slice(startIndex, endIndex)
+    // Sort products
+    filtered.sort((a, b) => {
+      switch (sortOrder) {
+        case 'price-low':
+          return a.price - b.price
+        case 'price-high':
+          return b.price - a.price
+        case 'name':
+          return a.name.localeCompare(b.name)
+        default:
+          return 0
+      }
+    })
+
+    setFilteredProducts(filtered)
+  }, [products, searchTerm, selectedCategory, sortOrder])
+
+  const addToCart = (product: Product) => {
+    // Mock add to cart functionality
+    console.log('Added to cart:', product.name)
+  }
 
   return (
-    <div className="min-h-screen bg-[#00008B] text-white pt-16">
+    <div className="min-h-screen bg-[#00008B] text-white">
       <Navbar />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">All Products</h1>
-          <p className="text-gray-300">
-            Discover our complete collection of premium products
-          </p>
-        </div>
-
-        {/* Filters and Search */}
-        <div className="bg-[#08153A] rounded-lg p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4 items-center">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-              />
-            </div>
-
-            {/* Category Filter */}
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full lg:w-48 bg-white/10 border-white/20 text-white">
-                <SelectValue placeholder="Select Category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Sort */}
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-full lg:w-48 bg-white/10 border-white/20 text-white">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                {sortOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* View Mode Toggle */}
-            <div className="flex items-center space-x-2">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-                className="bg-white/10 border-white/20 hover:bg-white/20"
-              >
-                <Grid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                className="bg-white/10 border-white/20 hover:bg-white/20"
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
+      <main className="pt-16">
+        {/* Header */}
+        <div className="bg-primary text-primary-foreground py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 className="text-3xl font-bold mb-2">Our Products</h1>
+            <p className="text-primary-foreground/80">Discover amazing tech products at DAVIETECH</p>
           </div>
         </div>
 
-        {/* Results Count */}
-        <div className="flex justify-between items-center mb-6">
-          <p className="text-gray-300">
-            Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} products
-          </p>
-        </div>
-
-        {/* Products Grid/List */}
-        {currentProducts.length > 0 ? (
-          <div className={viewMode === 'grid' 
-            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-            : "space-y-4"
-          }>
-            {currentProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={handleAddToCart}
-                viewMode={viewMode}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-300 text-lg">No products found matching your criteria.</p>
-            <Button
-              onClick={() => {
-                setSearchTerm('')
-                setSelectedCategory('All')
-                setSortBy('newest')
-              }}
-              className="mt-4 bg-[#00FFEF] text-black hover:bg-[#00FFEF]/90"
-            >
-              Clear Filters
-            </Button>
-          </div>
-        )}
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex justify-center mt-12">
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="bg-white/10 border-white/20 hover:bg-white/20"
-              >
-                Previous
-              </Button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Filters and Search */}
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-white/20 border-white/20 text-white placeholder:text-gray-300"
+                />
+              </div>
               
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="bg-white/20 border-white/20 text-white">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="Electronics">Electronics</SelectItem>
+                  <SelectItem value="Fashion">Fashion</SelectItem>
+                  <SelectItem value="Food & Beverages">Food & Beverages</SelectItem>
+                  <SelectItem value="Sports & Fitness">Sports & Fitness</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={sortOrder} onValueChange={setSortOrder}>
+                <SelectTrigger className="bg-white/20 border-white/20 text-white">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">Sort by Name</SelectItem>
+                  <SelectItem value="price-low">Price: Low to High</SelectItem>
+                  <SelectItem value="price-high">Price: High to Low</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <div className="flex items-center space-x-2">
                 <Button
-                  key={page}
-                  variant={currentPage === page ? 'default' : 'outline'}
+                  variant={viewMode === 'grid' ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setCurrentPage(page)}
-                  className={currentPage === page 
-                    ? "bg-[#00FFEF] text-black hover:bg-[#00FFEF]/90"
-                    : "bg-white/10 border-white/20 hover:bg-white/20"
-                  }
+                  onClick={() => setViewMode('grid')}
+                  className="bg-white/20 border-white/20 text-white hover:bg-white/30"
                 >
-                  {page}
+                  <Grid className="h-4 w-4" />
                 </Button>
-              ))}
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
-                className="bg-white/10 border-white/20 hover:bg-white/20"
-              >
-                Next
-              </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                  className="bg-white/20 border-white/20 text-white hover:bg-white/30"
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
-        )}
+
+          {/* Results Count */}
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-gray-300">
+              Showing {filteredProducts.length} of {products.length} products
+            </p>
+          </div>
+
+          {/* Products Grid/List */}
+          {filteredProducts.length > 0 ? (
+            <div className={viewMode === 'grid' 
+              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+              : 'space-y-4'
+            }>
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  viewMode={viewMode}
+                  onAddToCart={() => addToCart(product)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="h-8 w-8 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">No products found</h3>
+              <p className="text-gray-300 mb-4">
+                Try adjusting your search or filters to find what you're looking for.
+              </p>
+              <Button
+                onClick={() => {
+                  setSearchTerm('')
+                  setSelectedCategory('all')
+                }}
+                className="bg-accent text-accent-foreground hover:bg-accent/90"
+              >
+                Clear Filters
+              </Button>
+            </div>
+          )}
+        </div>
       </main>
 
       <Footer />
