@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: 0 0 139; /* #00008B deep navy blue */
+  --color-foreground: 255 255 255; /* white text on navy background */
+  
+  /* Davie Ecommerce Custom Colors */
+  --color-primary: 0 0 139; /* #00008B deep navy blue */
+  --color-primary-foreground: 255 255 255;
+  --color-accent: 0 255 239; /* #00FFEF aqua cyan */
+  --color-accent-foreground: 0 0 0; /* black text on aqua */
+  --color-slate-gray: 51 65 85; /* #334155 slate gray */
+  --color-soft-white: 249 249 249; /* #f9f9f9 soft white */
+  --color-vibrant-purple: 127 0 255; /* #7F00FF vibrant purple */
+  
+  --color-card: 249 249 249; /* #f9f9f9 soft white */
+  --color-card-foreground: 51 65 85; /* #334155 slate gray */
+  --color-popover: 249 249 249; /* #f9f9f9 soft white */
+  --color-popover-foreground: 51 65 85; /* #334155 slate gray */
+  --color-muted: 0 0 139; /* #00008B deep navy blue */
+  --color-muted-foreground: 200 200 200; /* light gray text on navy */
+  --color-border: 228 228 231;
+  --color-input: 228 228 231;
+  --color-ring: 0 0 139; /* #00008B deep navy blue */
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--color-border));
+  }
+  body {
+    background-color: #00008B !important;
+    color: white !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  }
+  
+  html {
+    background-color: #00008B !important;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    background-color: hsl(var(--color-primary));
+    color: hsl(var(--color-primary-foreground));
+    transition: all 0.2s;
+  }
+  
+  .btn-primary:hover {
+    background-color: hsl(var(--color-primary) / 0.9);
+  }
+  
+  .btn-primary:focus {
+    outline: 2px solid hsl(var(--color-primary) / 0.2);
+    outline-offset: 2px;
+  }
+  
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .btn-accent {
+    background-color: hsl(var(--color-accent));
+    color: hsl(var(--color-accent-foreground));
+    transition: all 0.2s;
+  }
+  
+  .btn-accent:hover {
+    background-color: hsl(var(--color-accent) / 0.9);
+  }
+  
+  .btn-accent:focus {
+    outline: 2px solid hsl(var(--color-accent) / 0.2);
+    outline-offset: 2px;
+  }
+  
+  .btn-accent:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .card-hover {
+    transition: all 0.3s;
+  }
+  
+  .card-hover:hover {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    transform: translateY(-0.25rem);
+  }
+  
+  .input-focus {
+    transition: all 0.2s;
+  }
+  
+  .input-focus:focus {
+    outline: 2px solid hsl(var(--color-primary) / 0.2);
+    outline-offset: 2px;
+    border-color: hsl(var(--color-primary));
+  }
+}
