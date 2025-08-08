@@ -264,111 +264,118 @@ export default function AdminProductsPage() {
                      Add Product
                    </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>
-                      {editingProduct ? 'Edit Product' : 'Add New Product'}
-                    </DialogTitle>
-                    <DialogDescription>
-                      {editingProduct ? 'Update product information' : 'Create a new product listing'}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium">Product Name *</label>
-                        <Input
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="Enter product name"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium">Category *</label>
-                        <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Electronics">Electronics</SelectItem>
-                            <SelectItem value="Fashion">Fashion</SelectItem>
-                            <SelectItem value="Food & Beverages">Food & Beverages</SelectItem>
-                            <SelectItem value="Sports & Fitness">Sports & Fitness</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium">Description</label>
-                      <Textarea
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Enter product description"
-                        rows={3}
-                      />
-                    </div>
+                                 <DialogContent className="max-w-2xl bg-white border-0 shadow-2xl">
+                   <DialogHeader className="border-b border-blue-100 pb-4">
+                     <DialogTitle className="text-2xl font-bold text-blue-800">
+                       {editingProduct ? 'Edit Product' : 'Add New Product'}
+                     </DialogTitle>
+                     <DialogDescription className="text-blue-600 mt-2">
+                       {editingProduct ? 'Update product information' : 'Create a new product listing'}
+                     </DialogDescription>
+                   </DialogHeader>
+                   <div className="space-y-6 pt-4">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                       <div>
+                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Product Name *</label>
+                         <Input
+                           value={formData.name}
+                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                           placeholder="Enter product name"
+                           className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                         />
+                       </div>
+                       <div>
+                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Category *</label>
+                         <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                           <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
+                             <SelectValue placeholder="Select category" />
+                           </SelectTrigger>
+                           <SelectContent className="bg-white border-blue-200">
+                             <SelectItem value="Electronics" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Electronics</SelectItem>
+                             <SelectItem value="Fashion" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Fashion</SelectItem>
+                             <SelectItem value="Food & Beverages" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Food & Beverages</SelectItem>
+                             <SelectItem value="Sports & Fitness" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Sports & Fitness</SelectItem>
+                           </SelectContent>
+                         </Select>
+                       </div>
+                     </div>
+                     
+                     <div>
+                       <label className="text-sm font-semibold text-blue-700 mb-2 block">Description</label>
+                       <Textarea
+                         value={formData.description}
+                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                         placeholder="Enter product description"
+                         rows={3}
+                         className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                       />
+                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <label className="text-sm font-medium">Price (KES) *</label>
-                        <Input
-                          type="number"
-                          value={formData.price}
-                          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                          placeholder="0"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium">Stock Quantity</label>
-                        <Input
-                          type="number"
-                          value={formData.stock}
-                          onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                          placeholder="0"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium">Image URL</label>
-                        <Input
-                          value={formData.image}
-                          onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                          placeholder="https://example.com/image.jpg"
-                        />
-                      </div>
-                    </div>
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                       <div>
+                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Price (KES) *</label>
+                         <Input
+                           type="number"
+                           value={formData.price}
+                           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                           placeholder="0"
+                           className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                         />
+                       </div>
+                       <div>
+                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Stock Quantity</label>
+                         <Input
+                           type="number"
+                           value={formData.stock}
+                           onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                           placeholder="0"
+                           className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                         />
+                       </div>
+                       <div>
+                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Image URL</label>
+                         <Input
+                           value={formData.image}
+                           onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                           placeholder="https://example.com/image.jpg"
+                           className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                         />
+                       </div>
+                     </div>
 
-                    <div className="flex space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id="featured"
-                          checked={formData.featured}
-                          onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                        />
-                        <label htmlFor="featured" className="text-sm">Featured Product</label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id="bestSeller"
-                          checked={formData.bestSeller}
-                          onChange={(e) => setFormData({ ...formData, bestSeller: e.target.checked })}
-                        />
-                        <label htmlFor="bestSeller" className="text-sm">Best Seller</label>
-                      </div>
-                    </div>
+                     <div className="flex space-x-6">
+                       <div className="flex items-center space-x-2">
+                         <input
+                           type="checkbox"
+                           id="featured"
+                           checked={formData.featured}
+                           onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                           className="text-blue-600 focus:ring-blue-500 border-blue-300"
+                         />
+                         <label htmlFor="featured" className="text-sm font-medium text-blue-700">Featured Product</label>
+                       </div>
+                       <div className="flex items-center space-x-2">
+                         <input
+                           type="checkbox"
+                           id="bestSeller"
+                           checked={formData.bestSeller}
+                           onChange={(e) => setFormData({ ...formData, bestSeller: e.target.checked })}
+                           className="text-blue-600 focus:ring-blue-500 border-blue-300"
+                         />
+                         <label htmlFor="bestSeller" className="text-sm font-medium text-blue-700">Best Seller</label>
+                       </div>
+                     </div>
 
-                    <div className="flex space-x-2 pt-4">
-                      <Button 
-                        onClick={editingProduct ? handleUpdateProduct : handleAddProduct}
-                        className="flex-1"
-                      >
-                        {editingProduct ? 'Update Product' : 'Add Product'}
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
+                     <div className="flex space-x-2 pt-4 border-t border-blue-100">
+                       <Button 
+                         onClick={editingProduct ? handleUpdateProduct : handleAddProduct}
+                         className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                       >
+                         {editingProduct ? 'Update Product' : 'Add Product'}
+                       </Button>
+                     </div>
+                   </div>
+                 </DialogContent>
               </Dialog>
             </div>
           </div>
