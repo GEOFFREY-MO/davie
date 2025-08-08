@@ -435,14 +435,14 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           </div>
 
           {/* Badges */}
-          <div className="absolute top-2 left-2 flex flex-col space-y-1">
+          <div className="absolute top-1 sm:top-2 left-1 sm:left-2 flex flex-col space-y-1">
             {product.featured && (
-              <span className="bg-accent text-accent-foreground text-xs px-2 py-1 rounded-full font-medium">
+              <span className="bg-accent text-accent-foreground text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
                 Featured
               </span>
             )}
             {product.bestSeller && (
-              <span className="bg-[#10B981] text-white text-xs px-2 py-1 rounded-full font-medium">
+              <span className="bg-[#10B981] text-white text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
                 Best Seller
               </span>
             )}
@@ -450,59 +450,59 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
 
           {/* Stock indicator */}
           {product.stock === 0 && (
-            <div className="absolute top-2 right-2">
-              <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+            <div className="absolute top-1 sm:top-2 right-1 sm:right-2">
+              <span className="bg-red-500 text-white text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
                 Out of Stock
               </span>
             </div>
           )}
         </div>
 
-        <CardContent className="p-4">
+        <CardContent className="p-2 sm:p-3 md:p-4">
           <div className="mb-2">
-            <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors text-gray-900">
+            <h3 className="font-semibold text-sm sm:text-base md:text-lg line-clamp-1 group-hover:text-primary transition-colors text-gray-900">
               {product.name}
             </h3>
-            <p className="text-gray-700 text-sm line-clamp-2">
+            <p className="text-gray-700 text-xs sm:text-sm line-clamp-2 mt-1">
               {product.description}
             </p>
           </div>
 
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
                 <Star 
                   key={i} 
-                  className={`h-4 w-4 ${
+                  className={`h-3 w-3 sm:h-4 sm:w-4 ${
                     i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
                   }`} 
                 />
               ))}
               <span className="text-xs text-gray-600 ml-1">(4.0)</span>
             </div>
-            <span className="text-sm text-gray-600">
+            <span className="text-xs sm:text-sm text-gray-600 truncate ml-2">
               {product.category}
             </span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-xl font-bold text-primary">
+            <span className="text-base sm:text-lg md:text-xl font-bold text-primary">
               KES {product.price.toLocaleString()}
             </span>
-            <span className="text-sm text-gray-600">
+            <span className="text-xs sm:text-sm text-gray-600">
               {product.stock} in stock
             </span>
           </div>
         </CardContent>
 
-        <CardFooter className="p-4 pt-0">
+        <CardFooter className="p-2 sm:p-3 md:p-4 pt-0">
           <Button 
-            className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-semibold py-3 text-base shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-semibold py-2 sm:py-3 text-xs sm:text-sm md:text-base shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
             style={{ cursor: 'pointer' }}
             onClick={handleAddToCart}
             disabled={product.stock === 0}
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />
+            <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
           </Button>
         </CardFooter>
