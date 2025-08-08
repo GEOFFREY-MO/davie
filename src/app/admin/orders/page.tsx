@@ -1,15 +1,321 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Package, Eye, Clock } from 'lucide-react'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { 
+  Package, 
+  Search, 
+  Filter,
+  Eye,
+  Edit,
+  Truck,
+  CheckCircle,
+  XCircle,
+  Clock,
+  User,
+  Phone,
+  MapPin,
+  CreditCard,
+  Calendar,
+  DollarSign,
+  ShoppingCart,
+  ArrowUpDown,
+  SortAsc,
+  SortDesc
+} from 'lucide-react'
+import { toast } from 'sonner'
+import Image from 'next/image'
+
+interface OrderItem {
+  id: string
+  productId: string
+  productName: string
+  productImage: string
+  quantity: number
+  price: number
+  total: number
+}
+
+interface Order {
+  id: string
+  customerName: string
+  customerEmail: string
+  customerPhone: string
+  shippingAddress: string
+  items: OrderItem[]
+  subtotal: number
+  shipping: number
+  tax: number
+  total: number
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
+  paymentMethod: 'mpesa' | 'card' | 'cash'
+  paymentStatus: 'pending' | 'paid' | 'failed'
+  orderDate: string
+  estimatedDelivery?: string
+  trackingNumber?: string
+  notes?: string
+}
 
 export default function AdminOrdersPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const [orders, setOrders] = useState<Order[]>([])
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedStatus, setSelectedStatus] = useState('all')
+  const [selectedPaymentStatus, setSelectedPaymentStatus] = useState('all')
+  const [sortBy, setSortBy] = useState<'date' | 'total' | 'customer'>('date')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null)
+  const [editFormData, setEditFormData] = useState({
+    status: '',
+    trackingNumber: '',
+    notes: ''
+  })
+
+  useEffect(() => {
+    if (status === 'loading') return
+    if (!session || session.user?.role !== 'ADMIN') {
+      router.push('/admin/login')
+    }
+  }, [session, status, router])
+
+  useEffect(() => {
+    const mockOrders: Order[] = [
+      {
+        id: 'ORD-001',
+        customerName: 'John Doe',
+        customerEmail: 'john.doe@email.com',
+        customerPhone: '+254 751 030 250',
+        shippingAddress: '123 Main St, Nyeri, Kenya',
+        items: [
+          {
+            id: '1',
+            productId: '1',
+            productName: 'Premium Wireless Headphones',
+            productImage: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop',
+            quantity: 2,
+            price: 15000,
+            total: 30000
+          },
+          {
+            id: '2',
+            productId: '2',
+            productName: 'Smart Fitness Watch',
+            productImage: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop',
+            quantity: 1,
+            price: 25000,
+            total: 25000
+          }
+        ],
+        subtotal: 55000,
+        shipping: 1000,
+        tax: 2750,
+        total: 58750,
+        status: 'processing',
+        paymentMethod: 'mpesa',
+        paymentStatus: 'paid',
+        orderDate: '2025-01-15T10:30:00Z',
+        estimatedDelivery: '2025-01-20',
+        trackingNumber: 'TRK-123456789',
+        notes: 'Customer requested express delivery'
+      },
+      {
+        id: 'ORD-002',
+        customerName: 'Jane Smith',
+        customerEmail: 'jane.smith@email.com',
+        customerPhone: '+254 725 172 596',
+        shippingAddress: '456 Oak Ave, Nairobi, Kenya',
+        items: [
+          {
+            id: '3',
+            productId: '3',
+            productName: 'Designer Leather Bag',
+            productImage: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=100&h=100&fit=crop',
+            quantity: 1,
+            price: 8500,
+            total: 8500
+          }
+        ],
+        subtotal: 8500,
+        shipping: 800,
+        tax: 425,
+        total: 9725,
+        status: 'shipped',
+        paymentMethod: 'card',
+        paymentStatus: 'paid',
+        orderDate: '2025-01-14T14:20:00Z',
+        estimatedDelivery: '2025-01-18',
+        trackingNumber: 'TRK-987654321'
+      },
+      {
+        id: 'ORD-003',
+        customerName: 'Mike Johnson',
+        customerEmail: 'mike.johnson@email.com',
+        customerPhone: '+254 700 123 456',
+        shippingAddress: '789 Pine Rd, Mombasa, Kenya',
+        items: [
+          {
+            id: '4',
+            productId: '1',
+            productName: 'Premium Wireless Headphones',
+            productImage: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop',
+            quantity: 1,
+            price: 15000,
+            total: 15000
+          }
+        ],
+        subtotal: 15000,
+        shipping: 1200,
+        tax: 750,
+        total: 16950,
+        status: 'pending',
+        paymentMethod: 'cash',
+        paymentStatus: 'pending',
+        orderDate: '2025-01-16T09:15:00Z'
+      }
+    ]
+    setOrders(mockOrders)
+    setFilteredOrders(mockOrders)
+  }, [])
+
+  useEffect(() => {
+    let filtered = orders
+
+    if (searchTerm) {
+      filtered = filtered.filter(order =>
+        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.customerPhone.includes(searchTerm)
+      )
+    }
+
+    if (selectedStatus !== 'all') {
+      filtered = filtered.filter(order => order.status === selectedStatus)
+    }
+
+    if (selectedPaymentStatus !== 'all') {
+      filtered = filtered.filter(order => order.paymentStatus === selectedPaymentStatus)
+    }
+
+    // Sort orders
+    filtered.sort((a, b) => {
+      let aValue: any, bValue: any
+      
+      switch (sortBy) {
+        case 'date':
+          aValue = new Date(a.orderDate).getTime()
+          bValue = new Date(b.orderDate).getTime()
+          break
+        case 'total':
+          aValue = a.total
+          bValue = b.total
+          break
+        case 'customer':
+          aValue = a.customerName.toLowerCase()
+          bValue = b.customerName.toLowerCase()
+          break
+        default:
+          aValue = new Date(a.orderDate).getTime()
+          bValue = new Date(b.orderDate).getTime()
+      }
+
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1
+      } else {
+        return aValue < bValue ? 1 : -1
+      }
+    })
+
+    setFilteredOrders(filtered)
+  }, [orders, searchTerm, selectedStatus, selectedPaymentStatus, sortBy, sortOrder])
+
+  const handleViewOrder = (order: Order) => {
+    setSelectedOrder(order)
+    setIsViewModalOpen(true)
+  }
+
+  const handleEditOrder = (order: Order) => {
+    setEditingOrder(order)
+    setEditFormData({
+      status: order.status,
+      trackingNumber: order.trackingNumber || '',
+      notes: order.notes || ''
+    })
+    setIsEditModalOpen(true)
+  }
+
+  const handleUpdateOrder = () => {
+    if (!editingOrder) return
+
+    const updatedOrders = orders.map(order =>
+      order.id === editingOrder.id
+        ? {
+            ...order,
+            status: editFormData.status as Order['status'],
+            trackingNumber: editFormData.trackingNumber,
+            notes: editFormData.notes
+          }
+        : order
+    )
+
+    setOrders(updatedOrders)
+    setIsEditModalOpen(false)
+    setEditingOrder(null)
+    toast.success('Order updated successfully!')
+  }
+
+  const getStatusColor = (status: Order['status']) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800'
+      case 'processing': return 'bg-blue-100 text-blue-800'
+      case 'shipped': return 'bg-purple-100 text-purple-800'
+      case 'delivered': return 'bg-green-100 text-green-800'
+      case 'cancelled': return 'bg-red-100 text-red-800'
+      default: return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const getPaymentStatusColor = (status: Order['paymentStatus']) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800'
+      case 'paid': return 'bg-green-100 text-green-800'
+      case 'failed': return 'bg-red-100 text-red-800'
+      default: return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const getStatusIcon = (status: Order['status']) => {
+    switch (status) {
+      case 'pending': return <Clock className="h-4 w-4" />
+      case 'processing': return <Package className="h-4 w-4" />
+      case 'shipped': return <Truck className="h-4 w-4" />
+      case 'delivered': return <CheckCircle className="h-4 w-4" />
+      case 'cancelled': return <XCircle className="h-4 w-4" />
+      default: return <Clock className="h-4 w-4" />
+    }
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
 
   if (status === 'loading') {
     return (
@@ -23,110 +329,441 @@ export default function AdminOrdersPage() {
   }
 
   if (!session || session.user?.role !== 'ADMIN') {
-    router.push('/admin/login')
     return null
   }
 
-  const mockOrders = [
-    {
-      id: '1',
-      customerName: 'John Doe',
-      total: 25000,
-      status: 'pending',
-      date: '2024-01-15',
-      items: 3
-    },
-    {
-      id: '2',
-      customerName: 'Jane Smith',
-      total: 15000,
-      status: 'processing',
-      date: '2024-01-14',
-      items: 2
-    },
-    {
-      id: '3',
-      customerName: 'Mike Johnson',
-      total: 35000,
-      status: 'delivered',
-      date: '2024-01-13',
-      items: 1
-    }
-  ]
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'processing':
-        return 'bg-blue-100 text-blue-800'
-      case 'delivered':
-        return 'bg-green-100 text-green-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header */}
-      <div className="bg-primary text-primary-foreground">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-[#08153A] text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">Order Management</h1>
-              <p className="text-primary-foreground/80">Manage customer orders and deliveries</p>
-            </div>
             <div className="flex items-center space-x-4">
-              <Button onClick={() => router.push('/admin/dashboard')}>
-                Back to Dashboard
-              </Button>
+              {/* Logo */}
+              <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+                <Image
+                  src="/davietech-logo.jpg"
+                  alt="DAVIETECH Logo"
+                  width={48}
+                  height={48}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white">Order Management</h1>
+                <p className="text-gray-300 mt-1">Manage customer orders and deliveries</p>
+              </div>
             </div>
+            <Button 
+              onClick={() => router.push('/admin/dashboard')}
+              variant="outline" 
+              className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300"
+            >
+              Back to Dashboard
+            </Button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Package className="h-5 w-5" />
-              <span>Orders</span>
+      <div className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Filters */}
+        <Card className="mb-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-0 shadow-xl">
+          <CardHeader className="border-b border-blue-100 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+            <CardTitle className="text-xl font-bold text-white flex items-center">
+              <Filter className="h-5 w-5 mr-2" />
+              Filters & Search
             </CardTitle>
-            <CardDescription>
-              View and manage customer orders
-            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {mockOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                      <Package className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">{order.customerName}</h4>
-                      <p className="text-sm text-muted-foreground">Order #{order.id}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <span className="font-semibold">KES {order.total.toLocaleString()}</span>
-                    <Badge className={getStatusColor(order.status)}>
-                      {order.status}
-                    </Badge>
-                    <span className="text-sm text-muted-foreground">{order.date}</span>
-                    <Button variant="outline" size="sm">
-                      <Eye className="h-4 w-4 mr-2" />
-                      View
-                    </Button>
-                  </div>
-                </div>
-              ))}
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-4 w-4" />
+                <Input
+                  placeholder="Search orders..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-blue-700 placeholder-blue-400"
+                />
+              </div>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700">
+                  <SelectValue placeholder="Order Status" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-blue-200 shadow-lg">
+                  <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">All Statuses</SelectItem>
+                  <SelectItem value="pending" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Pending</SelectItem>
+                  <SelectItem value="processing" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Processing</SelectItem>
+                  <SelectItem value="shipped" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Shipped</SelectItem>
+                  <SelectItem value="delivered" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Delivered</SelectItem>
+                  <SelectItem value="cancelled" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={selectedPaymentStatus} onValueChange={setSelectedPaymentStatus}>
+                <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700">
+                  <SelectValue placeholder="Payment Status" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-blue-200 shadow-lg">
+                  <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">All Payments</SelectItem>
+                  <SelectItem value="pending" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Pending</SelectItem>
+                  <SelectItem value="paid" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Paid</SelectItem>
+                  <SelectItem value="failed" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Failed</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={sortBy} onValueChange={(value: 'date' | 'total' | 'customer') => setSortBy(value)}>
+                <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-blue-200 shadow-lg">
+                  <SelectItem value="date" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Order Date</SelectItem>
+                  <SelectItem value="total" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Total Amount</SelectItem>
+                  <SelectItem value="customer" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Customer Name</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                variant="outline"
+                size="sm"
+                className="border-blue-200 bg-white text-blue-700 hover:bg-blue-50 hover:border-blue-300 shadow-sm cursor-pointer"
+              >
+                {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
+              </Button>
+              <div className="text-sm text-blue-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100 cursor-pointer">
+                <Package className="h-4 w-4 mr-2 text-blue-500" />
+                <span className="font-medium text-blue-800">{filteredOrders.length}</span>
+                <span className="mx-1 text-blue-600">of</span>
+                <span className="font-medium text-blue-800">{orders.length}</span>
+                <span className="ml-1 text-blue-600">orders</span>
+              </div>
             </div>
           </CardContent>
         </Card>
+
+        {/* Orders List */}
+        <div className="space-y-4">
+          {filteredOrders.map((order) => (
+            <Card key={order.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Package className="h-6 w-6 text-blue-600" />
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-lg font-semibold text-gray-900">{order.id}</h4>
+                          <p className="text-sm text-gray-600 flex items-center mt-1">
+                            <User className="h-4 w-4 mr-1" />
+                            {order.customerName}
+                          </p>
+                          <p className="text-sm text-gray-600 flex items-center mt-1">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            {formatDate(order.orderDate)}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-lg font-bold text-gray-900 flex items-center">
+                            <DollarSign className="h-4 w-4 mr-1" />
+                            KES {order.total.toLocaleString()}
+                          </p>
+                          <div className="flex items-center space-x-2 mt-2">
+                            <Badge className={getStatusColor(order.status)}>
+                              {getStatusIcon(order.status)}
+                              <span className="ml-1 capitalize">{order.status}</span>
+                            </Badge>
+                            <Badge className={getPaymentStatusColor(order.paymentStatus)}>
+                              <span className="capitalize">{order.paymentStatus}</span>
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-4 mt-3 text-sm text-gray-600">
+                        <span className="flex items-center">
+                          <Phone className="h-4 w-4 mr-1" />
+                          {order.customerPhone}
+                        </span>
+                        <span className="flex items-center">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {order.shippingAddress}
+                        </span>
+                        <span className="flex items-center">
+                          <CreditCard className="h-4 w-4 mr-1" />
+                          {order.paymentMethod.toUpperCase()}
+                        </span>
+                        <span className="flex items-center">
+                          <ShoppingCart className="h-4 w-4 mr-1" />
+                          {order.items.length} item{order.items.length !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleViewOrder(order)}
+                      className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEditOrder(order)}
+                      className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 transition-all duration-300 cursor-pointer"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {filteredOrders.length === 0 && (
+          <Card className="bg-white border-0 shadow-lg">
+            <CardContent className="text-center py-12">
+              <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2 text-gray-800">No orders found</h3>
+              <p className="text-gray-600">
+                {searchTerm || selectedStatus !== 'all' || selectedPaymentStatus !== 'all'
+                  ? 'Try adjusting your search or filters'
+                  : 'No orders have been placed yet'
+                }
+              </p>
+            </CardContent>
+          </Card>
+        )}
       </div>
+
+      {/* View Order Modal */}
+      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
+        <DialogContent className="max-w-4xl bg-white border-0 shadow-2xl">
+          <DialogHeader className="border-b border-blue-100 pb-4">
+            <DialogTitle className="text-2xl font-bold text-blue-800">
+              Order Details - {selectedOrder?.id}
+            </DialogTitle>
+            <DialogDescription className="text-blue-600 mt-2">
+              Complete order information and customer details
+            </DialogDescription>
+          </DialogHeader>
+          {selectedOrder && (
+            <div className="space-y-6 pt-4">
+              {/* Order Summary */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="bg-blue-50 border-blue-200">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-semibold text-blue-800">Order Status</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Badge className={getStatusColor(selectedOrder.status)}>
+                      {getStatusIcon(selectedOrder.status)}
+                      <span className="ml-1 capitalize">{selectedOrder.status}</span>
+                    </Badge>
+                  </CardContent>
+                </Card>
+                <Card className="bg-green-50 border-green-200">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-semibold text-green-800">Payment Status</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Badge className={getPaymentStatusColor(selectedOrder.paymentStatus)}>
+                      <span className="capitalize">{selectedOrder.paymentStatus}</span>
+                    </Badge>
+                  </CardContent>
+                </Card>
+                <Card className="bg-purple-50 border-purple-200">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-semibold text-purple-800">Total Amount</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-lg font-bold text-purple-800">KES {selectedOrder.total.toLocaleString()}</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Customer Information */}
+              <Card className="bg-gray-50 border-gray-200">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-800">Customer Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Name</p>
+                      <p className="text-gray-900">{selectedOrder.customerName}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Email</p>
+                      <p className="text-gray-900">{selectedOrder.customerEmail}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Phone</p>
+                      <p className="text-gray-900">{selectedOrder.customerPhone}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Payment Method</p>
+                      <p className="text-gray-900 capitalize">{selectedOrder.paymentMethod}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Shipping Address</p>
+                    <p className="text-gray-900">{selectedOrder.shippingAddress}</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Order Items */}
+              <Card className="bg-white border-gray-200">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-800">Order Items</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {selectedOrder.items.map((item) => (
+                      <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                        <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                          <img
+                            src={item.productImage}
+                            alt={item.productName}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900">{item.productName}</h4>
+                          <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-gray-900">KES {item.price.toLocaleString()}</p>
+                          <p className="text-sm text-gray-600">Total: KES {item.total.toLocaleString()}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Order Summary */}
+              <Card className="bg-blue-50 border-blue-200">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-blue-800">Order Summary</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Subtotal:</span>
+                      <span className="font-semibold">KES {selectedOrder.subtotal.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Shipping:</span>
+                      <span className="font-semibold">KES {selectedOrder.shipping.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Tax:</span>
+                      <span className="font-semibold">KES {selectedOrder.tax.toLocaleString()}</span>
+                    </div>
+                    <div className="border-t border-blue-200 pt-2">
+                      <div className="flex justify-between">
+                        <span className="text-lg font-bold text-blue-800">Total:</span>
+                        <span className="text-lg font-bold text-blue-800">KES {selectedOrder.total.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Additional Information */}
+              {(selectedOrder.trackingNumber || selectedOrder.estimatedDelivery || selectedOrder.notes) && (
+                <Card className="bg-gray-50 border-gray-200">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-semibold text-gray-800">Additional Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {selectedOrder.trackingNumber && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Tracking Number</p>
+                        <p className="text-gray-900">{selectedOrder.trackingNumber}</p>
+                      </div>
+                    )}
+                    {selectedOrder.estimatedDelivery && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Estimated Delivery</p>
+                        <p className="text-gray-900">{selectedOrder.estimatedDelivery}</p>
+                      </div>
+                    )}
+                    {selectedOrder.notes && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Notes</p>
+                        <p className="text-gray-900">{selectedOrder.notes}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Order Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-2xl bg-white border-0 shadow-2xl">
+          <DialogHeader className="border-b border-blue-100 pb-4">
+            <DialogTitle className="text-2xl font-bold text-blue-800">
+              Edit Order - {editingOrder?.id}
+            </DialogTitle>
+            <DialogDescription className="text-blue-600 mt-2">
+              Update order status and tracking information
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-6 pt-4">
+            <div>
+              <label className="text-sm font-semibold text-blue-700 mb-2 block">Order Status *</label>
+              <Select value={editFormData.status} onValueChange={(value) => setEditFormData({ ...editFormData, status: value })}>
+                <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-blue-200">
+                  <SelectItem value="pending" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Pending</SelectItem>
+                  <SelectItem value="processing" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Processing</SelectItem>
+                  <SelectItem value="shipped" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Shipped</SelectItem>
+                  <SelectItem value="delivered" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Delivered</SelectItem>
+                  <SelectItem value="cancelled" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-blue-700 mb-2 block">Tracking Number</label>
+              <Input
+                value={editFormData.trackingNumber}
+                onChange={(e) => setEditFormData({ ...editFormData, trackingNumber: e.target.value })}
+                placeholder="Enter tracking number"
+                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-blue-700 mb-2 block">Notes</label>
+              <Input
+                value={editFormData.notes}
+                onChange={(e) => setEditFormData({ ...editFormData, notes: e.target.value })}
+                placeholder="Add order notes"
+                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+              />
+            </div>
+            <div className="flex space-x-2 pt-4 border-t border-blue-100">
+              <Button 
+                onClick={handleUpdateOrder}
+                className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                Update Order
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 } 
