@@ -93,29 +93,29 @@ export default function ProductsPage() {
       
       <main className="pt-16">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-12">
+        <div className="bg-[#00008B] text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold mb-2">Our Products</h1>
-            <p className="text-blue-100">Discover amazing tech products at DAVIETECH</p>
+            <p className="text-white/80">Discover amazing tech products at DAVIETECH</p>
           </div>
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Filters and Search */}
-          <div className="bg-gray-50 rounded-xl p-6 mb-8 border border-gray-200">
+          <div className="bg-[#00008B] rounded-xl p-6 mb-8 text-white">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
                 <Input
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500"
+                  className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#00FFEF] focus:ring-[#00FFEF]"
                 />
               </div>
               
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="bg-white border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500">
+                <SelectTrigger className="bg-white/10 border-white/20 text-white focus:border-[#00FFEF] focus:ring-[#00FFEF]">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
@@ -128,7 +128,7 @@ export default function ProductsPage() {
               </Select>
 
               <Select value={sortOrder} onValueChange={setSortOrder}>
-                <SelectTrigger className="bg-white border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-blue-500">
+                <SelectTrigger className="bg-white/10 border-white/20 text-white focus:border-[#00FFEF] focus:ring-[#00FFEF]">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -144,8 +144,8 @@ export default function ProductsPage() {
                   size="sm"
                   onClick={() => setViewMode('grid')}
                   className={viewMode === 'grid' 
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    ? 'bg-[#00FFEF] hover:bg-[#00FFEF]/90 text-black' 
+                    : 'border-white/20 text-white hover:bg-white/10'
                   }
                 >
                   <Grid className="h-4 w-4" />
@@ -155,8 +155,8 @@ export default function ProductsPage() {
                   size="sm"
                   onClick={() => setViewMode('list')}
                   className={viewMode === 'list' 
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    ? 'bg-[#00FFEF] hover:bg-[#00FFEF]/90 text-black' 
+                    : 'border-white/20 text-white hover:bg-white/10'
                   }
                 >
                   <List className="h-4 w-4" />
@@ -201,7 +201,7 @@ export default function ProductsPage() {
                   setSearchTerm('')
                   setSelectedCategory('all')
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-[#00008B] hover:bg-[#00008B]/90 text-white"
               >
                 Clear Filters
               </Button>
