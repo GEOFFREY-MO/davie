@@ -253,16 +253,16 @@ export default function AdminProductsPage() {
               </Button>
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button 
-                    onClick={() => {
-                      setEditingProduct(null)
-                      resetForm()
-                    }}
-                    className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Product
-                  </Button>
+                                     <Button 
+                     onClick={() => {
+                       setEditingProduct(null)
+                       resetForm()
+                     }}
+                     className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                   >
+                     <Plus className="h-4 w-4 mr-2" />
+                     Add Product
+                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl">
                   <DialogHeader>
@@ -388,26 +388,26 @@ export default function AdminProductsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-4 w-4" />
-                <Input
-                  placeholder="Search products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
-                />
+                                 <Input
+                   placeholder="Search products..."
+                   value={searchTerm}
+                   onChange={(e) => setSearchTerm(e.target.value)}
+                   className="pl-10 border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-blue-700 placeholder-blue-400"
+                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
+                                 <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer">
+                   <SelectValue placeholder="Select category" />
+                 </SelectTrigger>
                                  <SelectContent className="bg-white border-blue-200 shadow-lg">
-                   <SelectItem value="all" className="hover:bg-blue-50 text-blue-700">All Categories</SelectItem>
-                   <SelectItem value="Electronics" className="hover:bg-blue-50 text-blue-700">Electronics</SelectItem>
-                   <SelectItem value="Fashion" className="hover:bg-blue-50 text-blue-700">Fashion</SelectItem>
-                   <SelectItem value="Food & Beverages" className="hover:bg-blue-50 text-blue-700">Food & Beverages</SelectItem>
-                   <SelectItem value="Sports & Fitness" className="hover:bg-blue-50 text-blue-700">Sports & Fitness</SelectItem>
+                   <SelectItem value="all" className="hover:bg-green-100 text-blue-700 cursor-pointer">All Categories</SelectItem>
+                   <SelectItem value="Electronics" className="hover:bg-green-100 text-blue-700 cursor-pointer">Electronics</SelectItem>
+                   <SelectItem value="Fashion" className="hover:bg-green-100 text-blue-700 cursor-pointer">Fashion</SelectItem>
+                   <SelectItem value="Food & Beverages" className="hover:bg-green-100 text-blue-700 cursor-pointer">Food & Beverages</SelectItem>
+                   <SelectItem value="Sports & Fitness" className="hover:bg-green-100 text-blue-700 cursor-pointer">Sports & Fitness</SelectItem>
                  </SelectContent>
               </Select>
-                             <div className="text-sm text-blue-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100">
+                             <div className="text-sm text-blue-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100 cursor-pointer">
                  <Filter className="h-4 w-4 mr-2 text-blue-500" />
                  <span className="font-medium text-blue-800">{filteredProducts.length}</span>
                  <span className="mx-1 text-blue-600">of</span>
@@ -415,28 +415,28 @@ export default function AdminProductsPage() {
                  <span className="ml-1 text-blue-600">products</span>
                </div>
               <div className="flex items-center space-x-2">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className={viewMode === 'grid' 
-                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md' 
-                    : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
-                  }
-                >
-                  <Grid className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className={viewMode === 'list' 
-                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md' 
-                    : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
-                  }
-                >
-                  <List className="h-4 w-4" />
-                </Button>
+                                 <Button
+                   variant={viewMode === 'grid' ? 'default' : 'outline'}
+                   size="sm"
+                   onClick={() => setViewMode('grid')}
+                   className={`cursor-pointer ${viewMode === 'grid' 
+                     ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md' 
+                     : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
+                   }`}
+                 >
+                   <Grid className="h-4 w-4" />
+                 </Button>
+                 <Button
+                   variant={viewMode === 'list' ? 'default' : 'outline'}
+                   size="sm"
+                   onClick={() => setViewMode('list')}
+                   className={`cursor-pointer ${viewMode === 'list' 
+                     ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md' 
+                     : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
+                   }`}
+                 >
+                   <List className="h-4 w-4" />
+                 </Button>
               </div>
             </div>
           </CardContent>
@@ -478,23 +478,23 @@ export default function AdminProductsPage() {
                       </div>
                     </div>
                     <div className="flex space-x-2 pt-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => handleEditProduct(product)} 
-                        className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
-                      >
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteProduct(product.id)}
-                        className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                                             <Button 
+                         variant="outline" 
+                         size="sm" 
+                         onClick={() => handleEditProduct(product)} 
+                         className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer"
+                       >
+                         <Edit className="h-4 w-4 mr-2" />
+                         Edit
+                       </Button>
+                       <Button
+                         variant="outline"
+                         size="sm"
+                         onClick={() => handleDeleteProduct(product.id)}
+                         className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300 cursor-pointer"
+                       >
+                         <Trash2 className="h-4 w-4" />
+                       </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -534,22 +534,22 @@ export default function AdminProductsPage() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => handleEditProduct(product)}
-                        className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteProduct(product.id)}
-                        className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                                             <Button 
+                         variant="outline" 
+                         size="sm" 
+                         onClick={() => handleEditProduct(product)}
+                         className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer"
+                       >
+                         <Edit className="h-4 w-4" />
+                       </Button>
+                       <Button
+                         variant="outline"
+                         size="sm"
+                         onClick={() => handleDeleteProduct(product.id)}
+                         className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300 cursor-pointer"
+                       >
+                         <Trash2 className="h-4 w-4" />
+                       </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -570,17 +570,17 @@ export default function AdminProductsPage() {
                 }
               </p>
               {!searchTerm && selectedCategory === 'all' && (
-                <Button 
-                  onClick={() => {
-                    setEditingProduct(null)
-                    resetForm()
-                    setIsModalOpen(true)
-                  }}
-                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Product
-                </Button>
+                                 <Button 
+                   onClick={() => {
+                     setEditingProduct(null)
+                     resetForm()
+                     setIsModalOpen(true)
+                   }}
+                   className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                 >
+                   <Plus className="h-4 w-4 mr-2" />
+                   Add Product
+                 </Button>
               )}
             </CardContent>
           </Card>
