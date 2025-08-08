@@ -400,11 +400,11 @@ export default function AdminProductsPage() {
                    <SelectValue placeholder="Select category" />
                  </SelectTrigger>
                                  <SelectContent className="bg-white border-blue-200 shadow-lg">
-                   <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-800 cursor-pointer">All Categories</SelectItem>
-                   <SelectItem value="Electronics" className="hover:bg-green-100 text-blue-700 hover:text-green-800 cursor-pointer">Electronics</SelectItem>
-                   <SelectItem value="Fashion" className="hover:bg-green-100 text-blue-700 hover:text-green-800 cursor-pointer">Fashion</SelectItem>
-                   <SelectItem value="Food & Beverages" className="hover:bg-green-100 text-blue-700 hover:text-green-800 cursor-pointer">Food & Beverages</SelectItem>
-                   <SelectItem value="Sports & Fitness" className="hover:bg-green-100 text-blue-700 hover:text-green-800 cursor-pointer">Sports & Fitness</SelectItem>
+                   <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">All Categories</SelectItem>
+                   <SelectItem value="Electronics" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Electronics</SelectItem>
+                   <SelectItem value="Fashion" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Fashion</SelectItem>
+                   <SelectItem value="Food & Beverages" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Food & Beverages</SelectItem>
+                   <SelectItem value="Sports & Fitness" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Sports & Fitness</SelectItem>
                  </SelectContent>
               </Select>
                              <div className="text-sm text-blue-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100 cursor-pointer">
