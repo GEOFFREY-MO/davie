@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Star, ShoppingCart, Eye } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import ProductCard from './product-card'
+import { ProductCard } from './product-card'
 
 interface Product {
   id: string
