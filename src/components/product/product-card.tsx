@@ -101,7 +101,8 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                   KES {product.price.toLocaleString()}
                 </span>
                 <Button 
-                  className="btn-primary"
+                  className="bg-[#00008B] hover:bg-[#00008B]/90 text-white font-semibold px-6 py-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+                  style={{ cursor: 'pointer' }}
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
                 >
@@ -144,7 +145,8 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
             </Link>
             <Button 
               size="sm" 
-              className="rounded-full btn-accent"
+              className="rounded-full bg-[#00008B] hover:bg-[#00008B]/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+              style={{ cursor: 'pointer' }}
               onClick={handleAddToCart}
             >
               <ShoppingCart className="h-4 w-4" />
@@ -215,7 +217,8 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
 
       <CardFooter className="p-4 pt-0">
         <Button 
-          className="w-full btn-primary"
+          className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-semibold py-3 text-base shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+          style={{ cursor: 'pointer' }}
           onClick={handleAddToCart}
           disabled={product.stock === 0}
         >
