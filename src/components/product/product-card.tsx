@@ -61,7 +61,9 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
   }
 
   const handleMouseEnter = () => {
-    setIsZooming(true)
+    if (zoomLevel > 1) {
+      setIsZooming(true)
+    }
   }
 
   const handleMouseLeave = () => {
@@ -71,6 +73,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
   const resetView = () => {
     setZoomLevel(1)
     setRotation(0)
+    setIsZooming(false)
   }
 
   // Product Detail Modal
@@ -184,7 +187,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
               </Button>
               <Link href={`/products/${product.id}`}>
-                <Button variant="outline" className="flex-1">
+                <Button className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold">
                   View Details
                 </Button>
               </Link>
