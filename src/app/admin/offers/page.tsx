@@ -517,11 +517,16 @@ export default function AdminOffersPage() {
                             <Calendar className="h-4 w-4 mr-1" />
                             {formatDate(banner.startDate)} - {formatDate(banner.endDate)}
                           </span>
-                          {banner.linkUrl && (
-                            <span className="text-blue-600 hover:text-blue-800 cursor-pointer">
-                              View Link
-                            </span>
-                          )}
+                                                     {banner.linkUrl && (
+                             <a 
+                               href={banner.linkUrl}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline transition-colors duration-200"
+                             >
+                               View Link
+                             </a>
+                           )}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
