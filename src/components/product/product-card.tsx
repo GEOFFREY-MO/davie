@@ -82,7 +82,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
     setShowDescription(!showDescription)
   }
 
-  // Product Detail Modal
+    // Product Detail Modal
   const ProductDetailModal = () => (
     <Dialog open={showModal} onOpenChange={setShowModal}>
       <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-white">
@@ -180,7 +180,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
             </div>
           </div>
 
-                              {/* Scrollable Content Section */}
+          {/* Scrollable Content Section */}
           <div className="flex-1 overflow-y-auto">
             <div className="px-8">
               {/* Two Columns Below Image */}
@@ -284,6 +284,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
               )}
             </div>
           </div>
+        </div>
       </DialogContent>
     </Dialog>
   )
