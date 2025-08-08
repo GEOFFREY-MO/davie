@@ -68,10 +68,10 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           <div className="flex-1 p-6">
             <div className="flex justify-between items-start mb-4">
               <div className="flex-1">
-                <h3 className="font-semibold text-xl mb-2 group-hover:text-primary transition-colors">
+                <h3 className="font-semibold text-xl mb-2 group-hover:text-primary transition-colors text-gray-900">
                   {product.name}
                 </h3>
-                <p className="text-muted-foreground mb-3">
+                <p className="text-gray-700 mb-3">
                   {product.description}
                 </p>
                 
@@ -85,12 +85,12 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                         }`} 
                       />
                     ))}
-                    <span className="text-sm text-muted-foreground ml-1">(4.0)</span>
+                    <span className="text-sm text-gray-600 ml-1">(4.0)</span>
                   </div>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-gray-600">
                     Category: {product.category}
                   </span>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-gray-600">
                     Stock: {product.stock}
                   </span>
                 </div>
@@ -178,10 +178,10 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
 
       <CardContent className="p-4">
         <div className="mb-2">
-          <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors">
+          <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors text-gray-900">
             {product.name}
           </h3>
-          <p className="text-muted-foreground text-sm line-clamp-2">
+          <p className="text-gray-700 text-sm line-clamp-2">
             {product.description}
           </p>
         </div>
@@ -196,9 +196,9 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 }`} 
               />
             ))}
-            <span className="text-xs text-muted-foreground ml-1">(4.0)</span>
+            <span className="text-xs text-gray-600 ml-1">(4.0)</span>
           </div>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-gray-600">
             {product.category}
           </span>
         </div>
@@ -207,7 +207,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           <span className="text-xl font-bold text-primary">
             KES {product.price.toLocaleString()}
           </span>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-gray-600">
             {product.stock} in stock
           </span>
         </div>
