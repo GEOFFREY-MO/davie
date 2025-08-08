@@ -377,43 +377,52 @@ export default function AdminProductsPage() {
 
       <div className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
-        <Card className="mb-6 bg-white border-0 shadow-lg">
-          <CardHeader className="border-b border-gray-100">
-            <CardTitle className="text-xl font-bold text-gray-800">Filters & Search</CardTitle>
+        <Card className="mb-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-0 shadow-xl">
+          <CardHeader className="border-b border-blue-100 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
+            <CardTitle className="text-xl font-bold text-white flex items-center">
+              <Filter className="h-5 w-5 mr-2" />
+              Filters & Search
+            </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-4 w-4" />
                 <Input
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="pl-10 border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm"
                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="border-gray-200 focus:border-blue-500 focus:ring-blue-500">
+                <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="Electronics">Electronics</SelectItem>
-                  <SelectItem value="Fashion">Fashion</SelectItem>
-                  <SelectItem value="Food & Beverages">Food & Beverages</SelectItem>
-                  <SelectItem value="Sports & Fitness">Sports & Fitness</SelectItem>
+                <SelectContent className="bg-white border-blue-200 shadow-lg">
+                  <SelectItem value="all" className="hover:bg-blue-50">All Categories</SelectItem>
+                  <SelectItem value="Electronics" className="hover:bg-blue-50">Electronics</SelectItem>
+                  <SelectItem value="Fashion" className="hover:bg-blue-50">Fashion</SelectItem>
+                  <SelectItem value="Food & Beverages" className="hover:bg-blue-50">Food & Beverages</SelectItem>
+                  <SelectItem value="Sports & Fitness" className="hover:bg-blue-50">Sports & Fitness</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="text-sm text-gray-600 flex items-center">
-                <Filter className="h-4 w-4 mr-2" />
-                {filteredProducts.length} of {products.length} products
+              <div className="text-sm text-indigo-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100">
+                <Filter className="h-4 w-4 mr-2 text-indigo-500" />
+                <span className="font-medium">{filteredProducts.length}</span>
+                <span className="mx-1">of</span>
+                <span className="font-medium">{products.length}</span>
+                <span className="ml-1">products</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Button
                   variant={viewMode === 'grid' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('grid')}
-                  className={viewMode === 'grid' ? 'bg-blue-600 hover:bg-blue-700' : 'border-gray-200 hover:bg-gray-50'}
+                  className={viewMode === 'grid' 
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md' 
+                    : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
+                  }
                 >
                   <Grid className="h-4 w-4" />
                 </Button>
@@ -421,7 +430,10 @@ export default function AdminProductsPage() {
                   variant={viewMode === 'list' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('list')}
-                  className={viewMode === 'list' ? 'bg-blue-600 hover:bg-blue-700' : 'border-gray-200 hover:bg-gray-50'}
+                  className={viewMode === 'list' 
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md' 
+                    : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
+                  }
                 >
                   <List className="h-4 w-4" />
                 </Button>
