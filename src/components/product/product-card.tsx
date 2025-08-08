@@ -109,7 +109,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 size="sm"
                 variant="secondary"
                 onClick={handleZoomOut}
-                className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                className="h-8 w-8 p-0 bg-[#00008B] hover:bg-[#00008B]/90 text-white border border-white/20"
               >
                 <ZoomOut className="h-4 w-4" />
               </Button>
@@ -117,7 +117,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 size="sm"
                 variant="secondary"
                 onClick={handleZoomIn}
-                className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                className="h-8 w-8 p-0 bg-[#00008B] hover:bg-[#00008B]/90 text-white border border-white/20"
               >
                 <ZoomIn className="h-4 w-4" />
               </Button>
@@ -125,7 +125,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 size="sm"
                 variant="secondary"
                 onClick={handleRotate}
-                className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+                className="h-8 w-8 p-0 bg-[#00008B] hover:bg-[#00008B]/90 text-white border border-white/20"
               >
                 <RotateCw className="h-4 w-4" />
               </Button>
@@ -133,7 +133,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 size="sm"
                 variant="secondary"
                 onClick={resetView}
-                className="h-8 w-8 p-0 bg-white/90 hover:bg-white text-xs"
+                className="h-8 w-8 p-0 bg-[#00008B] hover:bg-[#00008B]/90 text-white border border-white/20 text-xs"
               >
                 Reset
               </Button>
@@ -236,7 +236,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 text-lg">Category:</span>
-                  <span className="font-semibold text-lg">{product.category}</span>
+                  <span className="font-semibold text-lg text-[#00008B]">{product.category}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 text-lg">Stock:</span>
