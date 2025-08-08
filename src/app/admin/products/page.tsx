@@ -399,21 +399,21 @@ export default function AdminProductsPage() {
                 <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border-blue-200 shadow-lg">
-                  <SelectItem value="all" className="hover:bg-blue-50">All Categories</SelectItem>
-                  <SelectItem value="Electronics" className="hover:bg-blue-50">Electronics</SelectItem>
-                  <SelectItem value="Fashion" className="hover:bg-blue-50">Fashion</SelectItem>
-                  <SelectItem value="Food & Beverages" className="hover:bg-blue-50">Food & Beverages</SelectItem>
-                  <SelectItem value="Sports & Fitness" className="hover:bg-blue-50">Sports & Fitness</SelectItem>
-                </SelectContent>
+                                 <SelectContent className="bg-white border-blue-200 shadow-lg">
+                   <SelectItem value="all" className="hover:bg-blue-50 text-blue-700">All Categories</SelectItem>
+                   <SelectItem value="Electronics" className="hover:bg-blue-50 text-blue-700">Electronics</SelectItem>
+                   <SelectItem value="Fashion" className="hover:bg-blue-50 text-blue-700">Fashion</SelectItem>
+                   <SelectItem value="Food & Beverages" className="hover:bg-blue-50 text-blue-700">Food & Beverages</SelectItem>
+                   <SelectItem value="Sports & Fitness" className="hover:bg-blue-50 text-blue-700">Sports & Fitness</SelectItem>
+                 </SelectContent>
               </Select>
-              <div className="text-sm text-indigo-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100">
-                <Filter className="h-4 w-4 mr-2 text-indigo-500" />
-                <span className="font-medium">{filteredProducts.length}</span>
-                <span className="mx-1">of</span>
-                <span className="font-medium">{products.length}</span>
-                <span className="ml-1">products</span>
-              </div>
+                             <div className="text-sm text-blue-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100">
+                 <Filter className="h-4 w-4 mr-2 text-blue-500" />
+                 <span className="font-medium text-blue-800">{filteredProducts.length}</span>
+                 <span className="mx-1 text-blue-600">of</span>
+                 <span className="font-medium text-blue-800">{products.length}</span>
+                 <span className="ml-1 text-blue-600">products</span>
+               </div>
               <div className="flex items-center space-x-2">
                 <Button
                   variant={viewMode === 'grid' ? 'default' : 'outline'}
