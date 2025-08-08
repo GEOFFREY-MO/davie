@@ -1,103 +1,107 @@
 'use client'
 
-import { useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ProductCard } from './product-card'
-import { Product } from '@/types'
+import { Badge } from '@/components/ui/badge'
+import { Star, ShoppingCart, Eye } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import ProductCard from './product-card'
 
-interface FeaturedProductsProps {
-  products: Product[]
-  onAddToCart?: (product: Product) => void
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  category: string
+  image: string
+  stock: number
+  featured: boolean
+  bestSeller: boolean
 }
 
-export function FeaturedProducts({ products, onAddToCart }: FeaturedProductsProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const productsPerPage = 4
-  const totalPages = Math.ceil(products.length / productsPerPage)
+export default function FeaturedProducts() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
-  const nextPage = () => {
-    setCurrentIndex((prev) => (prev + 1) % totalPages)
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const response = await fetch('/api/products?featured=true')
+        if (response.ok) {
+          const data = await response.json()
+          setProducts(data)
+        } else {
+          console.error('Failed to fetch featured products')
+        }
+      } catch (error) {
+        console.error('Error fetching featured products:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchFeaturedProducts()
+  }, [])
+
+  if (loading) {
+    return (
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+            <p className="text-lg text-gray-600">Discover our handpicked selection of premium items</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="bg-gray-200 h-64 rounded-lg mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
   }
 
-  const prevPage = () => {
-    setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages)
+  if (products.length === 0) {
+    return (
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+            <p className="text-lg text-gray-600">Discover our handpicked selection of premium items</p>
+          </div>
+          <div className="text-center py-12">
+            <p className="text-gray-500">No featured products available at the moment.</p>
+          </div>
+        </div>
+      </section>
+    )
   }
-
-  const currentProducts = products.slice(
-    currentIndex * productsPerPage,
-    (currentIndex + 1) * productsPerPage
-  )
 
   return (
-         <section className="py-16 bg-[#00008B] text-white">
+    <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
         <div className="text-center mb-12">
-                     <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Featured Products
-          </h2>
-                     <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-            Discover our handpicked selection of premium products that our customers love
-          </p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+          <p className="text-lg text-gray-600">Discover our handpicked selection of premium items</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} viewMode="grid" />
+          ))}
         </div>
 
-        {/* Products Grid */}
-        <div className="relative">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {currentProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={onAddToCart}
-              />
-            ))}
-          </div>
-
-          {/* Navigation Buttons */}
-          {totalPages > 1 && (
-            <>
-                             <Button
-                 variant="outline"
-                 size="icon"
-                 className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-[hsl(var(--color-background))] border shadow-lg hover:bg-[hsl(var(--color-accent))] hover:text-[hsl(var(--color-accent-foreground))]"
-                 onClick={prevPage}
-               >
-                 <ChevronLeft className="h-4 w-4" />
-               </Button>
-               
-               <Button
-                 variant="outline"
-                 size="icon"
-                 className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-[hsl(var(--color-background))] border shadow-lg hover:bg-[hsl(var(--color-accent))] hover:text-[hsl(var(--color-accent-foreground))]"
-                 onClick={nextPage}
-               >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </>
-          )}
-        </div>
-
-        {/* Pagination Dots */}
-        {totalPages > 1 && (
-          <div className="flex justify-center mt-8 space-x-2">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i}
-                                 className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                   i === currentIndex
-                     ? 'bg-[hsl(var(--color-primary))]'
-                     : 'bg-[hsl(var(--color-muted))] hover:bg-[hsl(var(--color-muted-foreground)/0.5)]'
-                 }`}
-                onClick={() => setCurrentIndex(i)}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* View All Button */}
         <div className="text-center mt-12">
-          <Button size="lg" className="btn-primary">
+          <Button
+            onClick={() => router.push('/products')}
+            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
             View All Products
           </Button>
         </div>

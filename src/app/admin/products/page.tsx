@@ -11,13 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { 
-  Plus, 
   Package, 
-  Edit, 
-  Trash2, 
-  Search, 
+  Plus,
+  Edit,
+  Trash2,
+  Search,
   Filter,
-  Eye,
   Grid,
   List
 } from 'lucide-react'
@@ -34,6 +33,8 @@ interface Product {
   stock: number
   featured: boolean
   bestSeller: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 export default function AdminProductsPage() {
@@ -49,10 +50,10 @@ export default function AdminProductsPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    price: '',
+    price: 0,
     category: '',
     image: '',
-    stock: '',
+    stock: 0,
     featured: false,
     bestSeller: false
   })
@@ -65,44 +66,24 @@ export default function AdminProductsPage() {
   }, [session, status, router])
 
   useEffect(() => {
-    const mockProducts: Product[] = [
-      {
-        id: '1',
-        name: 'Premium Wireless Headphones',
-        description: 'High-quality wireless headphones with noise cancellation.',
-        price: 15000,
-        category: 'Electronics',
-        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-        stock: 25,
-        featured: true,
-        bestSeller: true,
-      },
-      {
-        id: '2',
-        name: 'Smart Fitness Watch',
-        description: 'Advanced fitness tracking with heart rate monitoring.',
-        price: 25000,
-        category: 'Electronics',
-        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
-        stock: 15,
-        featured: true,
-        bestSeller: true,
-      },
-      {
-        id: '3',
-        name: 'Designer Leather Bag',
-        description: 'Handcrafted leather bag with premium materials.',
-        price: 8500,
-        category: 'Fashion',
-        image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop',
-        stock: 30,
-        featured: true,
-        bestSeller: false,
-      },
-    ]
-    setProducts(mockProducts)
-    setFilteredProducts(mockProducts)
+    fetchProducts()
   }, [])
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch('/api/products')
+      if (response.ok) {
+        const data = await response.json()
+        setProducts(data)
+        setFilteredProducts(data)
+      } else {
+        toast.error('Failed to fetch products')
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error)
+      toast.error('Error fetching products')
+    }
+  }
 
   useEffect(() => {
     let filtered = products
@@ -110,7 +91,8 @@ export default function AdminProductsPage() {
     if (searchTerm) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
@@ -122,27 +104,9 @@ export default function AdminProductsPage() {
   }, [products, searchTerm, selectedCategory])
 
   const handleAddProduct = () => {
-    if (!formData.name || !formData.price || !formData.category) {
-      toast.error('Please fill in all required fields')
-      return
-    }
-
-    const newProduct: Product = {
-      id: Date.now().toString(),
-      name: formData.name,
-      description: formData.description,
-      price: parseFloat(formData.price),
-      category: formData.category,
-      image: formData.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-      stock: parseInt(formData.stock) || 0,
-      featured: formData.featured,
-      bestSeller: formData.bestSeller,
-    }
-
-    setProducts([...products, newProduct])
-    setIsModalOpen(false)
+    setEditingProduct(null)
     resetForm()
-    toast.success('Product added successfully!')
+    setIsModalOpen(true)
   }
 
   const handleEditProduct = (product: Product) => {
@@ -150,46 +114,75 @@ export default function AdminProductsPage() {
     setFormData({
       name: product.name,
       description: product.description,
-      price: product.price.toString(),
+      price: product.price,
       category: product.category,
       image: product.image,
-      stock: product.stock.toString(),
+      stock: product.stock,
       featured: product.featured,
       bestSeller: product.bestSeller
     })
     setIsModalOpen(true)
   }
 
-  const handleUpdateProduct = () => {
-    if (!editingProduct) return
+  const handleSaveProduct = async () => {
+    if (!formData.name || !formData.description || !formData.price || !formData.category || !formData.image) {
+      toast.error('Please fill in all required fields')
+      return
+    }
 
-    const updatedProducts = products.map(product =>
-      product.id === editingProduct.id
-        ? {
-            ...product,
-            name: formData.name,
-            description: formData.description,
-            price: parseFloat(formData.price),
-            category: formData.category,
-            image: formData.image,
-            stock: parseInt(formData.stock) || 0,
-            featured: formData.featured,
-            bestSeller: formData.bestSeller,
-          }
-        : product
-    )
+    try {
+      const url = editingProduct ? `/api/products/${editingProduct.id}` : '/api/products'
+      const method = editingProduct ? 'PUT' : 'POST'
 
-    setProducts(updatedProducts)
-    setIsModalOpen(false)
-    setEditingProduct(null)
-    resetForm()
-    toast.success('Product updated successfully!')
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (response.ok) {
+        const savedProduct = await response.json()
+        
+        if (editingProduct) {
+          setProducts(products.map(p => p.id === editingProduct.id ? savedProduct : p))
+          toast.success('Product updated successfully!')
+        } else {
+          setProducts([...products, savedProduct])
+          toast.success('Product created successfully!')
+        }
+        
+        setIsModalOpen(false)
+        setEditingProduct(null)
+        resetForm()
+      } else {
+        const error = await response.json()
+        toast.error(error.error || 'Failed to save product')
+      }
+    } catch (error) {
+      console.error('Error saving product:', error)
+      toast.error('Error saving product')
+    }
   }
 
-  const handleDeleteProduct = (productId: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      setProducts(products.filter(product => product.id !== productId))
-      toast.success('Product deleted successfully!')
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm('Are you sure you want to delete this product?')) return
+
+    try {
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        setProducts(products.filter(p => p.id !== productId))
+        toast.success('Product deleted successfully!')
+      } else {
+        toast.error('Failed to delete product')
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      toast.error('Error deleting product')
     }
   }
 
@@ -197,10 +190,10 @@ export default function AdminProductsPage() {
     setFormData({
       name: '',
       description: '',
-      price: '',
+      price: 0,
       category: '',
       image: '',
-      stock: '',
+      stock: 0,
       featured: false,
       bestSeller: false
     })
@@ -243,141 +236,133 @@ export default function AdminProductsPage() {
                 <p className="text-gray-300 mt-1">Full CRUD operations for products</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Button 
-                onClick={() => router.push('/admin/dashboard')}
-                variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300"
-              >
-                Back to Dashboard
-              </Button>
-              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogTrigger asChild>
-                                     <Button 
-                     onClick={() => {
-                       setEditingProduct(null)
-                       resetForm()
-                     }}
-                     className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-                   >
-                     <Plus className="h-4 w-4 mr-2" />
-                     Add Product
-                   </Button>
-                </DialogTrigger>
-                                 <DialogContent className="max-w-2xl bg-white border-0 shadow-2xl">
-                   <DialogHeader className="border-b border-blue-100 pb-4">
-                     <DialogTitle className="text-2xl font-bold text-blue-800">
-                       {editingProduct ? 'Edit Product' : 'Add New Product'}
-                     </DialogTitle>
-                     <DialogDescription className="text-blue-600 mt-2">
-                       {editingProduct ? 'Update product information' : 'Create a new product listing'}
-                     </DialogDescription>
-                   </DialogHeader>
-                   <div className="space-y-6 pt-4">
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                       <div>
-                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Product Name *</label>
-                         <Input
-                           value={formData.name}
-                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                           placeholder="Enter product name"
-                           className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                         />
-                       </div>
-                       <div>
-                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Category *</label>
-                                                   <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                            <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
-                              <SelectValue placeholder="Select category" className="text-blue-600" />
-                            </SelectTrigger>
-                           <SelectContent className="bg-white border-blue-200">
-                             <SelectItem value="Electronics" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Electronics</SelectItem>
-                             <SelectItem value="Fashion" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Fashion</SelectItem>
-                             <SelectItem value="Food & Beverages" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Food & Beverages</SelectItem>
-                             <SelectItem value="Sports & Fitness" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Sports & Fitness</SelectItem>
-                           </SelectContent>
-                         </Select>
-                       </div>
-                     </div>
-                     
-                     <div>
-                       <label className="text-sm font-semibold text-blue-700 mb-2 block">Description</label>
-                       <Textarea
-                         value={formData.description}
-                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                         placeholder="Enter product description"
-                         rows={3}
-                         className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                       />
-                     </div>
-
-                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                       <div>
-                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Price (KES) *</label>
-                         <Input
-                           type="number"
-                           value={formData.price}
-                           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                           placeholder="0"
-                           className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                         />
-                       </div>
-                       <div>
-                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Stock Quantity</label>
-                         <Input
-                           type="number"
-                           value={formData.stock}
-                           onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                           placeholder="0"
-                           className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                         />
-                       </div>
-                       <div>
-                         <label className="text-sm font-semibold text-blue-700 mb-2 block">Image URL</label>
-                         <Input
-                           value={formData.image}
-                           onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                           placeholder="https://example.com/image.jpg"
-                           className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                         />
-                       </div>
-                     </div>
-
-                     <div className="flex space-x-6">
-                       <div className="flex items-center space-x-2">
-                         <input
-                           type="checkbox"
-                           id="featured"
-                           checked={formData.featured}
-                           onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                           className="text-blue-600 focus:ring-blue-500 border-blue-300"
-                         />
-                         <label htmlFor="featured" className="text-sm font-medium text-blue-700">Featured Product</label>
-                       </div>
-                       <div className="flex items-center space-x-2">
-                         <input
-                           type="checkbox"
-                           id="bestSeller"
-                           checked={formData.bestSeller}
-                           onChange={(e) => setFormData({ ...formData, bestSeller: e.target.checked })}
-                           className="text-blue-600 focus:ring-blue-500 border-blue-300"
-                         />
-                         <label htmlFor="bestSeller" className="text-sm font-medium text-blue-700">Best Seller</label>
-                       </div>
-                     </div>
-
-                     <div className="flex space-x-2 pt-4 border-t border-blue-100">
-                       <Button 
-                         onClick={editingProduct ? handleUpdateProduct : handleAddProduct}
-                         className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-                       >
-                         {editingProduct ? 'Update Product' : 'Add Product'}
-                       </Button>
-                     </div>
-                   </div>
-                 </DialogContent>
-              </Dialog>
-            </div>
+            <Button
+              onClick={() => router.push('/admin/dashboard')}
+              variant="outline"
+              className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300"
+            >
+              Back to Dashboard
+            </Button>
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  onClick={() => {
+                    setEditingProduct(null)
+                    resetForm()
+                  }}
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Product
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl bg-white border-0 shadow-2xl">
+                <DialogHeader className="border-b border-blue-100 pb-4">
+                  <DialogTitle className="text-2xl font-bold text-blue-800">
+                    {editingProduct ? 'Edit Product' : 'Add New Product'}
+                  </DialogTitle>
+                  <DialogDescription className="text-blue-600 mt-2">
+                    {editingProduct ? 'Update product information' : 'Create a new product listing'}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-6 pt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Product Name *</label>
+                      <Input
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="Enter product name"
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Category *</label>
+                      <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                        <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
+                          <SelectValue placeholder="Select category" className="text-blue-600" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white border-blue-200">
+                          <SelectItem value="Electronics" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Electronics</SelectItem>
+                          <SelectItem value="Fashion" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Fashion</SelectItem>
+                          <SelectItem value="Food & Beverages" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Food & Beverages</SelectItem>
+                          <SelectItem value="Sports & Fitness" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Sports & Fitness</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Description *</label>
+                    <Textarea
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Enter product description"
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Price (KES) *</label>
+                      <Input
+                        type="number"
+                        value={formData.price}
+                        onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                        placeholder="0"
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Stock Quantity</label>
+                      <Input
+                        type="number"
+                        value={formData.stock}
+                        onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                        placeholder="0"
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Image URL *</label>
+                      <Input
+                        value={formData.image}
+                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                        placeholder="https://example.com/image.jpg"
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex space-x-4">
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.featured}
+                        onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                        className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="text-sm font-semibold text-blue-700">Featured Product</span>
+                    </label>
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.bestSeller}
+                        onChange={(e) => setFormData({ ...formData, bestSeller: e.target.checked })}
+                        className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="text-sm font-semibold text-blue-700">Best Seller</span>
+                    </label>
+                  </div>
+                  <div className="flex space-x-2 pt-4 border-t border-blue-100">
+                    <Button 
+                      onClick={handleSaveProduct}
+                      className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      {editingProduct ? 'Update Product' : 'Add Product'}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>
@@ -395,55 +380,55 @@ export default function AdminProductsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-4 w-4" />
-                                 <Input
-                   placeholder="Search products..."
-                   value={searchTerm}
-                   onChange={(e) => setSearchTerm(e.target.value)}
-                   className="pl-10 border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-blue-700 placeholder-blue-400"
-                 />
+                <Input
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-blue-700 placeholder-blue-400"
+                />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                                 <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700">
-                   <SelectValue placeholder="Select category" />
-                 </SelectTrigger>
-                                 <SelectContent className="bg-white border-blue-200 shadow-lg">
-                   <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">All Categories</SelectItem>
-                   <SelectItem value="Electronics" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Electronics</SelectItem>
-                   <SelectItem value="Fashion" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Fashion</SelectItem>
-                   <SelectItem value="Food & Beverages" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Food & Beverages</SelectItem>
-                   <SelectItem value="Sports & Fitness" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Sports & Fitness</SelectItem>
-                 </SelectContent>
+                <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-blue-200 shadow-lg">
+                  <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">All Categories</SelectItem>
+                  <SelectItem value="Electronics" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Electronics</SelectItem>
+                  <SelectItem value="Fashion" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Fashion</SelectItem>
+                  <SelectItem value="Food & Beverages" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Food & Beverages</SelectItem>
+                  <SelectItem value="Sports & Fitness" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Sports & Fitness</SelectItem>
+                </SelectContent>
               </Select>
-                             <div className="text-sm text-blue-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100 cursor-pointer">
-                 <Filter className="h-4 w-4 mr-2 text-blue-500" />
-                 <span className="font-medium text-blue-800">{filteredProducts.length}</span>
-                 <span className="mx-1 text-blue-600">of</span>
-                 <span className="font-medium text-blue-800">{products.length}</span>
-                 <span className="ml-1 text-blue-600">products</span>
-               </div>
+              <div className="text-sm text-blue-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100 cursor-pointer">
+                <Filter className="h-4 w-4 mr-2 text-blue-500" />
+                <span className="font-medium text-blue-800">{filteredProducts.length}</span>
+                <span className="mx-1 text-blue-600">of</span>
+                <span className="font-medium text-blue-800">{products.length}</span>
+                <span className="ml-1 text-blue-600">products</span>
+              </div>
               <div className="flex items-center space-x-2">
-                                 <Button
-                   variant={viewMode === 'grid' ? 'default' : 'outline'}
-                   size="sm"
-                   onClick={() => setViewMode('grid')}
-                   className={`cursor-pointer ${viewMode === 'grid' 
-                     ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md' 
-                     : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
-                   }`}
-                 >
-                   <Grid className="h-4 w-4" />
-                 </Button>
-                 <Button
-                   variant={viewMode === 'list' ? 'default' : 'outline'}
-                   size="sm"
-                   onClick={() => setViewMode('list')}
-                   className={`cursor-pointer ${viewMode === 'list' 
-                     ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md' 
-                     : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
-                   }`}
-                 >
-                   <List className="h-4 w-4" />
-                 </Button>
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
+                  className={`cursor-pointer ${viewMode === 'grid'
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md'
+                    : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
+                  }`}
+                >
+                  <Grid className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'list' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                  className={`cursor-pointer ${viewMode === 'list'
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0 shadow-md'
+                    : 'border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 shadow-sm'
+                  }`}
+                >
+                  <List className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </CardContent>
@@ -485,23 +470,23 @@ export default function AdminProductsPage() {
                       </div>
                     </div>
                     <div className="flex space-x-2 pt-2">
-                                             <Button 
-                         variant="outline" 
-                         size="sm" 
-                         onClick={() => handleEditProduct(product)} 
-                         className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer"
-                       >
-                         <Edit className="h-4 w-4 mr-2" />
-                         Edit
-                       </Button>
-                       <Button
-                         variant="outline"
-                         size="sm"
-                         onClick={() => handleDeleteProduct(product.id)}
-                         className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300 cursor-pointer"
-                       >
-                         <Trash2 className="h-4 w-4" />
-                       </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditProduct(product)}
+                        className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer"
+                      >
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteProduct(product.id)}
+                        className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300 cursor-pointer"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -541,22 +526,22 @@ export default function AdminProductsPage() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                                             <Button 
-                         variant="outline" 
-                         size="sm" 
-                         onClick={() => handleEditProduct(product)}
-                         className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer"
-                       >
-                         <Edit className="h-4 w-4" />
-                       </Button>
-                       <Button
-                         variant="outline"
-                         size="sm"
-                         onClick={() => handleDeleteProduct(product.id)}
-                         className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300 cursor-pointer"
-                       >
-                         <Trash2 className="h-4 w-4" />
-                       </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditProduct(product)}
+                        className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteProduct(product.id)}
+                        className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300 cursor-pointer"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </CardContent>
@@ -571,23 +556,23 @@ export default function AdminProductsPage() {
               <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2 text-gray-800">No products found</h3>
               <p className="text-gray-600 mb-4">
-                {searchTerm || selectedCategory !== 'all' 
+                {searchTerm || selectedCategory !== 'all'
                   ? 'Try adjusting your search or filters'
                   : 'Get started by adding your first product'
                 }
               </p>
               {!searchTerm && selectedCategory === 'all' && (
-                                 <Button 
-                   onClick={() => {
-                     setEditingProduct(null)
-                     resetForm()
-                     setIsModalOpen(true)
-                   }}
-                   className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-                 >
-                   <Plus className="h-4 w-4 mr-2" />
-                   Add Product
-                 </Button>
+                <Button
+                  onClick={() => {
+                    setEditingProduct(null)
+                    resetForm()
+                    setIsModalOpen(true)
+                  }}
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Product
+                </Button>
               )}
             </CardContent>
           </Card>

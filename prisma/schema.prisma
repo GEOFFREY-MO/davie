@@ -45,6 +45,10 @@ model Order {
   status          OrderStatus @default(PENDING)
   shippingAddress String
   paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus @default(PENDING)
+  trackingNumber  String?
+  notes           String?
+  estimatedDelivery DateTime?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   userId          String?
@@ -56,6 +60,7 @@ model OrderItem {
   id          String  @id @default(cuid())
   productId   String
   productName String
+  productImage String
   quantity    Int
   price       Float
   total       Float
@@ -65,15 +70,34 @@ model OrderItem {
 }
 
 model Offer {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  image       String
-  active      Boolean  @default(true)
-  startDate   DateTime
-  endDate     DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                 String         @id @default(cuid())
+  title              String
+  description        String
+  discountPercentage Int
+  startDate          DateTime
+  endDate            DateTime
+  status             OfferStatus    @default(ACTIVE)
+  targetAudience     TargetAudience @default(ALL)
+  minimumPurchase    Float?
+  maximumDiscount    Float?
+  usageLimit         Int?
+  usedCount          Int            @default(0)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+}
+
+model Banner {
+  id        String      @id @default(cuid())
+  title     String
+  imageUrl  String
+  altText   String
+  linkUrl   String?
+  status    BannerStatus @default(ACTIVE)
+  position  BannerPosition @default(HERO)
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }
 
 enum Role {
@@ -93,4 +117,34 @@ enum PaymentMethod {
   MPESA
   CASH
   CARD
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum OfferStatus {
+  ACTIVE
+  INACTIVE
+  SCHEDULED
+}
+
+enum TargetAudience {
+  ALL
+  NEW
+  EXISTING
+  VIP
+}
+
+enum BannerStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum BannerPosition {
+  HERO
+  SIDEBAR
+  FOOTER
 } 
