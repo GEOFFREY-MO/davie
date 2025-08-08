@@ -85,7 +85,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
   // Product Detail Modal
   const ProductDetailModal = () => (
     <Dialog open={showModal} onOpenChange={setShowModal}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-white">
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-white">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-gray-900 flex items-center justify-between">
             <span>{product.name}</span>
@@ -100,9 +100,9 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 p-8">
           {/* Image Section with Zoom */}
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="relative">
               {/* Zoom Controls */}
               <div className="absolute top-2 right-2 z-10 flex space-x-2">
@@ -224,7 +224,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           </div>
 
           {/* Product Info */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h2>
             </div>
@@ -243,7 +243,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Category:</span>
                 <span className="font-semibold">{product.category}</span>
