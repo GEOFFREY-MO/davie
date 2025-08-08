@@ -288,7 +288,7 @@ export default function AdminProductsPage() {
                          <label className="text-sm font-semibold text-blue-700 mb-2 block">Category *</label>
                                                    <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
                             <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
-                              <SelectValue placeholder="Select category" className="text-blue-400" />
+                              <SelectValue placeholder="Select category" className="text-blue-600" />
                             </SelectTrigger>
                            <SelectContent className="bg-white border-blue-200">
                              <SelectItem value="Electronics" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Electronics</SelectItem>
