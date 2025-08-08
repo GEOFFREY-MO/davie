@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart, Star, Eye, X, ZoomIn, ZoomOut, RotateCw } from 'lucide-react'
+import { ShoppingCart, Star, Eye, X, ZoomIn, ZoomOut, RotateCw, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -22,6 +22,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
   const [rotation, setRotation] = useState(0)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isZooming, setIsZooming] = useState(false)
+  const [showDescription, setShowDescription] = useState(false)
   const imageRef = useRef<HTMLDivElement>(null)
 
   const handleAddToCart = () => {
@@ -36,6 +37,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
     setShowModal(true)
     setZoomLevel(1)
     setRotation(0)
+    setShowDescription(false)
   }
 
   const handleZoomIn = () => {
@@ -74,6 +76,10 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
     setZoomLevel(1)
     setRotation(0)
     setIsZooming(false)
+  }
+
+  const toggleDescription = () => {
+    setShowDescription(!showDescription)
   }
 
   // Product Detail Modal
@@ -137,7 +143,9 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
               {/* Zoomable Image */}
               <div
                 ref={imageRef}
-                className="relative aspect-square overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in"
+                className={`relative overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in transition-all duration-300 ${
+                  showDescription ? 'aspect-video' : 'aspect-square'
+                }`}
                 onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -186,19 +194,39 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 <ShoppingCart className="h-4 w-4 mr-2" />
                 {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
               </Button>
-              <Link href={`/products/${product.id}`}>
-                <Button className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold">
-                  View Details
-                </Button>
-              </Link>
+              <Button 
+                onClick={toggleDescription}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold"
+              >
+                {showDescription ? (
+                  <>
+                    <ChevronUp className="h-4 w-4 mr-2" />
+                    Hide Details
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4 mr-2" />
+                    View Details
+                  </>
+                )}
+              </Button>
             </div>
+
+            {/* Description Section */}
+            {showDescription && (
+              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 className="font-semibold text-gray-900 mb-2">Product Description</h3>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {product.description}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Product Info */}
           <div className="space-y-6">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h2>
-              <p className="text-gray-500 text-sm italic">Click "View Details" to see full description</p>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -316,7 +344,9 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                   <h3 className="font-semibold text-xl mb-2 group-hover:text-primary transition-colors text-gray-900">
                     {product.name}
                   </h3>
-                  <p className="text-gray-500 text-sm italic mb-3">Click "View Details" to see full description</p>
+                  <p className="text-gray-700 mb-3">
+                    {product.description}
+                  </p>
                   
                   <div className="flex items-center space-x-4 mb-4">
                     <div className="flex items-center space-x-1">
@@ -432,8 +462,8 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
             <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors text-gray-900">
               {product.name}
             </h3>
-            <p className="text-gray-500 text-sm italic line-clamp-1">
-              Click "View Details" to see full description
+            <p className="text-gray-700 text-sm line-clamp-2">
+              {product.description}
             </p>
           </div>
 
