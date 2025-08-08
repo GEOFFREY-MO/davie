@@ -85,7 +85,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
     // Product Detail Modal
   const ProductDetailModal = () => (
     <Dialog open={showModal} onOpenChange={setShowModal}>
-      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-white">
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto bg-white">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-gray-900 flex items-center justify-between">
             <span>{product.name}</span>
@@ -100,9 +100,9 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col h-full">
-          {/* Fixed Image Section at Top */}
-          <div className="relative mx-auto max-w-2xl p-8 pb-4">
+        <div className="space-y-8 p-8">
+          {/* Image Section at Top - Fixed Size */}
+          <div className="relative mx-auto max-w-2xl">
             {/* Zoom Controls */}
             <div className="absolute top-2 right-2 z-10 flex space-x-2">
               <Button
@@ -139,12 +139,10 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
               </Button>
             </div>
 
-            {/* Zoomable Image */}
+            {/* Zoomable Image - Fixed Square Aspect */}
             <div
               ref={imageRef}
-              className={`relative overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in transition-all duration-300 ${
-                showDescription ? 'aspect-video' : 'aspect-square'
-              }`}
+              className="relative overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in transition-all duration-300 aspect-square"
               onMouseMove={handleMouseMove}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
@@ -180,110 +178,105 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
             </div>
           </div>
 
-          {/* Scrollable Content Section */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="px-8">
-              {/* Two Columns Below Image */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pt-4">
-                {/* Left Column - Product Actions */}
-                <div className="space-y-6">
-                  <div className="flex flex-col space-y-4">
-                    <Button
-                      onClick={() => {
-                        handleAddToCart()
-                        setShowModal(false)
-                      }}
-                      className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white py-4 text-lg font-semibold"
-                      disabled={product.stock === 0}
-                    >
-                      <ShoppingCart className="h-5 w-5 mr-3" />
-                      {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                    </Button>
-                    <Button 
-                      onClick={toggleDescription}
-                      className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 text-lg"
-                    >
-                      {showDescription ? (
-                        <>
-                          <ChevronUp className="h-5 w-5 mr-3" />
-                          Hide Details
-                        </>
-                      ) : (
-                        <>
-                          <ChevronDown className="h-5 w-5 mr-3" />
-                          View Details
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
+          {/* Two Columns Below Image */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Left Column - Product Actions */}
+            <div className="space-y-6">
+              <div className="flex flex-col space-y-4">
+                <Button
+                  onClick={() => {
+                    handleAddToCart()
+                    setShowModal(false)
+                  }}
+                  className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white py-4 text-lg font-semibold"
+                  disabled={product.stock === 0}
+                >
+                  <ShoppingCart className="h-5 w-5 mr-3" />
+                  {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                </Button>
+                <Button 
+                  onClick={toggleDescription}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 text-lg"
+                >
+                  {showDescription ? (
+                    <>
+                      <ChevronUp className="h-5 w-5 mr-3" />
+                      Hide Details
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-5 w-5 mr-3" />
+                      View Details
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
 
-                {/* Right Column - Product Info */}
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h2>
-                  </div>
+            {/* Right Column - Product Info */}
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h2>
+              </div>
 
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={`h-6 w-6 ${
-                            i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                          }`} 
-                        />
-                      ))}
-                      <span className="text-gray-600 ml-2 text-lg">(4.0)</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600 text-lg">Category:</span>
-                      <span className="font-semibold text-lg">{product.category}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600 text-lg">Stock:</span>
-                      <span className={`font-semibold text-lg ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {product.stock > 0 ? `${product.stock} available` : 'Out of Stock'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600 text-lg">Price:</span>
-                      <span className="text-4xl font-bold text-[#00008B]">
-                        KES {product.price.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Badges */}
-                  <div className="flex space-x-3">
-                    {product.featured && (
-                      <span className="bg-[#00FFEF] text-black text-sm px-4 py-2 rounded-full font-medium">
-                        Featured
-                      </span>
-                    )}
-                    {product.bestSeller && (
-                      <span className="bg-[#10B981] text-white text-sm px-4 py-2 rounded-full font-medium">
-                        Best Seller
-                      </span>
-                    )}
-                  </div>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      className={`h-6 w-6 ${
+                        i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                      }`} 
+                    />
+                  ))}
+                  <span className="text-gray-600 ml-2 text-lg">(4.0)</span>
                 </div>
               </div>
 
-              {/* Description Section - Full Width Row */}
-              {showDescription && (
-                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 mt-8 mb-8">
-                  <h3 className="font-semibold text-gray-900 mb-4 text-xl">Product Description</h3>
-                  <p className="text-gray-700 text-lg leading-relaxed">
-                    {product.description}
-                  </p>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600 text-lg">Category:</span>
+                  <span className="font-semibold text-lg">{product.category}</span>
                 </div>
-              )}
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600 text-lg">Stock:</span>
+                  <span className={`font-semibold text-lg ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.stock > 0 ? `${product.stock} available` : 'Out of Stock'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600 text-lg">Price:</span>
+                  <span className="text-4xl font-bold text-[#00008B]">
+                    KES {product.price.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Badges */}
+              <div className="flex space-x-3">
+                {product.featured && (
+                  <span className="bg-[#00FFEF] text-black text-sm px-4 py-2 rounded-full font-medium">
+                    Featured
+                  </span>
+                )}
+                {product.bestSeller && (
+                  <span className="bg-[#10B981] text-white text-sm px-4 py-2 rounded-full font-medium">
+                    Best Seller
+                  </span>
+                )}
+              </div>
             </div>
           </div>
+
+          {/* Description Section - Full Width Row Below */}
+          {showDescription && (
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <h3 className="font-semibold text-gray-900 mb-4 text-xl">Product Description</h3>
+              <p className="text-gray-700 text-lg leading-relaxed">
+                {product.description}
+              </p>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
