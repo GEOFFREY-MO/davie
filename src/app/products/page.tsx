@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { ProductCard } from '@/components/product/product-card'
+import { PromotionalOffers } from '@/components/promotional/promotional-offers'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -97,6 +98,21 @@ export default function ProductsPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold mb-2">Our Products</h1>
             <p className="text-white/80">Discover amazing tech products at DAVIETECH</p>
+          </div>
+        </div>
+
+        {/* Promotional Offers Section */}
+        <div className="bg-gradient-to-r from-[#00008B] to-[#00008B]/90 py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Special Offers Available
+              </h2>
+              <p className="text-white/80">
+                Take advantage of these amazing deals while shopping!
+              </p>
+            </div>
+            <PromotionalOffers />
           </div>
         </div>
 

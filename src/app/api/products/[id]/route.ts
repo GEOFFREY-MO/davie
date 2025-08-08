@@ -3,14 +3,15 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth'
 import { db } from '@/lib/db'
 
-// GET - Public access to single product
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
+    
     const product = await db.product.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!product) {
@@ -30,10 +31,9 @@ export async function GET(
   }
 }
 
-// PUT - Admin only - Update product
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -45,29 +45,12 @@ export async function PUT(
       )
     }
 
+    const { id } = await params
     const body = await request.json()
-    const { name, description, price, category, image, stock, featured, bestSeller } = body
-
-    // Validate required fields
-    if (!name || !description || !price || !category || !image) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
 
     const product = await db.product.update({
-      where: { id: params.id },
-      data: {
-        name,
-        description,
-        price: parseFloat(price),
-        category,
-        image,
-        stock: parseInt(stock) || 0,
-        featured: featured || false,
-        bestSeller: bestSeller || false
-      }
+      where: { id },
+      data: body
     })
 
     return NextResponse.json(product)
@@ -80,10 +63,9 @@ export async function PUT(
   }
 }
 
-// DELETE - Admin only - Delete product
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -95,8 +77,34 @@ export async function DELETE(
       )
     }
 
+    const { id } = await params
+
+    // First check if the product exists
+    const existingProduct = await db.product.findUnique({
+      where: { id }
+    })
+
+    if (!existingProduct) {
+      return NextResponse.json(
+        { error: 'Product not found' },
+        { status: 404 }
+      )
+    }
+
+    // Check if product is referenced in any orders
+    const orderItems = await db.orderItem.findMany({
+      where: { productId: id }
+    })
+
+    if (orderItems.length > 0) {
+      return NextResponse.json(
+        { error: 'Cannot delete product that is referenced in orders' },
+        { status: 400 }
+      )
+    }
+
     await db.product.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json({ message: 'Product deleted successfully' })

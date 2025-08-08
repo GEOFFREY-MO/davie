@@ -1,36 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth/auth'
 import { db } from '@/lib/db'
 
-// GET - Public access to active banners (for customers)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const position = searchParams.get('position')
     const status = searchParams.get('status')
 
-    let whereClause: any = {}
-
-    // Filter by position
-    if (position && position !== 'all') {
-      whereClause.position = position
+    const whereClause: any = {
+      AND: [
+        {
+          startDate: {
+            lte: new Date()
+          }
+        },
+        {
+          endDate: {
+            gte: new Date()
+          }
+        }
+      ]
     }
 
-    // Filter by status
-    if (status && status !== 'all') {
-      whereClause.status = status
-    } else {
-      // Default to active banners for public access
-      whereClause.status = 'ACTIVE'
+    if (position) {
+      whereClause.position = position.toUpperCase()
     }
 
-    // Only show banners that are currently active (within date range)
-    const now = new Date()
-    whereClause.AND = [
-      { startDate: { lte: now } },
-      { endDate: { gte: now } }
-    ]
+    if (status) {
+      whereClause.status = status.toUpperCase()
+    }
 
     const banners = await db.banner.findMany({
       where: whereClause,
@@ -47,46 +45,28 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Admin only - Create new banner
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session || session.user?.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
     const body = await request.json()
     const {
       title,
       imageUrl,
       altText,
       linkUrl,
-      status,
-      position,
+      status = 'ACTIVE',
+      position = 'HERO',
       startDate,
       endDate
     } = body
-
-    // Validate required fields
-    if (!title || !imageUrl || !altText || !startDate || !endDate) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
 
     const banner = await db.banner.create({
       data: {
         title,
         imageUrl,
         altText,
-        linkUrl: linkUrl || null,
-        status: status || 'ACTIVE',
-        position: position || 'HERO',
+        linkUrl,
+        status: status.toUpperCase(),
+        position: position.toUpperCase(),
         startDate: new Date(startDate),
         endDate: new Date(endDate)
       }

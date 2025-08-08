@@ -1,36 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth/auth'
 import { db } from '@/lib/db'
 
-// GET - Public access to active offers (for customers)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
     const targetAudience = searchParams.get('targetAudience')
 
-    let whereClause: any = {}
-
-    // Filter by status
-    if (status && status !== 'all') {
-      whereClause.status = status
-    } else {
-      // Default to active offers for public access
-      whereClause.status = 'ACTIVE'
+    const whereClause: any = {
+      AND: [
+        {
+          startDate: {
+            lte: new Date()
+          }
+        },
+        {
+          endDate: {
+            gte: new Date()
+          }
+        }
+      ]
     }
 
-    // Filter by target audience
-    if (targetAudience && targetAudience !== 'all') {
-      whereClause.targetAudience = targetAudience
+    if (status) {
+      whereClause.status = status.toUpperCase()
     }
 
-    // Only show offers that are currently active (within date range)
-    const now = new Date()
-    whereClause.AND = [
-      { startDate: { lte: now } },
-      { endDate: { gte: now } }
-    ]
+    if (targetAudience) {
+      whereClause.targetAudience = targetAudience.toUpperCase()
+    }
 
     const offers = await db.offer.findMany({
       where: whereClause,
@@ -47,18 +45,8 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Admin only - Create new offer
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session || session.user?.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
     const body = await request.json()
     const {
       title,
@@ -66,34 +54,25 @@ export async function POST(request: NextRequest) {
       discountPercentage,
       startDate,
       endDate,
-      status,
-      targetAudience,
+      status = 'ACTIVE',
+      targetAudience = 'ALL',
       minimumPurchase,
       maximumDiscount,
       usageLimit
     } = body
 
-    // Validate required fields
-    if (!title || !description || !discountPercentage || !startDate || !endDate) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
-
     const offer = await db.offer.create({
       data: {
         title,
         description,
-        discountPercentage: parseInt(discountPercentage),
+        discountPercentage,
         startDate: new Date(startDate),
         endDate: new Date(endDate),
-        status: status || 'ACTIVE',
-        targetAudience: targetAudience || 'ALL',
-        minimumPurchase: minimumPurchase ? parseFloat(minimumPurchase) : null,
-        maximumDiscount: maximumDiscount ? parseFloat(maximumDiscount) : null,
-        usageLimit: usageLimit ? parseInt(usageLimit) : null,
-        usedCount: 0
+        status: status.toUpperCase(),
+        targetAudience: targetAudience.toUpperCase(),
+        minimumPurchase,
+        maximumDiscount,
+        usageLimit
       }
     })
 
