@@ -118,12 +118,12 @@ export default function ProductsPage() {
                 <SelectTrigger className="bg-white/10 border-white/20 text-white focus:border-[#00FFEF] focus:ring-[#00FFEF]">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="Electronics">Electronics</SelectItem>
-                  <SelectItem value="Fashion">Fashion</SelectItem>
-                  <SelectItem value="Food & Beverages">Food & Beverages</SelectItem>
-                  <SelectItem value="Sports & Fitness">Sports & Fitness</SelectItem>
+                <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                  <SelectItem value="all" className="text-black hover:bg-gray-100">All Categories</SelectItem>
+                  <SelectItem value="Electronics" className="text-black hover:bg-gray-100">Electronics</SelectItem>
+                  <SelectItem value="Fashion" className="text-black hover:bg-gray-100">Fashion</SelectItem>
+                  <SelectItem value="Food & Beverages" className="text-black hover:bg-gray-100">Food & Beverages</SelectItem>
+                  <SelectItem value="Sports & Fitness" className="text-black hover:bg-gray-100">Sports & Fitness</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -131,10 +131,10 @@ export default function ProductsPage() {
                 <SelectTrigger className="bg-white/10 border-white/20 text-white focus:border-[#00FFEF] focus:ring-[#00FFEF]">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="name">Sort by Name</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
+                <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                  <SelectItem value="name" className="text-black hover:bg-gray-100">Sort by Name</SelectItem>
+                  <SelectItem value="price-low" className="text-black hover:bg-gray-100">Price: Low to High</SelectItem>
+                  <SelectItem value="price-high" className="text-black hover:bg-gray-100">Price: High to Low</SelectItem>
                 </SelectContent>
               </Select>
 
