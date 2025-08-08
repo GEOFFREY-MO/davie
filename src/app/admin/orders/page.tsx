@@ -375,7 +375,7 @@ export default function AdminOrdersPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-4 w-4" />
                 <Input
@@ -553,7 +553,7 @@ export default function AdminOrdersPage() {
           {selectedOrder && (
             <div className="space-y-6 pt-4">
               {/* Order Summary */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <Card className="bg-blue-50 border-blue-200">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-semibold text-blue-800">Order Status</CardTitle>
@@ -591,7 +591,7 @@ export default function AdminOrdersPage() {
                   <CardTitle className="text-lg font-semibold text-gray-800">Customer Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Name</p>
                       <p className="text-gray-900">{selectedOrder.customerName}</p>

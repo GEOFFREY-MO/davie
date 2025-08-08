@@ -266,7 +266,7 @@ export default function AdminProductsPage() {
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-6 pt-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-semibold text-blue-700 mb-2 block">Product Name *</label>
                       <Input
@@ -301,7 +301,7 @@ export default function AdminProductsPage() {
                       rows={3}
                     />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                       <label className="text-sm font-semibold text-blue-700 mb-2 block">Price (KES) *</label>
                       <Input
@@ -376,8 +376,8 @@ export default function AdminProductsPage() {
               Filters & Search
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <CardContent className="p-4 sm:p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-4 w-4" />
                 <Input
@@ -436,7 +436,7 @@ export default function AdminProductsPage() {
 
         {/* Products Grid/List */}
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {filteredProducts.map((product) => (
               <Card key={product.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader className="border-b border-gray-100">

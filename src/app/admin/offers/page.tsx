@@ -385,7 +385,7 @@ export default function AdminOffersPage() {
       </div>
 
       <div className="pt-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Promotional Offers */}
           <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -420,7 +420,7 @@ export default function AdminOffersPage() {
                           </Badge>
                         </div>
                         <p className="text-gray-600 mb-3">{offer.description}</p>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                           <div className="flex items-center space-x-2">
                             <Calendar className="h-4 w-4 text-gray-400" />
                             <span className="text-gray-600">
@@ -568,7 +568,7 @@ export default function AdminOffersPage() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-6 pt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-semibold text-blue-700 mb-2 block">Offer Title *</label>
                 <Input
@@ -599,7 +599,7 @@ export default function AdminOffersPage() {
                 rows={3}
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-semibold text-blue-700 mb-2 block">Start Date *</label>
                 <Input
@@ -619,7 +619,7 @@ export default function AdminOffersPage() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-semibold text-blue-700 mb-2 block">Status</label>
                 <Select value={offerFormData.status} onValueChange={(value) => setOfferFormData({ ...offerFormData, status: value as any })}>
@@ -648,7 +648,7 @@ export default function AdminOffersPage() {
                 </Select>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="text-sm font-semibold text-blue-700 mb-2 block">Minimum Purchase (KES)</label>
                 <Input
@@ -741,7 +741,7 @@ export default function AdminOffersPage() {
                 className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="text-sm font-semibold text-blue-700 mb-2 block">Status</label>
                 <Select value={bannerFormData.status} onValueChange={(value) => setBannerFormData({ ...bannerFormData, status: value as any })}>
