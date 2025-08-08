@@ -100,9 +100,9 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-8 p-8">
-          {/* Image Section at Top */}
-          <div className="relative mx-auto max-w-2xl">
+        <div className="flex flex-col h-full">
+          {/* Fixed Image Section at Top */}
+          <div className="relative mx-auto max-w-2xl p-8 pb-4">
             {/* Zoom Controls */}
             <div className="absolute top-2 right-2 z-10 flex space-x-2">
               <Button
@@ -180,8 +180,10 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
             </div>
           </div>
 
-          {/* Two Columns Below Image */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    {/* Scrollable Content Section */}
+          <div className="flex-1 overflow-y-auto px-8">
+            {/* Two Columns Below Image */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pt-4">
             {/* Left Column - Product Actions */}
             <div className="space-y-6">
               <div className="flex flex-col space-y-4">
@@ -270,16 +272,17 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
             </div>
           </div>
 
-          {/* Description Section - Full Width Row */}
-          {showDescription && (
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <h3 className="font-semibold text-gray-900 mb-4 text-xl">Product Description</h3>
-              <p className="text-gray-700 text-lg leading-relaxed">
-                {product.description}
-              </p>
-            </div>
-          )}
-        </div>
+                       {/* Description Section - Full Width Row */}
+             {showDescription && (
+               <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 mt-8">
+                 <h3 className="font-semibold text-gray-900 mb-4 text-xl">Product Description</h3>
+                 <p className="text-gray-700 text-lg leading-relaxed">
+                   {product.description}
+                 </p>
+               </div>
+             )}
+           </div>
+         </div>
       </DialogContent>
     </Dialog>
   )
