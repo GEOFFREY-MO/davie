@@ -198,7 +198,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           <div className="space-y-6">
             <div>
               <h2 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h2>
-              <p className="text-gray-600 text-lg">{product.description}</p>
+              <p className="text-gray-500 text-sm italic">Click "View Details" to see full description</p>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -316,9 +316,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                   <h3 className="font-semibold text-xl mb-2 group-hover:text-primary transition-colors text-gray-900">
                     {product.name}
                   </h3>
-                  <p className="text-gray-700 mb-3">
-                    {product.description}
-                  </p>
+                  <p className="text-gray-500 text-sm italic mb-3">Click "View Details" to see full description</p>
                   
                   <div className="flex items-center space-x-4 mb-4">
                     <div className="flex items-center space-x-1">
@@ -434,8 +432,8 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
             <h3 className="font-semibold text-lg line-clamp-1 group-hover:text-primary transition-colors text-gray-900">
               {product.name}
             </h3>
-            <p className="text-gray-700 text-sm line-clamp-2">
-              {product.description}
+            <p className="text-gray-500 text-sm italic line-clamp-1">
+              Click "View Details" to see full description
             </p>
           </div>
 
