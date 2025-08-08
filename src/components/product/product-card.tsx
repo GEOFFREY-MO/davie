@@ -100,182 +100,185 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 p-8">
-          {/* Image Section with Zoom */}
-          <div className="space-y-6">
-            <div className="relative">
-              {/* Zoom Controls */}
-              <div className="absolute top-2 right-2 z-10 flex space-x-2">
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={handleZoomOut}
-                  className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
-                >
-                  <ZoomOut className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={handleZoomIn}
-                  className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
-                >
-                  <ZoomIn className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={handleRotate}
-                  className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
-                >
-                  <RotateCw className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={resetView}
-                  className="h-8 w-8 p-0 bg-white/90 hover:bg-white text-xs"
-                >
-                  Reset
-                </Button>
-              </div>
-
-              {/* Zoomable Image */}
-              <div
-                ref={imageRef}
-                className={`relative overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in transition-all duration-300 ${
-                  showDescription ? 'aspect-video' : 'aspect-square'
-                }`}
-                onMouseMove={handleMouseMove}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+        <div className="space-y-8 p-8">
+          {/* Image Section at Top */}
+          <div className="relative mx-auto max-w-2xl">
+            {/* Zoom Controls */}
+            <div className="absolute top-2 right-2 z-10 flex space-x-2">
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={handleZoomOut}
+                className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
               >
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover transition-all duration-300"
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={handleZoomIn}
+                className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+              >
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={handleRotate}
+                className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
+              >
+                <RotateCw className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={resetView}
+                className="h-8 w-8 p-0 bg-white/90 hover:bg-white text-xs"
+              >
+                Reset
+              </Button>
+            </div>
+
+            {/* Zoomable Image */}
+            <div
+              ref={imageRef}
+              className={`relative overflow-hidden rounded-lg border border-gray-200 cursor-zoom-in transition-all duration-300 ${
+                showDescription ? 'aspect-video' : 'aspect-square'
+              }`}
+              onMouseMove={handleMouseMove}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                className="object-cover transition-all duration-300"
+                style={{
+                  transform: `scale(${zoomLevel}) rotate(${rotation}deg)`,
+                  transformOrigin: isZooming ? `${mousePosition.x}% ${mousePosition.y}%` : 'center',
+                }}
+              />
+              
+              {/* Lens Effect */}
+              {isZooming && zoomLevel > 1 && (
+                <div
+                  className="absolute w-32 h-32 border-2 border-white shadow-lg rounded-full pointer-events-none"
                   style={{
-                    transform: `scale(${zoomLevel}) rotate(${rotation}deg)`,
-                    transformOrigin: isZooming ? `${mousePosition.x}% ${mousePosition.y}%` : 'center',
+                    left: `${mousePosition.x}%`,
+                    top: `${mousePosition.y}%`,
+                    transform: 'translate(-50%, -50%)',
+                    background: `radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)`,
                   }}
                 />
-                
-                {/* Lens Effect */}
-                {isZooming && zoomLevel > 1 && (
-                  <div
-                    className="absolute w-32 h-32 border-2 border-white shadow-lg rounded-full pointer-events-none"
-                    style={{
-                      left: `${mousePosition.x}%`,
-                      top: `${mousePosition.y}%`,
-                      transform: 'translate(-50%, -50%)',
-                      background: `radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)`,
-                    }}
-                  />
-                )}
-              </div>
-
-              {/* Zoom Level Indicator */}
-              <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-sm">
-                {Math.round(zoomLevel * 100)}%
-              </div>
-            </div>
-
-            {/* Product Actions */}
-            <div className="flex space-x-3">
-              <Button
-                onClick={() => {
-                  handleAddToCart()
-                  setShowModal(false)
-                }}
-                className="flex-1 bg-[#00008B] hover:bg-[#00008B]/90 text-white"
-                disabled={product.stock === 0}
-              >
-                <ShoppingCart className="h-4 w-4 mr-2" />
-                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-              </Button>
-              <Button 
-                onClick={toggleDescription}
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold"
-              >
-                {showDescription ? (
-                  <>
-                    <ChevronUp className="h-4 w-4 mr-2" />
-                    Hide Details
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="h-4 w-4 mr-2" />
-                    View Details
-                  </>
-                )}
-              </Button>
-            </div>
-
-            {/* Description Section */}
-            {showDescription && (
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                <h3 className="font-semibold text-gray-900 mb-2">Product Description</h3>
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  {product.description}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Product Info */}
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h2>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star 
-                    key={i} 
-                    className={`h-5 w-5 ${
-                      i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                    }`} 
-                  />
-                ))}
-                <span className="text-gray-600 ml-2">(4.0)</span>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Category:</span>
-                <span className="font-semibold">{product.category}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Stock:</span>
-                <span className={`font-semibold ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {product.stock > 0 ? `${product.stock} available` : 'Out of Stock'}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Price:</span>
-                <span className="text-3xl font-bold text-[#00008B]">
-                  KES {product.price.toLocaleString()}
-                </span>
-              </div>
-            </div>
-
-            {/* Badges */}
-            <div className="flex space-x-2">
-              {product.featured && (
-                <span className="bg-[#00FFEF] text-black text-sm px-3 py-1 rounded-full font-medium">
-                  Featured
-                </span>
-              )}
-              {product.bestSeller && (
-                <span className="bg-[#10B981] text-white text-sm px-3 py-1 rounded-full font-medium">
-                  Best Seller
-                </span>
               )}
             </div>
+
+            {/* Zoom Level Indicator */}
+            <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-sm">
+              {Math.round(zoomLevel * 100)}%
+            </div>
           </div>
+
+          {/* Two Columns Below Image */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Left Column - Product Actions */}
+            <div className="space-y-6">
+              <div className="flex flex-col space-y-4">
+                <Button
+                  onClick={() => {
+                    handleAddToCart()
+                    setShowModal(false)
+                  }}
+                  className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white py-4 text-lg font-semibold"
+                  disabled={product.stock === 0}
+                >
+                  <ShoppingCart className="h-5 w-5 mr-3" />
+                  {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                </Button>
+                <Button 
+                  onClick={toggleDescription}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 text-lg"
+                >
+                  {showDescription ? (
+                    <>
+                      <ChevronUp className="h-5 w-5 mr-3" />
+                      Hide Details
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-5 w-5 mr-3" />
+                      View Details
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {/* Right Column - Product Info */}
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h2>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      className={`h-6 w-6 ${
+                        i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                      }`} 
+                    />
+                  ))}
+                  <span className="text-gray-600 ml-2 text-lg">(4.0)</span>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600 text-lg">Category:</span>
+                  <span className="font-semibold text-lg">{product.category}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600 text-lg">Stock:</span>
+                  <span className={`font-semibold text-lg ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.stock > 0 ? `${product.stock} available` : 'Out of Stock'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600 text-lg">Price:</span>
+                  <span className="text-4xl font-bold text-[#00008B]">
+                    KES {product.price.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Badges */}
+              <div className="flex space-x-3">
+                {product.featured && (
+                  <span className="bg-[#00FFEF] text-black text-sm px-4 py-2 rounded-full font-medium">
+                    Featured
+                  </span>
+                )}
+                {product.bestSeller && (
+                  <span className="bg-[#10B981] text-white text-sm px-4 py-2 rounded-full font-medium">
+                    Best Seller
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Description Section - Full Width Row */}
+          {showDescription && (
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <h3 className="font-semibold text-gray-900 mb-4 text-xl">Product Description</h3>
+              <p className="text-gray-700 text-lg leading-relaxed">
+                {product.description}
+              </p>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
