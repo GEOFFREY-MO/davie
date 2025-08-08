@@ -92,18 +92,19 @@ export function BannerCarousel() {
             className="object-cover"
             priority={index === 0}
           />
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center text-white p-6">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 drop-shadow-lg">
                 {banner.title}
               </h2>
-              <p className="text-lg md:text-xl mb-4 opacity-90">
+              <p className="text-lg md:text-xl mb-6 opacity-90 drop-shadow-md">
                 {banner.description}
               </p>
               <Button
                 onClick={() => window.open(banner.linkUrl, '_blank')}
-                className="bg-[#00FFEF] hover:bg-[#00FFEF]/90 text-black font-semibold px-6 py-2"
+                className="bg-[#00FFEF] hover:bg-[#00FFEF]/90 text-black font-bold px-8 py-3 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer border-2 border-white/20"
+                style={{ cursor: 'pointer' }}
               >
                 Shop Now
               </Button>
@@ -116,15 +117,17 @@ export function BannerCarousel() {
         <>
           <Button
             onClick={prevBanner}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 cursor-pointer"
             size="sm"
+            style={{ cursor: 'pointer' }}
           >
             <ChevronLeft className="h-6 w-6" />
           </Button>
           <Button
             onClick={nextBanner}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 cursor-pointer"
             size="sm"
+            style={{ cursor: 'pointer' }}
           >
             <ChevronRight className="h-6 w-6" />
           </Button>
@@ -135,9 +138,10 @@ export function BannerCarousel() {
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-3 h-3 rounded-full transition-colors ${
+                className={`w-3 h-3 rounded-full transition-colors cursor-pointer ${
                   index === currentIndex ? 'bg-[#00FFEF]' : 'bg-white/50'
                 }`}
+                style={{ cursor: 'pointer' }}
               />
             ))}
           </div>

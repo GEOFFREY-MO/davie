@@ -171,7 +171,7 @@ export function PromotionalOffers() {
               </div>
 
               {/* Progress bar */}
-              <div className="mb-4">
+              <div className="mb-6">
                 <div className="flex justify-between text-xs text-gray-500 mb-1">
                   <span>Usage</span>
                   <span>{Math.round((offer.usedCount / offer.usageLimit) * 100)}%</span>
@@ -188,7 +188,8 @@ export function PromotionalOffers() {
 
               {/* Action button */}
               <Button
-                className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white"
+                className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-bold py-3 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer border-2 border-[#00FFEF]/20"
+                style={{ cursor: 'pointer' }}
                 onClick={() => {
                   // Navigate to products page or apply offer
                   window.location.href = '/products'
