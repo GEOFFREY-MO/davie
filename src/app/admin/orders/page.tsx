@@ -458,39 +458,45 @@ export default function AdminOrdersPage() {
           </CardContent>
         </Card>
 
-        {/* Orders List - Mobile Responsive */}
-        <div className="space-y-3 sm:space-y-4 w-full">
+        {/* Orders List - Mobile Responsive 2-Column Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-6 w-full">
           {filteredOrders.map((order) => (
             <Card key={order.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-3 sm:p-4 lg:p-6">
-                <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                  <div className="flex items-center space-x-3 sm:space-x-4">
+              <CardContent className="p-2 sm:p-3 lg:p-6">
+                {/* Mobile 2-column compact layout / Desktop full layout */}
+                <div className="flex flex-col space-y-2 lg:space-y-0 lg:flex-row lg:items-center lg:space-x-4">
+                  <div className="flex items-start space-x-2 lg:space-x-4 flex-1">
                     <div className="flex-shrink-0">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Package className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+                      <div className="w-8 h-8 lg:w-12 lg:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Package className="h-4 w-4 lg:h-6 lg:w-6 text-blue-600" />
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                        <div>
-                          <h4 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 truncate">{order.id}</h4>
-                          <p className="text-xs sm:text-sm text-gray-600 flex items-center mt-1">
-                            <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                            {order.customerName}
+                      <div className="space-y-1 lg:space-y-0 lg:flex lg:items-center lg:justify-between">
+                        <div className="space-y-1">
+                          <h4 className="text-xs lg:text-lg font-semibold text-gray-900 truncate">{order.id}</h4>
+                          <p className="text-xs text-gray-600 flex items-center lg:mt-1">
+                            <User className="h-3 w-3 mr-1" />
+                            <span className="truncate">{order.customerName}</span>
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-600 flex items-center mt-1">
-                            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          <p className="text-xs text-gray-600 flex items-center lg:hidden">
+                            <Calendar className="h-3 w-3 mr-1" />
+                            {formatDate(order.orderDate)}
+                          </p>
+                          <p className="hidden lg:flex text-sm text-gray-600 items-center mt-1">
+                            <Calendar className="h-4 w-4 mr-1" />
                             {formatDate(order.orderDate)}
                           </p>
                         </div>
-                        <div className="text-left sm:text-right">
-                          <p className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 flex items-center">
-                            <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                        <div className="lg:text-right">
+                          <p className="text-sm lg:text-lg font-bold text-gray-900 flex items-center">
+                            <DollarSign className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
                             KES {order.total.toLocaleString()}
                           </p>
-                          <div className="flex items-center space-x-1 sm:space-x-2 mt-2">
+                          <div className="flex flex-wrap items-center gap-1 lg:space-x-2 mt-1 lg:mt-2">
                             <Badge className={`${getStatusColor(order.status)} text-xs`}>
-                              {getStatusIcon(order.status)}
+                              <span className="lg:hidden">{getStatusIcon(order.status)}</span>
+                              <span className="hidden lg:inline">{getStatusIcon(order.status)}</span>
                               <span className="ml-1 capitalize">{order.status}</span>
                             </Badge>
                             <Badge className={`${getPaymentStatusColor(order.paymentStatus)} text-xs`}>
@@ -499,44 +505,53 @@ export default function AdminOrdersPage() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-2 sm:gap-4 mt-3 text-xs sm:text-sm text-gray-600">
+                      {/* Desktop-only details */}
+                      <div className="hidden lg:flex flex-wrap gap-4 mt-3 text-sm text-gray-600">
                         <span className="flex items-center">
-                          <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                          <span className="truncate">{order.customerPhone}</span>
+                          <Phone className="h-4 w-4 mr-1" />
+                          {order.customerPhone}
                         </span>
                         <span className="flex items-center">
-                          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                          <span className="truncate max-w-32 sm:max-w-none">{order.shippingAddress}</span>
+                          <MapPin className="h-4 w-4 mr-1" />
+                          <span className="truncate">{order.shippingAddress}</span>
                         </span>
                         <span className="flex items-center">
-                          <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          <CreditCard className="h-4 w-4 mr-1" />
                           {order.paymentMethod.toUpperCase()}
                         </span>
                         <span className="flex items-center">
-                          <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          <ShoppingCart className="h-4 w-4 mr-1" />
                           {order.items.length} item{order.items.length !== 1 ? 's' : ''}
                         </span>
                       </div>
+                      {/* Mobile-only compact details */}
+                      <div className="flex items-center text-xs text-gray-600 mt-1 lg:hidden">
+                        <ShoppingCart className="h-3 w-3 mr-1" />
+                        <span>{order.items.length} item{order.items.length !== 1 ? 's' : ''}</span>
+                        <span className="mx-2">•</span>
+                        <span className="truncate">{order.paymentMethod.toUpperCase()}</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center sm:justify-start space-x-1 sm:space-x-2 mt-3 sm:mt-0">
+                  {/* Action buttons */}
+                  <div className="flex items-center justify-center lg:justify-start space-x-1 lg:space-x-2">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleViewOrder(order)}
-                      className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer text-xs sm:text-sm"
+                      className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer text-xs lg:text-sm px-2 lg:px-3"
                     >
-                      <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
-                      <span className="hidden sm:inline ml-1 sm:ml-2">View</span>
+                      <Eye className="h-3 w-3 lg:h-4 lg:w-4" />
+                      <span className="hidden lg:inline ml-2">View</span>
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleEditOrder(order)}
-                      className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 transition-all duration-300 cursor-pointer text-xs sm:text-sm"
+                      className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 transition-all duration-300 cursor-pointer text-xs lg:text-sm px-2 lg:px-3"
                     >
-                      <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
-                      <span className="hidden sm:inline ml-1 sm:ml-2">Edit</span>
+                      <Edit className="h-3 w-3 lg:h-4 lg:w-4" />
+                      <span className="hidden lg:inline ml-2">Edit</span>
                     </Button>
                   </div>
                 </div>
