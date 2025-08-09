@@ -28,7 +28,9 @@ import {
   ShoppingCart,
   ArrowUpDown,
   SortAsc,
-  SortDesc
+  SortDesc,
+  Minus,
+  X
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
@@ -76,6 +78,8 @@ export default function AdminOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isViewMinimized, setIsViewMinimized] = useState(false)
+  const [isEditMinimized, setIsEditMinimized] = useState(false)
   const [editingOrder, setEditingOrder] = useState<Order | null>(null)
   const [editFormData, setEditFormData] = useState({
     status: '',
@@ -577,15 +581,47 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* View Order Modal */}
-      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-        <DialogContent className="max-w-4xl bg-white border-0 shadow-2xl">
-          <DialogHeader className="border-b border-blue-100 pb-4">
-            <DialogTitle className="text-2xl font-bold text-blue-800">
-              Order Details - {selectedOrder?.id}
-            </DialogTitle>
-            <DialogDescription className="text-blue-600 mt-2">
-              Complete order information and customer details
-            </DialogDescription>
+      <Dialog
+        open={isViewModalOpen}
+        onOpenChange={(open) => {
+          setIsViewModalOpen(open)
+          if (!open) setIsViewMinimized(false)
+        }}
+      >
+        <DialogContent className={`w-[95vw] max-w-3xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 transition-all duration-300 ${isViewMinimized ? 'max-h-16' : 'max-h-[85vh]'}`}>
+          <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
+                  Order Details - {selectedOrder?.id}
+                </DialogTitle>
+                {!isViewMinimized && (
+                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                    Complete order information and customer details
+                  </DialogDescription>
+                )}
+              </div>
+              <div className="flex items-center space-x-2 ml-2 sm:ml-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsViewMinimized(!isViewMinimized)}
+                  className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
+                  title={isViewMinimized ? 'Maximize' : 'Minimize'}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setIsViewModalOpen(false); setIsViewMinimized(false) }}
+                  className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
+                  title="Close"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </DialogHeader>
           {selectedOrder && (
             <div className="space-y-6 pt-4">
@@ -691,16 +727,16 @@ export default function AdminOrdersPage() {
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Subtotal:</span>
-                      <span className="font-semibold">KES {selectedOrder.subtotal.toLocaleString()}</span>
+                      <span className="text-gray-700">Subtotal:</span>
+                      <span className="font-semibold text-gray-900">KES {selectedOrder.subtotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Shipping:</span>
-                      <span className="font-semibold">KES {selectedOrder.shipping.toLocaleString()}</span>
+                      <span className="text-gray-700">Shipping:</span>
+                      <span className="font-semibold text-gray-900">KES {selectedOrder.shipping.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Tax:</span>
-                      <span className="font-semibold">KES {selectedOrder.tax.toLocaleString()}</span>
+                      <span className="text-gray-700">Tax:</span>
+                      <span className="font-semibold text-gray-900">KES {selectedOrder.tax.toLocaleString()}</span>
                     </div>
                     <div className="border-t border-blue-200 pt-2">
                       <div className="flex justify-between">
@@ -746,15 +782,47 @@ export default function AdminOrdersPage() {
       </Dialog>
 
       {/* Edit Order Modal */}
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        <DialogContent className="max-w-2xl bg-white border-0 shadow-2xl">
-          <DialogHeader className="border-b border-blue-100 pb-4">
-            <DialogTitle className="text-2xl font-bold text-blue-800">
-              Edit Order - {editingOrder?.id}
-            </DialogTitle>
-            <DialogDescription className="text-blue-600 mt-2">
-              Update order status and tracking information
-            </DialogDescription>
+      <Dialog
+        open={isEditModalOpen}
+        onOpenChange={(open) => {
+          setIsEditModalOpen(open)
+          if (!open) setIsEditMinimized(false)
+        }}
+      >
+        <DialogContent className={`w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 transition-all duration-300 ${isEditMinimized ? 'max-h-16' : 'max-h-[85vh]'}`}>
+          <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
+                  Edit Order - {editingOrder?.id}
+                </DialogTitle>
+                {!isEditMinimized && (
+                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                    Update order status and tracking information
+                  </DialogDescription>
+                )}
+              </div>
+              <div className="flex items-center space-x-2 ml-2 sm:ml-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsEditMinimized(!isEditMinimized)}
+                  className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
+                  title={isEditMinimized ? 'Maximize' : 'Minimize'}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setIsEditModalOpen(false); setIsEditMinimized(false) }}
+                  className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
+                  title="Close"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </DialogHeader>
           <div className="space-y-6 pt-4">
             <div>
