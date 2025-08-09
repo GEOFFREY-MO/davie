@@ -333,14 +333,14 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Header */}
+    <>
+      {/* Fixed Header - Mobile Optimized */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#08153A] text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+        <div className="w-full px-2 sm:px-4 lg:px-8 py-2 sm:py-3 lg:py-6">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center space-x-1 sm:space-x-2 flex-1 min-w-0">
               {/* Logo */}
-              <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 rounded-lg overflow-hidden flex-shrink-0">
                 <Image
                   src="/davietech-logo.jpg"
                   alt="DAVIETECH Logo"
@@ -349,23 +349,33 @@ export default function AdminOrdersPage() {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">Order Management</h1>
-                <p className="text-gray-300 mt-1">Manage customer orders and deliveries</p>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-xs sm:text-sm lg:text-xl font-bold text-white truncate">
+                  <span className="hidden lg:inline">Order Management</span>
+                  <span className="hidden sm:inline lg:hidden">Orders</span>
+                  <span className="sm:hidden">Orders</span>
+                </h1>
+                <p className="text-gray-300 mt-1 text-xs hidden lg:block">Manage customer orders and deliveries</p>
               </div>
             </div>
-            <Button 
-              onClick={() => router.push('/admin/dashboard')}
-              variant="outline" 
-              className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300"
-            >
-              Back to Dashboard
-            </Button>
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <Button
+                onClick={() => router.push('/admin/dashboard')}
+                variant="outline"
+                size="sm"
+                className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 text-xs px-2 sm:px-3"
+              >
+                <span className="hidden sm:inline">Dashboard</span>
+                <span className="sm:hidden">Back</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content - Separate Container */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-x-hidden overflow-y-auto w-full pt-16 sm:pt-20 lg:pt-24">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-8 sm:pb-12">
         {/* Filters */}
         <Card className="mb-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-0 shadow-xl">
           <CardHeader className="border-b border-blue-100 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
@@ -374,147 +384,159 @@ export default function AdminOrdersPage() {
               Filters & Search
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-4 w-4" />
+          <CardContent className="p-4 sm:p-6">
+            {/* Mobile-first filters layout */}
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-2 sm:gap-3 lg:gap-4">
+              <div className="relative col-span-2 sm:col-span-1">
+                <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-blue-500 h-3 w-3 sm:h-4 sm:w-4" />
                 <Input
                   placeholder="Search orders..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-blue-700 placeholder-blue-400"
+                  className="pl-8 sm:pl-10 border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-blue-700 placeholder-blue-400 text-xs sm:text-sm"
                 />
               </div>
-              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700">
-                  <SelectValue placeholder="Order Status" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border-blue-200 shadow-lg">
-                  <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">All Statuses</SelectItem>
-                  <SelectItem value="pending" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Pending</SelectItem>
-                  <SelectItem value="processing" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Processing</SelectItem>
-                  <SelectItem value="shipped" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Shipped</SelectItem>
-                  <SelectItem value="delivered" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Delivered</SelectItem>
-                  <SelectItem value="cancelled" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Cancelled</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={selectedPaymentStatus} onValueChange={setSelectedPaymentStatus}>
-                <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700">
-                  <SelectValue placeholder="Payment Status" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border-blue-200 shadow-lg">
-                  <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">All Payments</SelectItem>
-                  <SelectItem value="pending" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Pending</SelectItem>
-                  <SelectItem value="paid" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Paid</SelectItem>
-                  <SelectItem value="failed" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Failed</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={sortBy} onValueChange={(value: 'date' | 'total' | 'customer') => setSortBy(value)}>
-                <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border-blue-200 shadow-lg">
-                  <SelectItem value="date" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Order Date</SelectItem>
-                  <SelectItem value="total" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Total Amount</SelectItem>
-                  <SelectItem value="customer" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer">Customer Name</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button
-                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                variant="outline"
-                size="sm"
-                className="border-blue-200 bg-white text-blue-700 hover:bg-blue-50 hover:border-blue-300 shadow-sm cursor-pointer"
-              >
-                {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
-              </Button>
-              <div className="text-sm text-blue-700 flex items-center bg-white px-3 py-2 rounded-lg shadow-sm border border-blue-100 cursor-pointer">
-                <Package className="h-4 w-4 mr-2 text-blue-500" />
+              <div className="col-span-2 sm:col-span-1">
+                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                  <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700 text-xs sm:text-sm">
+                    <SelectValue placeholder="Order Status" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-blue-200 shadow-lg">
+                    <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">All Statuses</SelectItem>
+                    <SelectItem value="pending" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Pending</SelectItem>
+                    <SelectItem value="processing" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Processing</SelectItem>
+                    <SelectItem value="shipped" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Shipped</SelectItem>
+                    <SelectItem value="delivered" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Delivered</SelectItem>
+                    <SelectItem value="cancelled" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <Select value={selectedPaymentStatus} onValueChange={setSelectedPaymentStatus}>
+                  <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700 text-xs sm:text-sm">
+                    <SelectValue placeholder="Payment Status" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-blue-200 shadow-lg">
+                    <SelectItem value="all" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">All Payments</SelectItem>
+                    <SelectItem value="pending" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Pending</SelectItem>
+                    <SelectItem value="paid" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Paid</SelectItem>
+                    <SelectItem value="failed" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Failed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="col-span-2 sm:col-span-1">
+                <Select value={sortBy} onValueChange={(value: 'date' | 'total' | 'customer') => setSortBy(value)}>
+                  <SelectTrigger className="border-blue-200 bg-white focus:border-indigo-500 focus:ring-indigo-500 shadow-sm cursor-pointer text-blue-700 text-xs sm:text-sm">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-blue-200 shadow-lg">
+                    <SelectItem value="date" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Order Date</SelectItem>
+                    <SelectItem value="total" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Total Amount</SelectItem>
+                    <SelectItem value="customer" className="hover:bg-green-100 text-blue-700 hover:text-green-700 cursor-pointer text-xs sm:text-sm">Customer Name</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center space-x-1 sm:space-x-2">
+                <Button
+                  onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                  variant="outline"
+                  size="sm"
+                  className="border-blue-200 bg-white text-blue-700 hover:bg-blue-50 hover:border-blue-300 shadow-sm cursor-pointer"
+                >
+                  {sortOrder === 'asc' ? <SortAsc className="h-3 w-3 sm:h-4 sm:w-4" /> : <SortDesc className="h-3 w-3 sm:h-4 sm:w-4" />}
+                </Button>
+              </div>
+              <div className="text-xs sm:text-sm text-blue-700 flex items-center bg-white px-2 sm:px-3 py-2 rounded-lg shadow-sm border border-blue-100 cursor-pointer">
+                <Package className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-blue-500" />
                 <span className="font-medium text-blue-800">{filteredOrders.length}</span>
-                <span className="mx-1 text-blue-600">of</span>
+                <span className="mx-1 text-blue-600 hidden sm:inline">of</span>
+                <span className="mx-1 text-blue-600 sm:hidden">/</span>
                 <span className="font-medium text-blue-800">{orders.length}</span>
-                <span className="ml-1 text-blue-600">orders</span>
+                <span className="ml-1 text-blue-600 hidden sm:inline">orders</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Orders List */}
-        <div className="space-y-4">
+        {/* Orders List - Mobile Responsive */}
+        <div className="space-y-3 sm:space-y-4 w-full">
           {filteredOrders.map((order) => (
             <Card key={order.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
+              <CardContent className="p-3 sm:p-4 lg:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                  <div className="flex items-center space-x-3 sm:space-x-4">
                     <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Package className="h-6 w-6 text-blue-600" />
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Package className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
                         <div>
-                          <h4 className="text-lg font-semibold text-gray-900">{order.id}</h4>
-                          <p className="text-sm text-gray-600 flex items-center mt-1">
-                            <User className="h-4 w-4 mr-1" />
+                          <h4 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 truncate">{order.id}</h4>
+                          <p className="text-xs sm:text-sm text-gray-600 flex items-center mt-1">
+                            <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             {order.customerName}
                           </p>
-                          <p className="text-sm text-gray-600 flex items-center mt-1">
-                            <Calendar className="h-4 w-4 mr-1" />
+                          <p className="text-xs sm:text-sm text-gray-600 flex items-center mt-1">
+                            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             {formatDate(order.orderDate)}
                           </p>
                         </div>
-                        <div className="text-right">
-                          <p className="text-lg font-bold text-gray-900 flex items-center">
-                            <DollarSign className="h-4 w-4 mr-1" />
+                        <div className="text-left sm:text-right">
+                          <p className="text-sm sm:text-base lg:text-lg font-bold text-gray-900 flex items-center">
+                            <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             KES {order.total.toLocaleString()}
                           </p>
-                          <div className="flex items-center space-x-2 mt-2">
-                            <Badge className={getStatusColor(order.status)}>
+                          <div className="flex items-center space-x-1 sm:space-x-2 mt-2">
+                            <Badge className={`${getStatusColor(order.status)} text-xs`}>
                               {getStatusIcon(order.status)}
                               <span className="ml-1 capitalize">{order.status}</span>
                             </Badge>
-                            <Badge className={getPaymentStatusColor(order.paymentStatus)}>
+                            <Badge className={`${getPaymentStatusColor(order.paymentStatus)} text-xs`}>
                               <span className="capitalize">{order.paymentStatus}</span>
                             </Badge>
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-4 mt-3 text-sm text-gray-600">
+                      <div className="flex flex-wrap gap-2 sm:gap-4 mt-3 text-xs sm:text-sm text-gray-600">
                         <span className="flex items-center">
-                          <Phone className="h-4 w-4 mr-1" />
-                          {order.customerPhone}
+                          <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          <span className="truncate">{order.customerPhone}</span>
                         </span>
                         <span className="flex items-center">
-                          <MapPin className="h-4 w-4 mr-1" />
-                          {order.shippingAddress}
+                          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          <span className="truncate max-w-32 sm:max-w-none">{order.shippingAddress}</span>
                         </span>
                         <span className="flex items-center">
-                          <CreditCard className="h-4 w-4 mr-1" />
+                          <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                           {order.paymentMethod.toUpperCase()}
                         </span>
                         <span className="flex items-center">
-                          <ShoppingCart className="h-4 w-4 mr-1" />
+                          <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                           {order.items.length} item{order.items.length !== 1 ? 's' : ''}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center justify-center sm:justify-start space-x-1 sm:space-x-2 mt-3 sm:mt-0">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleViewOrder(order)}
-                      className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer"
+                      className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 cursor-pointer text-xs sm:text-sm"
                     >
-                      <Eye className="h-4 w-4" />
+                      <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <span className="hidden sm:inline ml-1 sm:ml-2">View</span>
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleEditOrder(order)}
-                      className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 transition-all duration-300 cursor-pointer"
+                      className="border-green-200 text-green-700 hover:bg-green-50 hover:border-green-300 transition-all duration-300 cursor-pointer text-xs sm:text-sm"
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <span className="hidden sm:inline ml-1 sm:ml-2">Edit</span>
                     </Button>
                   </div>
                 </div>
@@ -764,6 +786,7 @@ export default function AdminOrdersPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+      </div>
+    </>
   )
 } 
