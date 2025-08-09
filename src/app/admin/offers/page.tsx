@@ -102,83 +102,25 @@ export default function AdminOffersPage() {
   }, [session, status, router])
 
   useEffect(() => {
-    const mockOffers: Offer[] = [
-      {
-        id: 'OFF-001',
-        title: 'Summer Sale',
-        description: 'Get up to 50% off on selected items',
-        discountPercentage: 50,
-        startDate: '2025-01-01',
-        endDate: '2025-03-31',
-        status: 'active',
-        targetAudience: 'all',
-        minimumPurchase: 5000,
-        maximumDiscount: 10000,
-        usageLimit: 1000,
-        usedCount: 342,
-        createdAt: '2025-01-01T00:00:00Z'
-      },
-      {
-        id: 'OFF-002',
-        title: 'New Year Special',
-        description: 'Welcome 2025 with amazing deals',
-        discountPercentage: 30,
-        startDate: '2025-01-01',
-        endDate: '2025-01-31',
-        status: 'active',
-        targetAudience: 'existing',
-        minimumPurchase: 3000,
-        maximumDiscount: 5000,
-        usageLimit: 500,
-        usedCount: 156,
-        createdAt: '2024-12-15T00:00:00Z'
-      },
-      {
-        id: 'OFF-003',
-        title: 'Tech Week',
-        description: 'Exclusive deals on electronics',
-        discountPercentage: 25,
-        startDate: '2025-02-01',
-        endDate: '2025-02-07',
-        status: 'scheduled',
-        targetAudience: 'all',
-        minimumPurchase: 10000,
-        maximumDiscount: 15000,
-        usageLimit: 200,
-        usedCount: 0,
-        createdAt: '2024-12-20T00:00:00Z'
+    const load = async () => {
+      try {
+        const [offersRes, bannersRes] = await Promise.all([
+          fetch('/api/offers', { cache: 'no-store' }),
+          fetch('/api/banners', { cache: 'no-store' }),
+        ])
+        if (offersRes.ok) {
+          const offersData = await offersRes.json()
+          setOffers(offersData)
+        }
+        if (bannersRes.ok) {
+          const bannersData = await bannersRes.json()
+          setBanners(bannersData)
+        }
+      } catch (err) {
+        console.error('Failed loading offers/banners', err)
       }
-    ]
-
-    const mockBanners: Banner[] = [
-      {
-        id: 'BAN-001',
-        title: 'Hero Banner 1',
-        imageUrl: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=400&fit=crop',
-        altText: 'Summer Sale Banner',
-        linkUrl: '/products?category=summer-sale',
-        status: 'active',
-        position: 'hero',
-        startDate: '2025-01-01',
-        endDate: '2025-03-31',
-        createdAt: '2025-01-01T00:00:00Z'
-      },
-      {
-        id: 'BAN-002',
-        title: 'Hero Banner 2',
-        imageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=400&fit=crop',
-        altText: 'New Year Special Banner',
-        linkUrl: '/products?category=new-year',
-        status: 'active',
-        position: 'hero',
-        startDate: '2025-01-01',
-        endDate: '2025-01-31',
-        createdAt: '2024-12-15T00:00:00Z'
-      }
-    ]
-
-    setOffers(mockOffers)
-    setBanners(mockBanners)
+    }
+    load()
   }, [])
 
   const handleAddOffer = () => {
@@ -221,32 +163,51 @@ export default function AdminOffersPage() {
       return
     }
 
-    if (editingOffer) {
-      const updatedOffers = offers.map(offer =>
-        offer.id === editingOffer.id
-          ? { ...offer, ...offerFormData }
-          : offer
-      )
-      setOffers(updatedOffers)
-      toast.success('Offer updated successfully!')
-    } else {
-      const newOffer: Offer = {
-        id: `OFF-${Date.now()}`,
-        ...offerFormData,
-        usedCount: 0,
-        createdAt: new Date().toISOString()
+    const save = async () => {
+      try {
+        if (editingOffer) {
+          const res = await fetch(`/api/offers/${editingOffer.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(offerFormData),
+          })
+          if (!res.ok) throw new Error('Failed to update offer')
+          toast.success('Offer updated successfully!')
+        } else {
+          const res = await fetch('/api/offers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(offerFormData),
+          })
+          if (!res.ok) throw new Error('Failed to create offer')
+          toast.success('Offer created successfully!')
+        }
+        const refreshed = await fetch('/api/offers', { cache: 'no-store' })
+        if (refreshed.ok) setOffers(await refreshed.json())
+        setIsOfferModalOpen(false)
+        setEditingOffer(null)
+      } catch (e) {
+        console.error(e)
+        toast.error('Save failed')
       }
-      setOffers([...offers, newOffer])
-      toast.success('Offer created successfully!')
     }
-
-    setIsOfferModalOpen(false)
-    setEditingOffer(null)
+    void save()
   }
 
   const handleDeleteOffer = (offerId: string) => {
-    setOffers(offers.filter(offer => offer.id !== offerId))
-    toast.success('Offer deleted successfully!')
+    const run = async () => {
+      try {
+        const res = await fetch(`/api/offers/${offerId}`, { method: 'DELETE' })
+        if (!res.ok) throw new Error('Delete failed')
+        const refreshed = await fetch('/api/offers', { cache: 'no-store' })
+        if (refreshed.ok) setOffers(await refreshed.json())
+        toast.success('Offer deleted successfully!')
+      } catch (e) {
+        console.error(e)
+        toast.error('Failed to delete offer')
+      }
+    }
+    void run()
   }
 
   const handleAddBanner = () => {
@@ -285,35 +246,56 @@ export default function AdminOffersPage() {
       return
     }
 
-    if (editingBanner) {
-      const updatedBanners = banners.map(banner =>
-        banner.id === editingBanner.id
-          ? { ...banner, ...bannerFormData }
-          : banner
-      )
-      setBanners(updatedBanners)
-      toast.success('Banner updated successfully!')
-    } else {
-      const newBanner: Banner = {
-        id: `BAN-${Date.now()}`,
-        ...bannerFormData,
-        createdAt: new Date().toISOString()
+    const run = async () => {
+      try {
+        if (editingBanner) {
+          const res = await fetch(`/api/banners/${editingBanner.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bannerFormData),
+          })
+          if (!res.ok) throw new Error('Update failed')
+          toast.success('Banner updated successfully!')
+        } else {
+          const res = await fetch('/api/banners', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bannerFormData),
+          })
+          if (!res.ok) throw new Error('Create failed')
+          toast.success('Banner created successfully!')
+        }
+        const refreshed = await fetch('/api/banners', { cache: 'no-store' })
+        if (refreshed.ok) setBanners(await refreshed.json())
+        setIsBannerModalOpen(false)
+        setEditingBanner(null)
+      } catch (e) {
+        console.error(e)
+        toast.error('Save failed')
       }
-      setBanners([...banners, newBanner])
-      toast.success('Banner created successfully!')
     }
-
-    setIsBannerModalOpen(false)
-    setEditingBanner(null)
+    void run()
   }
 
   const handleDeleteBanner = (bannerId: string) => {
-    setBanners(banners.filter(banner => banner.id !== bannerId))
-    toast.success('Banner deleted successfully!')
+    const run = async () => {
+      try {
+        const res = await fetch(`/api/banners/${bannerId}`, { method: 'DELETE' })
+        if (!res.ok) throw new Error('Delete failed')
+        const refreshed = await fetch('/api/banners', { cache: 'no-store' })
+        if (refreshed.ok) setBanners(await refreshed.json())
+        toast.success('Banner deleted successfully!')
+      } catch (e) {
+        console.error(e)
+        toast.error('Failed to delete banner')
+      }
+    }
+    void run()
   }
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    const key = String(status).toLowerCase()
+    switch (key) {
       case 'active': return 'bg-green-100 text-green-800'
       case 'inactive': return 'bg-gray-100 text-gray-800'
       case 'scheduled': return 'bg-blue-100 text-blue-800'
@@ -322,7 +304,8 @@ export default function AdminOffersPage() {
   }
 
   const getTargetAudienceColor = (audience: string) => {
-    switch (audience) {
+    const key = String(audience).toLowerCase()
+    switch (key) {
       case 'all': return 'bg-purple-100 text-purple-800'
       case 'new': return 'bg-blue-100 text-blue-800'
       case 'existing': return 'bg-green-100 text-green-800'
