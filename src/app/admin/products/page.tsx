@@ -218,11 +218,11 @@ export default function AdminProductsPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Header - Mobile Optimized */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#08153A] text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 sm:space-x-4">
+        <div className="w-full px-2 sm:px-4 lg:px-8 py-2 sm:py-3 lg:py-6">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center space-x-1 sm:space-x-2 flex-1 min-w-0">
               {/* Logo */}
-              <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-lg overflow-hidden flex-shrink-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 rounded-lg overflow-hidden flex-shrink-0">
                 <Image
                   src="/davietech-logo.jpg"
                   alt="DAVIETECH Logo"
@@ -231,38 +231,39 @@ export default function AdminProductsPage() {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <div>
-                <h1 className="text-sm sm:text-xl lg:text-2xl font-bold text-white">
-                  <span className="hidden sm:inline">Enhanced Product Management</span>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-xs sm:text-sm lg:text-xl font-bold text-white truncate">
+                  <span className="hidden lg:inline">Enhanced Product Management</span>
+                  <span className="hidden sm:inline lg:hidden">Product Management</span>
                   <span className="sm:hidden">Products</span>
                 </h1>
-                <p className="text-gray-300 mt-1 text-xs sm:text-sm hidden sm:block">Full CRUD operations for products</p>
+                <p className="text-gray-300 mt-1 text-xs hidden lg:block">Full CRUD operations for products</p>
               </div>
             </div>
-            <Button
-              onClick={() => router.push('/admin/dashboard')}
-              variant="outline"
-              size="sm"
-              className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 text-xs sm:text-sm"
-            >
-              <span className="hidden sm:inline">Back to Dashboard</span>
-              <span className="sm:hidden">Dashboard</span>
-            </Button>
-            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  onClick={() => {
-                    setEditingProduct(null)
-                    resetForm()
-                  }}
-                  size="sm"
-                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer text-xs sm:text-sm ml-2"
-                >
-                  <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                  <span className="hidden sm:inline">Add Product</span>
-                  <span className="sm:hidden">Add</span>
-                </Button>
-              </DialogTrigger>
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <Button
+                onClick={() => router.push('/admin/dashboard')}
+                variant="outline"
+                size="sm"
+                className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 text-xs px-2 sm:px-3"
+              >
+                <span className="hidden sm:inline">Dashboard</span>
+                <span className="sm:hidden">Back</span>
+              </Button>
+              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      setEditingProduct(null)
+                      resetForm()
+                    }}
+                    size="sm"
+                    className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer text-xs px-2 sm:px-3"
+                  >
+                    <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline ml-1">Add</span>
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="max-w-2xl bg-white border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader className="border-b border-blue-100 pb-3 sm:pb-4">
                   <DialogTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-800">
@@ -374,7 +375,7 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
-      <div className="pt-16 sm:pt-20 lg:pt-24 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="pt-12 sm:pt-16 lg:pt-24 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Filters */}
         <Card className="mb-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-0 shadow-xl">
           <CardHeader className="border-b border-blue-100 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
