@@ -95,102 +95,19 @@ export default function AdminOrdersPage() {
   }, [session, status, router])
 
   useEffect(() => {
-    const mockOrders: Order[] = [
-      {
-        id: 'ORD-001',
-        customerName: 'John Doe',
-        customerEmail: 'john.doe@email.com',
-        customerPhone: '+254 751 030 250',
-        shippingAddress: '123 Main St, Nyeri, Kenya',
-        items: [
-          {
-            id: '1',
-            productId: '1',
-            productName: 'Premium Wireless Headphones',
-            productImage: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop',
-            quantity: 2,
-            price: 15000,
-            total: 30000
-          },
-          {
-            id: '2',
-            productId: '2',
-            productName: 'Smart Fitness Watch',
-            productImage: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop',
-            quantity: 1,
-            price: 25000,
-            total: 25000
-          }
-        ],
-        subtotal: 55000,
-        shipping: 1000,
-        tax: 2750,
-        total: 58750,
-        status: 'processing',
-        paymentMethod: 'mpesa',
-        paymentStatus: 'paid',
-        orderDate: '2025-01-15T10:30:00Z',
-        estimatedDelivery: '2025-01-20',
-        trackingNumber: 'TRK-123456789',
-        notes: 'Customer requested express delivery'
-      },
-      {
-        id: 'ORD-002',
-        customerName: 'Jane Smith',
-        customerEmail: 'jane.smith@email.com',
-        customerPhone: '+254 725 172 596',
-        shippingAddress: '456 Oak Ave, Nairobi, Kenya',
-        items: [
-          {
-            id: '3',
-            productId: '3',
-            productName: 'Designer Leather Bag',
-            productImage: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=100&h=100&fit=crop',
-            quantity: 1,
-            price: 8500,
-            total: 8500
-          }
-        ],
-        subtotal: 8500,
-        shipping: 800,
-        tax: 425,
-        total: 9725,
-        status: 'shipped',
-        paymentMethod: 'card',
-        paymentStatus: 'paid',
-        orderDate: '2025-01-14T14:20:00Z',
-        estimatedDelivery: '2025-01-18',
-        trackingNumber: 'TRK-987654321'
-      },
-      {
-        id: 'ORD-003',
-        customerName: 'Mike Johnson',
-        customerEmail: 'mike.johnson@email.com',
-        customerPhone: '+254 700 123 456',
-        shippingAddress: '789 Pine Rd, Mombasa, Kenya',
-        items: [
-          {
-            id: '4',
-            productId: '1',
-            productName: 'Premium Wireless Headphones',
-            productImage: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop',
-            quantity: 1,
-            price: 15000,
-            total: 15000
-          }
-        ],
-        subtotal: 15000,
-        shipping: 1200,
-        tax: 750,
-        total: 16950,
-        status: 'pending',
-        paymentMethod: 'cash',
-        paymentStatus: 'pending',
-        orderDate: '2025-01-16T09:15:00Z'
+    const loadOrders = async () => {
+      try {
+        const res = await fetch('/api/orders', { cache: 'no-store' })
+        if (res.ok) {
+          const data = await res.json()
+          setOrders(data)
+          setFilteredOrders(data)
+        }
+      } catch (e) {
+        console.error('Failed to load orders', e)
       }
-    ]
-    setOrders(mockOrders)
-    setFilteredOrders(mockOrders)
+    }
+    loadOrders()
   }, [])
 
   useEffect(() => {
@@ -262,22 +179,25 @@ export default function AdminOrdersPage() {
 
   const handleUpdateOrder = () => {
     if (!editingOrder) return
-
-    const updatedOrders = orders.map(order =>
-      order.id === editingOrder.id
-        ? {
-            ...order,
-            status: editFormData.status as Order['status'],
-            trackingNumber: editFormData.trackingNumber,
-            notes: editFormData.notes
-          }
-        : order
-    )
-
-    setOrders(updatedOrders)
-    setIsEditModalOpen(false)
-    setEditingOrder(null)
-    toast.success('Order updated successfully!')
+    const run = async () => {
+      try {
+        const res = await fetch(`/api/orders/${editingOrder.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(editFormData),
+        })
+        if (!res.ok) throw new Error('Update failed')
+        const refreshed = await fetch('/api/orders', { cache: 'no-store' })
+        if (refreshed.ok) setOrders(await refreshed.json())
+        setIsEditModalOpen(false)
+        setEditingOrder(null)
+        toast.success('Order updated successfully!')
+      } catch (e) {
+        console.error(e)
+        toast.error('Failed to update order')
+      }
+    }
+    void run()
   }
 
   const getStatusColor = (status: Order['status']) => {

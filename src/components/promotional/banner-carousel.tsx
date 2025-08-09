@@ -25,7 +25,7 @@ export function BannerCarousel() {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const response = await fetch('/api/banners?position=hero&status=active')
+        const response = await fetch('/api/banners?position=hero&status=active', { cache: 'no-store' })
         if (response.ok) {
           const data = await response.json()
           setBanners(data)
@@ -40,6 +40,17 @@ export function BannerCarousel() {
     }
 
     fetchBanners()
+
+    const evt = new EventSource('/api/updates/stream')
+    evt.onmessage = (e) => {
+      try {
+        const payload = JSON.parse(e.data)
+        if (payload?.type === 'banners:changed') {
+          fetchBanners()
+        }
+      } catch {}
+    }
+    return () => evt.close()
   }, [])
 
   useEffect(() => {

@@ -27,7 +27,7 @@ export function PromotionalOffers() {
   useEffect(() => {
     const fetchOffers = async () => {
       try {
-        const response = await fetch('/api/offers?status=active')
+        const response = await fetch('/api/offers?status=active', { cache: 'no-store' })
         if (response.ok) {
           const data = await response.json()
           setOffers(data)
@@ -42,6 +42,18 @@ export function PromotionalOffers() {
     }
 
     fetchOffers()
+
+    // Subscribe to SSE for instant updates
+    const evt = new EventSource('/api/updates/stream')
+    evt.onmessage = (e) => {
+      try {
+        const payload = JSON.parse(e.data)
+        if (payload?.type === 'offers:changed') {
+          fetchOffers()
+        }
+      } catch {}
+    }
+    return () => evt.close()
   }, [])
 
   const getStatusColor = (status: string) => {

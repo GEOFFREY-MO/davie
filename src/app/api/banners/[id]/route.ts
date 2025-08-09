@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { broadcastEvent } from '@/app/api/updates/stream/route'
 
 export async function GET(
   request: NextRequest,
@@ -38,6 +39,7 @@ export async function PUT(
         endDate: endDate ? new Date(endDate) : undefined,
       },
     })
+    broadcastEvent({ type: 'banners:changed' })
     return NextResponse.json(updated)
   } catch (error) {
     console.error('Error updating banner:', error)
@@ -52,6 +54,7 @@ export async function DELETE(
   try {
     const { id } = await params
     await db.banner.delete({ where: { id } })
+    broadcastEvent({ type: 'banners:changed' })
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting banner:', error)

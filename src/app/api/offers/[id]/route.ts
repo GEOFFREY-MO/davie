@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { broadcastEvent } from '@/app/api/updates/stream/route'
 
 export async function GET(
   request: NextRequest,
@@ -51,6 +52,7 @@ export async function PUT(
         usageLimit,
       },
     })
+    broadcastEvent({ type: 'offers:changed' })
     return NextResponse.json(updated)
   } catch (error) {
     console.error('Error updating offer:', error)
@@ -65,6 +67,7 @@ export async function DELETE(
   try {
     const { id } = await params
     await db.offer.delete({ where: { id } })
+    broadcastEvent({ type: 'offers:changed' })
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting offer:', error)
