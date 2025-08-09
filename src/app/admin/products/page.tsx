@@ -18,7 +18,9 @@ import {
   Search,
   Filter,
   Grid,
-  List
+  List,
+  X,
+  Minus
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
@@ -46,6 +48,7 @@ export default function AdminProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalMinimized, setIsModalMinimized] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [formData, setFormData] = useState({
     name: '',
@@ -121,6 +124,7 @@ export default function AdminProductsPage() {
       featured: product.featured,
       bestSeller: product.bestSeller
     })
+    setIsModalMinimized(false)
     setIsModalOpen(true)
   }
 
@@ -155,6 +159,7 @@ export default function AdminProductsPage() {
         
         setIsModalOpen(false)
         setEditingProduct(null)
+        setIsModalMinimized(false)
         resetForm()
       } else {
         const error = await response.json()
@@ -253,10 +258,11 @@ export default function AdminProductsPage() {
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                   <Button
-                    onClick={() => {
-                      setEditingProduct(null)
-                      resetForm()
-                    }}
+                                      onClick={() => {
+                    setEditingProduct(null)
+                    resetForm()
+                    setIsModalMinimized(false)
+                  }}
                     size="sm"
                     className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer text-xs px-2 sm:px-3"
                   >
@@ -264,15 +270,45 @@ export default function AdminProductsPage() {
                     <span className="hidden sm:inline ml-1">Add</span>
                   </Button>
                 </DialogTrigger>
-              <DialogContent className="w-[95vw] max-w-2xl bg-white border-0 shadow-2xl max-h-[85vh] overflow-y-auto mx-2 my-4">
-                <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
-                  <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800">
-                    {editingProduct ? 'Edit Product' : 'Add New Product'}
-                  </DialogTitle>
-                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
-                    {editingProduct ? 'Update product information' : 'Create a new product listing'}
-                  </DialogDescription>
+              <DialogContent className={`w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 transition-all duration-300 ${isModalMinimized ? 'max-h-16' : 'max-h-[85vh]'}`}>
+                <DialogHeader className={`border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4 relative`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800">
+                        {editingProduct ? 'Edit Product' : 'Add New Product'}
+                      </DialogTitle>
+                      {!isModalMinimized && (
+                        <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                          {editingProduct ? 'Update product information' : 'Create a new product listing'}
+                        </DialogDescription>
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2 ml-4">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsModalMinimized(!isModalMinimized)}
+                        className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
+                        title={isModalMinimized ? "Maximize" : "Minimize"}
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setIsModalOpen(false)
+                          setIsModalMinimized(false)
+                        }}
+                        className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
+                        title="Close"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </DialogHeader>
+                {!isModalMinimized && (
                 <div className="space-y-3 sm:space-y-4 lg:space-y-6 pt-3 sm:pt-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
                     <div>
@@ -369,6 +405,7 @@ export default function AdminProductsPage() {
                     </Button>
                   </div>
                 </div>
+                )}
               </DialogContent>
             </Dialog>
           </div>
