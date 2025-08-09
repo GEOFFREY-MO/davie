@@ -67,6 +67,8 @@ export default function AdminOffersPage() {
   const [banners, setBanners] = useState<Banner[]>([])
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false)
   const [isBannerModalOpen, setIsBannerModalOpen] = useState(false)
+  const [isOfferMinimized, setIsOfferMinimized] = useState(false)
+  const [isBannerMinimized, setIsBannerMinimized] = useState(false)
   const [editingOffer, setEditingOffer] = useState<Offer | null>(null)
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null)
   const [offerFormData, setOfferFormData] = useState({
@@ -572,18 +574,41 @@ export default function AdminOffersPage() {
         open={isOfferModalOpen}
         onOpenChange={(open) => {
           setIsOfferModalOpen(open)
+          if (!open) setIsOfferMinimized(false)
         }}
       >
-        <DialogContent className="w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 max-h-[85vh]">
+        <DialogContent className={`w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 transition-all duration-300 ${isOfferMinimized ? 'max-h-16' : 'max-h-[85vh]'}`}>
           <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
                 <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
                   {editingOffer ? 'Edit Offer' : 'Add New Offer'}
                 </DialogTitle>
-                <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
-                  {editingOffer ? 'Update promotional offer details' : 'Create a new promotional offer'}
-                </DialogDescription>
+                {!isOfferMinimized && (
+                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                    {editingOffer ? 'Update promotional offer details' : 'Create a new promotional offer'}
+                  </DialogDescription>
+                )}
+              </div>
+              <div className="flex items-center space-x-2 ml-2 sm:ml-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsOfferMinimized(!isOfferMinimized)}
+                  className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
+                  title={isOfferMinimized ? 'Maximize' : 'Minimize'}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setIsOfferModalOpen(false); setIsOfferMinimized(false) }}
+                  className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
+                  title="Close"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </DialogHeader>
@@ -718,18 +743,41 @@ export default function AdminOffersPage() {
         open={isBannerModalOpen}
         onOpenChange={(open) => {
           setIsBannerModalOpen(open)
+          if (!open) setIsBannerMinimized(false)
         }}
       >
-        <DialogContent className="w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 max-h-[85vh]">
+        <DialogContent className={`w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 transition-all duration-300 ${isBannerMinimized ? 'max-h-16' : 'max-h-[85vh]'}`}>
           <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0">
                 <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
                   {editingBanner ? 'Edit Banner' : 'Add New Banner'}
                 </DialogTitle>
-                <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
-                  {editingBanner ? 'Update banner details' : 'Upload a new banner image'}
-                </DialogDescription>
+                {!isBannerMinimized && (
+                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                    {editingBanner ? 'Update banner details' : 'Upload a new banner image'}
+                  </DialogDescription>
+                )}
+              </div>
+              <div className="flex items-center space-x-2 ml-2 sm:ml-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsBannerMinimized(!isBannerMinimized)}
+                  className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
+                  title={isBannerMinimized ? 'Maximize' : 'Minimize'}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setIsBannerModalOpen(false); setIsBannerMinimized(false) }}
+                  className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
+                  title="Close"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </DialogHeader>
