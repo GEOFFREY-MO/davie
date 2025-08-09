@@ -25,7 +25,8 @@ import {
   Eye,
   EyeOff,
   Save,
-  X
+  X,
+  Minus
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
@@ -352,14 +353,14 @@ export default function AdminOffersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Header */}
+    <>
+      {/* Fixed Header - Mobile Optimized */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#08153A] text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+        <div className="w-full px-2 sm:px-4 lg:px-8 py-2 sm:py-3 lg:py-6">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center space-x-1 sm:space-x-2 flex-1 min-w-0">
               {/* Logo */}
-              <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 rounded-lg overflow-hidden flex-shrink-0">
                 <Image
                   src="/davietech-logo.jpg"
                   alt="DAVIETECH Logo"
@@ -368,23 +369,33 @@ export default function AdminOffersPage() {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">Offers & Promotions</h1>
-                <p className="text-gray-300 mt-1">Manage promotional offers and banners</p>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-xs sm:text-sm lg:text-xl font-bold text-white truncate">
+                  <span className="hidden lg:inline">Offers & Promotions</span>
+                  <span className="hidden sm:inline lg:hidden">Offers</span>
+                  <span className="sm:hidden">Offers</span>
+                </h1>
+                <p className="text-gray-300 mt-1 text-xs hidden lg:block">Manage promotional offers and banners</p>
               </div>
             </div>
-            <Button 
-              onClick={() => router.push('/admin/dashboard')}
-              variant="outline" 
-              className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300"
-            >
-              Back to Dashboard
-            </Button>
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <Button 
+                onClick={() => router.push('/admin/dashboard')}
+                variant="outline"
+                size="sm"
+                className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 text-xs px-2 sm:px-3"
+              >
+                <span className="hidden sm:inline">Dashboard</span>
+                <span className="sm:hidden">Back</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="pt-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content - Separate Container */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-x-hidden overflow-y-auto w-full pt-16 sm:pt-20 lg:pt-24">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-8 sm:pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Promotional Offers */}
           <div className="space-y-6">
@@ -402,67 +413,67 @@ export default function AdminOffersPage() {
               </Button>
             </div>
 
-            <div className="space-y-4">
-              {offers.map((offer) => (
-                <Card key={offer.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-6">
+          <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-6 w-full">
+            {offers.map((offer) => (
+              <Card key={offer.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-2 sm:p-3 lg:p-6">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">{offer.title}</h3>
-                          <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0">
-                            <Percent className="h-3 w-3 mr-1" />
-                            {offer.discountPercentage}%
-                          </Badge>
-                          <Badge className={getStatusColor(offer.status)}>
-                            {offer.status === 'active' ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
-                            {offer.status}
+                      <div className="flex flex-wrap items-center gap-2 mb-1 sm:mb-2">
+                        <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 truncate">{offer.title}</h3>
+                        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 text-xs">
+                          <Percent className="h-3 w-3 mr-1" />
+                          {offer.discountPercentage}%
+                        </Badge>
+                        <Badge className={`${getStatusColor(offer.status)} text-xs`}>
+                          {offer.status === 'active' ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
+                          {offer.status}
+                        </Badge>
+                      </div>
+                      <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2">{offer.description}</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs sm:text-sm">
+                        <div className="flex items-center space-x-2">
+                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                          <span className="text-gray-600">
+                            {formatDate(offer.startDate)} - {formatDate(offer.endDate)}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Target className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                          <Badge className={`${getTargetAudienceColor(offer.targetAudience)} text-xs`}>
+                            {offer.targetAudience}
                           </Badge>
                         </div>
-                        <p className="text-gray-600 mb-3">{offer.description}</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                          <div className="flex items-center space-x-2">
-                            <Calendar className="h-4 w-4 text-gray-400" />
-                            <span className="text-gray-600">
-                              {formatDate(offer.startDate)} - {formatDate(offer.endDate)}
-                            </span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Target className="h-4 w-4 text-gray-400" />
-                            <Badge className={getTargetAudienceColor(offer.targetAudience)}>
-                              {offer.targetAudience}
-                            </Badge>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Users className="h-4 w-4 text-gray-400" />
-                            <span className="text-gray-600">
-                              {offer.usedCount} / {offer.usageLimit} used
-                            </span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <TrendingUp className="h-4 w-4 text-gray-400" />
-                            <span className="text-gray-600">
-                              Min: KES {offer.minimumPurchase?.toLocaleString()}
-                            </span>
-                          </div>
+                        <div className="flex items-center space-x-2">
+                          <Users className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                          <span className="text-gray-600">
+                            {offer.usedCount} / {offer.usageLimit} used
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
+                          <span className="text-gray-600">
+                            Min: KES {offer.minimumPurchase?.toLocaleString()}
+                          </span>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2 ml-4">
+                      </div>
+                    <div className="flex items-center space-x-1 sm:space-x-2 ml-2 sm:ml-4">
                         <Button
                           variant="outline"
-                          size="sm"
+                        size="sm"
                           onClick={() => handleEditOffer(offer)}
-                          className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
+                        className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3"
                         >
-                          <Edit className="h-4 w-4" />
+                        <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                         <Button
                           variant="outline"
-                          size="sm"
+                        size="sm"
                           onClick={() => handleDeleteOffer(offer.id)}
-                          className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300"
+                        className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3"
                         >
-                          <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                       </div>
                     </div>
@@ -488,12 +499,12 @@ export default function AdminOffersPage() {
               </Button>
             </div>
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-6 w-full">
               {banners.map((banner) => (
                 <Card key={banner.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-24 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                  <CardContent className="p-2 sm:p-3 lg:p-6">
+                    <div className="flex items-start space-x-2 sm:space-x-4">
+                      <div className="w-20 h-14 sm:w-24 sm:h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
                         <img
                           src={banner.imageUrl}
                           alt={banner.altText}
@@ -501,50 +512,50 @@ export default function AdminOffersPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">{banner.title}</h3>
-                          <Badge className={getStatusColor(banner.status)}>
+                        <div className="flex flex-wrap items-center gap-2 mb-1 sm:mb-2">
+                          <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 truncate">{banner.title}</h3>
+                          <Badge className={`${getStatusColor(banner.status)} text-xs`}>
                             {banner.status === 'active' ? <Eye className="h-3 w-3 mr-1" /> : <EyeOff className="h-3 w-3 mr-1" />}
                             {banner.status}
                           </Badge>
-                          <Badge className="bg-purple-100 text-purple-800">
+                          <Badge className="bg-purple-100 text-purple-800 text-xs">
                             {banner.position}
                           </Badge>
                         </div>
-                        <p className="text-gray-600 mb-2">{banner.altText}</p>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2 line-clamp-2">{banner.altText}</p>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
                           <span className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-1" />
+                            <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             {formatDate(banner.startDate)} - {formatDate(banner.endDate)}
                           </span>
-                                                     {banner.linkUrl && (
-                             <a 
-                               href={banner.linkUrl}
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline transition-colors duration-200"
-                             >
-                               View Link
-                             </a>
-                           )}
+                          {banner.linkUrl && (
+                            <a 
+                              href={banner.linkUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-800 cursor-pointer hover:underline transition-colors duration-200"
+                            >
+                              View Link
+                            </a>
+                          )}
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-1 sm:space-x-2">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleEditBanner(banner)}
-                          className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300"
+                          className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleDeleteBanner(banner.id)}
-                          className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300"
+                          className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300 text-xs sm:text-sm px-2 sm:px-3"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                       </div>
                     </div>
@@ -557,15 +568,24 @@ export default function AdminOffersPage() {
       </div>
 
       {/* Add/Edit Offer Modal */}
-      <Dialog open={isOfferModalOpen} onOpenChange={setIsOfferModalOpen}>
-        <DialogContent className="max-w-2xl bg-white border-0 shadow-2xl">
-          <DialogHeader className="border-b border-blue-100 pb-4">
-            <DialogTitle className="text-2xl font-bold text-blue-800">
-              {editingOffer ? 'Edit Offer' : 'Add New Offer'}
-            </DialogTitle>
-            <DialogDescription className="text-blue-600 mt-2">
-              {editingOffer ? 'Update promotional offer details' : 'Create a new promotional offer'}
-            </DialogDescription>
+      <Dialog
+        open={isOfferModalOpen}
+        onOpenChange={(open) => {
+          setIsOfferModalOpen(open)
+        }}
+      >
+        <DialogContent className="w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 max-h-[85vh]">
+          <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
+                  {editingOffer ? 'Edit Offer' : 'Add New Offer'}
+                </DialogTitle>
+                <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                  {editingOffer ? 'Update promotional offer details' : 'Create a new promotional offer'}
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
           <div className="space-y-6 pt-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -694,15 +714,24 @@ export default function AdminOffersPage() {
       </Dialog>
 
       {/* Add/Edit Banner Modal */}
-      <Dialog open={isBannerModalOpen} onOpenChange={setIsBannerModalOpen}>
-        <DialogContent className="max-w-2xl bg-white border-0 shadow-2xl">
-          <DialogHeader className="border-b border-blue-100 pb-4">
-            <DialogTitle className="text-2xl font-bold text-blue-800">
-              {editingBanner ? 'Edit Banner' : 'Add New Banner'}
-            </DialogTitle>
-            <DialogDescription className="text-blue-600 mt-2">
-              {editingBanner ? 'Update banner details' : 'Upload a new banner image'}
-            </DialogDescription>
+      <Dialog
+        open={isBannerModalOpen}
+        onOpenChange={(open) => {
+          setIsBannerModalOpen(open)
+        }}
+      >
+        <DialogContent className="w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 max-h-[85vh]">
+          <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
+                  {editingBanner ? 'Edit Banner' : 'Add New Banner'}
+                </DialogTitle>
+                <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                  {editingBanner ? 'Update banner details' : 'Upload a new banner image'}
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
           <div className="space-y-6 pt-4">
             <div>
@@ -798,6 +827,7 @@ export default function AdminOffersPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+      </div>
+    </>
   )
-} 
+}
