@@ -215,9 +215,9 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-x-hidden overflow-y-auto w-full relative">
       {/* Header - Mobile Optimized */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-[#08153A] text-white shadow-lg">
+      <div className="sticky top-0 left-0 right-0 z-50 bg-[#08153A] text-white shadow-lg">
         <div className="w-full px-2 sm:px-4 lg:px-8 py-2 sm:py-3 lg:py-6">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center space-x-1 sm:space-x-2 flex-1 min-w-0">
@@ -264,83 +264,83 @@ export default function AdminProductsPage() {
                     <span className="hidden sm:inline ml-1">Add</span>
                   </Button>
                 </DialogTrigger>
-              <DialogContent className="max-w-2xl bg-white border-0 shadow-2xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader className="border-b border-blue-100 pb-3 sm:pb-4">
-                  <DialogTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-800">
+              <DialogContent className="w-[95vw] max-w-2xl bg-white border-0 shadow-2xl max-h-[85vh] overflow-y-auto mx-2 my-4">
+                <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
+                  <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800">
                     {editingProduct ? 'Edit Product' : 'Add New Product'}
                   </DialogTitle>
-                  <DialogDescription className="text-blue-600 mt-2 text-sm sm:text-base">
+                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
                     {editingProduct ? 'Update product information' : 'Create a new product listing'}
                   </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-4 sm:space-y-6 pt-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-3 sm:space-y-4 lg:space-y-6 pt-3 sm:pt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
                     <div>
-                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Product Name *</label>
+                      <label className="text-xs sm:text-sm font-semibold text-blue-700 mb-1 sm:mb-2 block">Product Name *</label>
                       <Input
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Enter product name"
-                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400 text-sm"
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Category *</label>
+                      <label className="text-xs sm:text-sm font-semibold text-blue-700 mb-1 sm:mb-2 block">Category *</label>
                       <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
-                        <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
+                        <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 text-sm">
                           <SelectValue placeholder="Select category" className="text-blue-600" />
                         </SelectTrigger>
                         <SelectContent className="bg-white border-blue-200">
-                          <SelectItem value="Electronics" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Electronics</SelectItem>
-                          <SelectItem value="Fashion" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Fashion</SelectItem>
-                          <SelectItem value="Food & Beverages" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Food & Beverages</SelectItem>
-                          <SelectItem value="Sports & Fitness" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Sports & Fitness</SelectItem>
+                          <SelectItem value="Electronics" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800 text-sm">Electronics</SelectItem>
+                          <SelectItem value="Fashion" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800 text-sm">Fashion</SelectItem>
+                          <SelectItem value="Food & Beverages" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800 text-sm">Food & Beverages</SelectItem>
+                          <SelectItem value="Sports & Fitness" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800 text-sm">Sports & Fitness</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
                   <div>
-                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Description *</label>
+                    <label className="text-xs sm:text-sm font-semibold text-blue-700 mb-1 sm:mb-2 block">Description *</label>
                     <Textarea
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       placeholder="Enter product description"
-                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400 text-sm"
                       rows={3}
                     />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
                     <div>
-                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Price (KES) *</label>
+                      <label className="text-xs sm:text-sm font-semibold text-blue-700 mb-1 sm:mb-2 block">Price (KES) *</label>
                       <Input
                         type="number"
                         value={formData.price}
                         onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
                         placeholder="0"
-                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400 text-sm"
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Stock Quantity</label>
+                      <label className="text-xs sm:text-sm font-semibold text-blue-700 mb-1 sm:mb-2 block">Stock Quantity</label>
                       <Input
                         type="number"
                         value={formData.stock}
                         onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
                         placeholder="0"
-                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400 text-sm"
                       />
                     </div>
-                    <div>
-                      <label className="text-sm font-semibold text-blue-700 mb-2 block">Image URL *</label>
+                    <div className="sm:col-span-2 lg:col-span-1">
+                      <label className="text-xs sm:text-sm font-semibold text-blue-700 mb-1 sm:mb-2 block">Image URL *</label>
                       <Input
                         value={formData.image}
                         onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                         placeholder="https://example.com/image.jpg"
-                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                        className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400 text-sm"
                       />
                     </div>
                   </div>
-                  <div className="flex space-x-4">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                     <label className="flex items-center space-x-2 cursor-pointer">
                       <input
                         type="checkbox"
@@ -348,7 +348,7 @@ export default function AdminProductsPage() {
                         onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                         className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="text-sm font-semibold text-blue-700">Featured Product</span>
+                      <span className="text-xs sm:text-sm font-semibold text-blue-700">Featured Product</span>
                     </label>
                     <label className="flex items-center space-x-2 cursor-pointer">
                       <input
@@ -357,13 +357,13 @@ export default function AdminProductsPage() {
                         onChange={(e) => setFormData({ ...formData, bestSeller: e.target.checked })}
                         className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="text-sm font-semibold text-blue-700">Best Seller</span>
+                      <span className="text-xs sm:text-sm font-semibold text-blue-700">Best Seller</span>
                     </label>
                   </div>
-                  <div className="flex space-x-2 pt-4 border-t border-blue-100">
+                  <div className="flex space-x-2 pt-3 sm:pt-4 border-t border-blue-100">
                     <Button 
                       onClick={handleSaveProduct}
-                      className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 text-sm"
                     >
                       {editingProduct ? 'Update Product' : 'Add Product'}
                     </Button>
@@ -375,7 +375,7 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
-      <div className="pt-12 sm:pt-16 lg:pt-24 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="pt-4 sm:pt-6 lg:pt-8 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-8 sm:pb-12">
         {/* Filters */}
         <Card className="mb-6 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-0 shadow-xl">
           <CardHeader className="border-b border-blue-100 bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
@@ -448,7 +448,7 @@ export default function AdminProductsPage() {
 
         {/* Products Grid/List - Mobile: 2 columns */}
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 w-full">
             {filteredProducts.map((product) => (
               <Card key={product.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                 <CardHeader className="border-b border-gray-100 p-3 sm:p-4 lg:p-6">
@@ -507,7 +507,7 @@ export default function AdminProductsPage() {
             ))}
           </div>
         ) : (
-          <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-3 sm:space-y-4 w-full">
             {filteredProducts.map((product) => (
               <Card key={product.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-3 sm:p-4 lg:p-6">
@@ -592,6 +592,7 @@ export default function AdminProductsPage() {
           </Card>
         )}
       </div>
+    </div>
     </div>
   )
 } 
