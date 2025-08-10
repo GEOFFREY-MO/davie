@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { 
@@ -18,41 +18,17 @@ import {
 import Link from 'next/link'
 import Image from 'next/image'
 
-// Mock data for demonstration
-const mockStats = {
-  totalSales: 1250000,
-  totalOrders: 156,
-  totalProducts: 89,
-  totalCustomers: 234
+type Stats = {
+  totals: { totalSales: number; totalOrders: number; totalProducts: number; totalCustomers: number }
+  changes: { salesPct: number; ordersPct: number; productsPct: number; customersPct: number }
+  recentOrders: { id: string; customerName: string; total: number; status: string; date: string }[]
 }
-
-const mockRecentOrders = [
-  {
-    id: '1',
-    customerName: 'John Doe',
-    total: 25000,
-    status: 'pending',
-    date: '2024-01-15'
-  },
-  {
-    id: '2',
-    customerName: 'Jane Smith',
-    total: 15000,
-    status: 'processing',
-    date: '2024-01-14'
-  },
-  {
-    id: '3',
-    customerName: 'Mike Johnson',
-    total: 35000,
-    status: 'delivered',
-    date: '2024-01-13'
-  }
-]
 
 export default function AdminDashboard() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const [stats, setStats] = useState<Stats | null>(null)
+  const formatNumber = (n?: number) => (typeof n === 'number' ? n.toLocaleString() : '0')
 
   useEffect(() => {
     if (status === 'loading') return
@@ -60,6 +36,18 @@ export default function AdminDashboard() {
       router.push('/admin/login')
     }
   }, [session, status, router])
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch('/api/admin/stats', { cache: 'no-store' })
+        if (res.ok) setStats(await res.json())
+      } catch (e) {
+        console.error('Failed to load stats', e)
+      }
+    }
+    load()
+  }, [])
 
   if (status === 'loading') {
     return (
@@ -136,9 +124,9 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-1 sm:pt-2">
-              <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">KES {mockStats.totalSales.toLocaleString()}</div>
+              <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">KES {formatNumber(stats?.totals.totalSales)}</div>
               <p className="text-xs text-gray-600 mt-1 sm:mt-2">
-                <span className="text-green-600 font-semibold">+12%</span> from last month
+                <span className="text-green-600 font-semibold">{stats ? `${Math.round(stats.changes.salesPct)}%` : '—'}</span> from last month
               </p>
             </CardContent>
           </Card>
@@ -151,9 +139,9 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-1 sm:pt-2">
-              <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">{mockStats.totalOrders}</div>
+              <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">{formatNumber(stats?.totals.totalOrders)}</div>
               <p className="text-xs text-gray-600 mt-1 sm:mt-2">
-                <span className="text-green-600 font-semibold">+8%</span> from last month
+                <span className="text-green-600 font-semibold">{stats ? `${Math.round(stats.changes.ordersPct)}%` : '—'}</span> from last month
               </p>
             </CardContent>
           </Card>
@@ -166,9 +154,9 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-1 sm:pt-2">
-              <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">{mockStats.totalProducts}</div>
+              <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">{formatNumber(stats?.totals.totalProducts)}</div>
               <p className="text-xs text-gray-600 mt-1 sm:mt-2">
-                <span className="text-green-600 font-semibold">+5%</span> from last month
+                <span className="text-green-600 font-semibold">{stats ? `${Math.round(stats.changes.productsPct)}%` : '—'}</span> from last month
               </p>
             </CardContent>
           </Card>
@@ -181,9 +169,9 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-1 sm:pt-2">
-              <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">{mockStats.totalCustomers}</div>
+              <div className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900">{formatNumber(stats?.totals.totalCustomers)}</div>
               <p className="text-xs text-gray-600 mt-1 sm:mt-2">
-                <span className="text-green-600 font-semibold">+15%</span> from last month
+                <span className="text-green-600 font-semibold">{stats ? `${Math.round(stats.changes.customersPct)}%` : '—'}</span> from last month
               </p>
             </CardContent>
           </Card>
@@ -264,7 +252,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent className="p-3 sm:p-4 lg:p-6">
             <div className="space-y-3 sm:space-y-4">
-              {mockRecentOrders.map((order) => (
+              {(stats?.recentOrders || []).map((order) => (
                 <div key={order.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300 space-y-2 sm:space-y-0">
                   <div className="flex items-center space-x-3 sm:space-x-4">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
