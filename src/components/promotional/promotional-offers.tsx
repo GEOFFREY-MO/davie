@@ -137,10 +137,23 @@ export function PromotionalOffers() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {offers.map((offer) => (
-            <div
-              key={offer.id}
-              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
-            >
+            <div key={offer.id} className="relative group">
+              {/* Ambient colorful glow orbs */}
+              <div className="pointer-events-none absolute -inset-6 -z-10 opacity-80">
+                <div className="absolute -top-10 -left-8 h-28 w-28 bg-pink-400/35 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
+                <div className="absolute -bottom-12 -right-10 h-36 w-36 bg-sky-400/35 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
+                <div className="absolute top-1/2 -translate-y-1/2 left-1/3 h-24 w-24 bg-purple-500/30 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
+              </div>
+
+              {/* Conic gradient ring and glass card */}
+              <div
+                className="relative rounded-2xl p-[2px] transition-transform duration-300 group-hover:scale-[1.01]"
+                style={{
+                  background:
+                    'conic-gradient(from 180deg at 50% 50%, rgba(236,72,153,0.65), rgba(59,130,246,0.65), rgba(16,185,129,0.65), rgba(168,85,247,0.65), rgba(236,72,153,0.65))',
+                }}
+              >
+                <div className="rounded-2xl bg-white/95 backdrop-blur-md p-6 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),0_0_60px_-25px_rgba(56,189,248,0.45),0_0_80px_-30px_rgba(168,85,247,0.4)]">
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -157,7 +170,7 @@ export function PromotionalOffers() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-bold text-[#00008B] flex items-center">
+                  <div className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 flex items-center drop-shadow-sm">
                     <Percent className="h-6 w-6 mr-1" />
                     {offer.discountPercentage}%
                   </div>
@@ -199,9 +212,9 @@ export function PromotionalOffers() {
                   <span>Usage</span>
                   <span>{computeUsagePercent(offer.usedCount, offer.usageLimit)}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200/70 rounded-full h-2 overflow-hidden">
                   <div
-                    className="bg-[#00FFEF] h-2 rounded-full transition-all duration-300"
+                    className="h-2 rounded-full transition-all duration-300 bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600"
                     style={{
                       width: `${computeUsagePercent(offer.usedCount, offer.usageLimit)}%`
                     }}
@@ -211,7 +224,7 @@ export function PromotionalOffers() {
 
               {/* Action button */}
               <Button
-                className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-bold py-3 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer border-2 border-[#00FFEF]/20"
+                className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-bold py-3 text-lg shadow-[0_10px_25px_rgba(59,130,246,0.35)] hover:shadow-[0_15px_35px_rgba(59,130,246,0.45)] transform hover:scale-105 transition-all duration-300 cursor-pointer border-2 border-[#00FFEF]/20"
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
                   // Navigate to products page or apply offer
@@ -220,6 +233,8 @@ export function PromotionalOffers() {
               >
                 Shop Now
               </Button>
+              </div>
+            </div>
             </div>
           ))}
         </div>
