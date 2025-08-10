@@ -560,56 +560,42 @@ export default function AdminOffersPage() {
           if (!open) setIsOfferMinimized(false)
         }}
       >
-        <DialogContent className={`relative w-[95vw] max-w-2xl bg-transparent border-0 p-0 mx-2 my-0 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${isOfferMinimized ? 'max-h-16' : 'max-h-[85vh]'} overflow-visible`}> 
-          <div className="pointer-events-none absolute -inset-6 -z-10 opacity-70">
-            <div className="absolute -top-12 -left-10 h-44 w-44 bg-pink-400/40 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute -bottom-16 -right-12 h-56 w-56 bg-sky-400/40 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute top-1/2 -translate-y-1/2 -left-12 h-36 w-36 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
-          </div>
-          <div
-            className="relative rounded-2xl p-[2px]"
-            style={{
-              background: 'conic-gradient(from 180deg at 50% 50%, rgba(236,72,153,0.7), rgba(59,130,246,0.7), rgba(16,185,129,0.7), rgba(168,85,247,0.7), rgba(236,72,153,0.7))'
-            }}
-          >
-            <div
-              className={`rounded-2xl bg-white/95 backdrop-blur-md overflow-y-auto ${isOfferMinimized ? 'max-h-16' : 'max-h-[85vh]'} shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),0_0_60px_-20px_rgba(56,189,248,0.45),0_0_80px_-30px_rgba(168,85,247,0.4)]`}
-            >
-              <DialogHeader className="border-b border-blue-100/60 pb-2 sm:pb-3 lg:pb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 truncate">
-                      {editingOffer ? 'Edit Offer' : 'Add New Offer'}
-                    </DialogTitle>
-                    {!isOfferMinimized && (
-                      <DialogDescription className="text-blue-700/80 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
-                        {editingOffer ? 'Update promotional offer details' : 'Create a new promotional offer'}
-                      </DialogDescription>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-2 ml-2 sm:ml-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setIsOfferMinimized(!isOfferMinimized)}
-                      className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
-                      title={isOfferMinimized ? 'Maximize' : 'Minimize'}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => { setIsOfferModalOpen(false); setIsOfferMinimized(false) }}
-                      className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
-                      title="Close"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </DialogHeader>
-              <div className="space-y-6 pt-4 px-4 sm:px-6 lg:px-8 pb-6">
+        <DialogContent className={`w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 transition-all duration-300 ${isOfferMinimized ? 'max-h-16' : 'max-h-[85vh]'}`}>
+          <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
+                  {editingOffer ? 'Edit Offer' : 'Add New Offer'}
+                </DialogTitle>
+                {!isOfferMinimized && (
+                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                    {editingOffer ? 'Update promotional offer details' : 'Create a new promotional offer'}
+                  </DialogDescription>
+                )}
+              </div>
+              <div className="flex items-center space-x-2 ml-2 sm:ml-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsOfferMinimized(!isOfferMinimized)}
+                  className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
+                  title={isOfferMinimized ? 'Maximize' : 'Minimize'}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setIsOfferModalOpen(false); setIsOfferMinimized(false) }}
+                  className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
+                  title="Close"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+          <div className="space-y-6 pt-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-semibold text-blue-700 mb-2 block">Offer Title *</label>
@@ -732,9 +718,7 @@ export default function AdminOffersPage() {
                   </Button>
                 </div>
               </div>
-            </div>
-          </div>
-        </DialogContent>
+          </DialogContent>
       </Dialog>
 
       {/* Add/Edit Banner Modal */}
@@ -745,56 +729,42 @@ export default function AdminOffersPage() {
           if (!open) setIsBannerMinimized(false)
         }}
       >
-        <DialogContent className={`relative w-[95vw] max-w-2xl bg-transparent border-0 p-0 mx-2 my-0 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${isBannerMinimized ? 'max-h-16' : 'max-h-[85vh]'} overflow-visible`}>
-          <div className="pointer-events-none absolute -inset-6 -z-10 opacity-70">
-            <div className="absolute -top-10 -left-10 h-40 w-40 bg-fuchsia-400/40 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute -bottom-14 -right-10 h-48 w-48 bg-cyan-400/40 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute top-1/2 -translate-y-1/2 right-1/3 h-32 w-32 bg-indigo-500/30 rounded-full blur-3xl animate-pulse"></div>
-          </div>
-          <div
-            className="relative rounded-2xl p-[2px]"
-            style={{
-              background: 'conic-gradient(from 180deg at 50% 50%, rgba(59,130,246,0.7), rgba(236,72,153,0.7), rgba(99,102,241,0.7), rgba(14,165,233,0.7), rgba(59,130,246,0.7))'
-            }}
-          >
-            <div
-              className={`rounded-2xl bg-white/95 backdrop-blur-md overflow-y-auto ${isBannerMinimized ? 'max-h-16' : 'max-h-[85vh]'} shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),0_0_60px_-20px_rgba(14,165,233,0.45),0_0_80px_-30px_rgba(99,102,241,0.4)]`}
-            >
-              <DialogHeader className="border-b border-blue-100/60 pb-2 sm:pb-3 lg:pb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 truncate">
-                      {editingBanner ? 'Edit Banner' : 'Add New Banner'}
-                    </DialogTitle>
-                    {!isBannerMinimized && (
-                      <DialogDescription className="text-blue-700/80 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
-                        {editingBanner ? 'Update banner details' : 'Upload a new banner image'}
-                      </DialogDescription>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-2 ml-2 sm:ml-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setIsBannerMinimized(!isBannerMinimized)}
-                      className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
-                      title={isBannerMinimized ? 'Maximize' : 'Minimize'}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => { setIsBannerModalOpen(false); setIsBannerMinimized(false) }}
-                      className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
-                      title="Close"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </DialogHeader>
-              <div className="space-y-6 pt-4 px-4 sm:px-6 lg:px-8 pb-6">
+        <DialogContent className={`w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 transition-all duration-300 ${isBannerMinimized ? 'max-h-16' : 'max-h-[85vh]'}`}>
+          <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
+                  {editingBanner ? 'Edit Banner' : 'Add New Banner'}
+                </DialogTitle>
+                {!isBannerMinimized && (
+                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                    {editingBanner ? 'Update banner details' : 'Upload a new banner image'}
+                  </DialogDescription>
+                )}
+              </div>
+              <div className="flex items-center space-x-2 ml-2 sm:ml-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsBannerMinimized(!isBannerMinimized)}
+                  className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
+                  title={isBannerMinimized ? 'Maximize' : 'Minimize'}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setIsBannerModalOpen(false); setIsBannerMinimized(false) }}
+                  className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
+                  title="Close"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </DialogHeader>
+          <div className="space-y-6 pt-4">
                 <div>
                   <label className="text-sm font-semibold text-blue-700 mb-2 block">Banner Title *</label>
                   <Input
@@ -886,9 +856,7 @@ export default function AdminOffersPage() {
                   </Button>
                 </div>
               </div>
-            </div>
-          </div>
-        </DialogContent>
+          </DialogContent>
       </Dialog>
       </div>
     </>
