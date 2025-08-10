@@ -59,20 +59,22 @@ export function PromotionalOffers() {
   }, [])
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    const key = String(status).toLowerCase()
+    switch (key) {
       case 'active':
-        return 'bg-green-500'
+        return 'bg-[#56CC9D] text-white'
       case 'scheduled':
-        return 'bg-blue-500'
+        return 'bg-blue-500 text-white'
       case 'inactive':
-        return 'bg-gray-500'
+        return 'bg-gray-500 text-white'
       default:
-        return 'bg-gray-500'
+        return 'bg-gray-500 text-white'
     }
   }
 
   const getTargetAudienceColor = (audience: string) => {
-    switch (audience) {
+    const key = String(audience).toLowerCase()
+    switch (key) {
       case 'all':
         return 'bg-blue-100 text-blue-800'
       case 'new':
@@ -138,11 +140,12 @@ export function PromotionalOffers() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {offers.map((offer) => (
             <div key={offer.id} className="relative group">
-              {/* Ambient colorful glow orbs */}
+              {/* Ambient colorful glow orbs (yellow, orange, green, purple) */}
               <div className="pointer-events-none absolute -inset-6 -z-10 opacity-80">
-                <div className="absolute -top-10 -left-8 h-28 w-28 bg-pink-400/35 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
-                <div className="absolute -bottom-12 -right-10 h-36 w-36 bg-sky-400/35 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
-                <div className="absolute top-1/2 -translate-y-1/2 left-1/3 h-24 w-24 bg-purple-500/30 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
+                <div className="absolute -top-10 -left-8 h-28 w-28 bg-amber-400/35 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
+                <div className="absolute -bottom-12 -right-10 h-36 w-36 bg-orange-400/35 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
+                <div className="absolute top-1/2 -translate-y-1/2 left-1/3 h-24 w-24 bg-green-500/30 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
+                <div className="absolute -top-6 right-1/4 h-20 w-20 bg-purple-500/30 rounded-full blur-3xl group-hover:opacity-90 transition-opacity"></div>
               </div>
 
               {/* Conic gradient ring and glass card */}
@@ -150,7 +153,7 @@ export function PromotionalOffers() {
                 className="relative rounded-2xl p-[2px] transition-transform duration-300 group-hover:scale-[1.01]"
                 style={{
                   background:
-                    'conic-gradient(from 180deg at 50% 50%, rgba(236,72,153,0.65), rgba(59,130,246,0.65), rgba(16,185,129,0.65), rgba(168,85,247,0.65), rgba(236,72,153,0.65))',
+                    'conic-gradient(from 180deg at 50% 50%, rgba(245,158,11,0.65), rgba(249,115,22,0.65), rgba(16,185,129,0.65), rgba(168,85,247,0.65), rgba(245,158,11,0.65))',
                 }}
               >
                 <div className="rounded-2xl bg-white/95 backdrop-blur-md p-6 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),0_0_60px_-25px_rgba(56,189,248,0.45),0_0_80px_-30px_rgba(168,85,247,0.4)]">
