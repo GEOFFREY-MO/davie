@@ -560,7 +560,7 @@ export default function AdminOffersPage() {
           if (!open) setIsOfferMinimized(false)
         }}
       >
-        <DialogContent className={`relative w-[95vw] max-w-2xl bg-transparent border-0 p-0 mx-2 my-4 transition-all duration-300 ${isOfferMinimized ? 'max-h-16' : 'max-h-[85vh]'} overflow-visible`}> 
+        <DialogContent className={`relative w-[95vw] max-w-2xl bg-transparent border-0 p-0 mx-2 my-0 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${isOfferMinimized ? 'max-h-16' : 'max-h-[85vh]'} overflow-visible`}> 
           <div className="pointer-events-none absolute -inset-6 -z-10 opacity-70">
             <div className="absolute -top-12 -left-10 h-44 w-44 bg-pink-400/40 rounded-full blur-3xl animate-pulse"></div>
             <div className="absolute -bottom-16 -right-12 h-56 w-56 bg-sky-400/40 rounded-full blur-3xl animate-pulse"></div>
@@ -745,7 +745,7 @@ export default function AdminOffersPage() {
           if (!open) setIsBannerMinimized(false)
         }}
       >
-        <DialogContent className={`relative w-[95vw] max-w-2xl bg-transparent border-0 p-0 mx-2 my-4 transition-all duration-300 ${isBannerMinimized ? 'max-h-16' : 'max-h-[85vh]'} overflow-visible`}>
+        <DialogContent className={`relative w-[95vw] max-w-2xl bg-transparent border-0 p-0 mx-2 my-0 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${isBannerMinimized ? 'max-h-16' : 'max-h-[85vh]'} overflow-visible`}>
           <div className="pointer-events-none absolute -inset-6 -z-10 opacity-70">
             <div className="absolute -top-10 -left-10 h-40 w-40 bg-fuchsia-400/40 rounded-full blur-3xl animate-pulse"></div>
             <div className="absolute -bottom-14 -right-10 h-48 w-48 bg-cyan-400/40 rounded-full blur-3xl animate-pulse"></div>
