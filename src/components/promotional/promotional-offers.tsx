@@ -12,9 +12,11 @@ interface Offer {
   discountPercentage: number
   status: 'active' | 'inactive' | 'scheduled'
   targetAudience: 'all' | 'new' | 'existing'
-  usageLimit: number
-  usedCount: number
-  minimumOrderAmount: number
+  usageLimit?: number
+  usedCount?: number
+  minimumOrderAmount?: number
+  // Some APIs may return this field name instead
+  minimumPurchase?: number
   startDate: string
   endDate: string
   code?: string
@@ -88,6 +90,15 @@ export function PromotionalOffers() {
       day: 'numeric',
       year: 'numeric'
     })
+  }
+
+  const formatNumber = (value?: number) =>
+    typeof value === 'number' && !Number.isNaN(value) ? value.toLocaleString() : '0'
+
+  const computeUsagePercent = (used?: number, limit?: number) => {
+    if (!limit || limit <= 0) return 0
+    const percent = ((used ?? 0) / limit) * 100
+    return Math.round(Math.min(percent, 100))
   }
 
   if (loading) {
@@ -170,14 +181,14 @@ export function PromotionalOffers() {
                 <div className="flex items-center text-sm text-gray-600">
                   <Users className="h-4 w-4 mr-2 text-[#00FFEF]" />
                   <span>
-                    {offer.usedCount} / {offer.usageLimit} used
+                    {(offer.usedCount ?? 0)} / {(offer.usageLimit ?? 0)} used
                   </span>
                 </div>
                 
                 <div className="flex items-center text-sm text-gray-600">
                   <DollarSign className="h-4 w-4 mr-2 text-[#00FFEF]" />
                   <span>
-                    Min: KES {offer.minimumOrderAmount.toLocaleString()}
+                    Min: KES {formatNumber(offer.minimumOrderAmount ?? offer.minimumPurchase)}
                   </span>
                 </div>
               </div>
@@ -186,13 +197,13 @@ export function PromotionalOffers() {
               <div className="mb-6">
                 <div className="flex justify-between text-xs text-gray-500 mb-1">
                   <span>Usage</span>
-                  <span>{Math.round((offer.usedCount / offer.usageLimit) * 100)}%</span>
+                  <span>{computeUsagePercent(offer.usedCount, offer.usageLimit)}%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
                     className="bg-[#00FFEF] h-2 rounded-full transition-all duration-300"
                     style={{
-                      width: `${Math.min((offer.usedCount / offer.usageLimit) * 100, 100)}%`
+                      width: `${computeUsagePercent(offer.usedCount, offer.usageLimit)}%`
                     }}
                   ></div>
                 </div>
