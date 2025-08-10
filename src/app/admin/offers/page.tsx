@@ -560,162 +560,178 @@ export default function AdminOffersPage() {
           if (!open) setIsOfferMinimized(false)
         }}
       >
-        <DialogContent className={`w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 transition-all duration-300 ${isOfferMinimized ? 'max-h-16' : 'max-h-[85vh]'}`}>
-          <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex-1 min-w-0">
-                <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
-                  {editingOffer ? 'Edit Offer' : 'Add New Offer'}
-                </DialogTitle>
-                {!isOfferMinimized && (
-                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
-                    {editingOffer ? 'Update promotional offer details' : 'Create a new promotional offer'}
-                  </DialogDescription>
-                )}
+        <DialogContent className={`relative w-[95vw] max-w-2xl bg-transparent border-0 p-0 mx-2 my-4 transition-all duration-300 ${isOfferMinimized ? 'max-h-16' : 'max-h-[85vh]'} overflow-visible`}> 
+          <div className="pointer-events-none absolute -inset-6 -z-10 opacity-70">
+            <div className="absolute -top-12 -left-10 h-44 w-44 bg-pink-400/40 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute -bottom-16 -right-12 h-56 w-56 bg-sky-400/40 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute top-1/2 -translate-y-1/2 -left-12 h-36 w-36 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
+          </div>
+          <div
+            className="relative rounded-2xl p-[2px]"
+            style={{
+              background: 'conic-gradient(from 180deg at 50% 50%, rgba(236,72,153,0.7), rgba(59,130,246,0.7), rgba(16,185,129,0.7), rgba(168,85,247,0.7), rgba(236,72,153,0.7))'
+            }}
+          >
+            <div
+              className={`rounded-2xl bg-white/95 backdrop-blur-md overflow-y-auto ${isOfferMinimized ? 'max-h-16' : 'max-h-[85vh]'} shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),0_0_60px_-20px_rgba(56,189,248,0.45),0_0_80px_-30px_rgba(168,85,247,0.4)]`}
+            >
+              <DialogHeader className="border-b border-blue-100/60 pb-2 sm:pb-3 lg:pb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 truncate">
+                      {editingOffer ? 'Edit Offer' : 'Add New Offer'}
+                    </DialogTitle>
+                    {!isOfferMinimized && (
+                      <DialogDescription className="text-blue-700/80 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                        {editingOffer ? 'Update promotional offer details' : 'Create a new promotional offer'}
+                      </DialogDescription>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-2 ml-2 sm:ml-4">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsOfferMinimized(!isOfferMinimized)}
+                      className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
+                      title={isOfferMinimized ? 'Maximize' : 'Minimize'}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => { setIsOfferModalOpen(false); setIsOfferMinimized(false) }}
+                      className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
+                      title="Close"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </DialogHeader>
+              <div className="space-y-6 pt-4 px-4 sm:px-6 lg:px-8 pb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Offer Title *</label>
+                    <Input
+                      value={offerFormData.title}
+                      onChange={(e) => setOfferFormData({ ...offerFormData, title: e.target.value })}
+                      placeholder="Enter offer title"
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Discount Percentage *</label>
+                    <Input
+                      type="number"
+                      value={offerFormData.discountPercentage}
+                      onChange={(e) => setOfferFormData({ ...offerFormData, discountPercentage: parseInt(e.target.value) || 0 })}
+                      placeholder="0"
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-blue-700 mb-2 block">Description *</label>
+                  <Textarea
+                    value={offerFormData.description}
+                    onChange={(e) => setOfferFormData({ ...offerFormData, description: e.target.value })}
+                    placeholder="Enter offer description"
+                    className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                    rows={3}
+                  />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Start Date *</label>
+                    <Input
+                      type="date"
+                      value={offerFormData.startDate}
+                      onChange={(e) => setOfferFormData({ ...offerFormData, startDate: e.target.value })}
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">End Date *</label>
+                    <Input
+                      type="date"
+                      value={offerFormData.endDate}
+                      onChange={(e) => setOfferFormData({ ...offerFormData, endDate: e.target.value })}
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Status</label>
+                    <Select value={offerFormData.status} onValueChange={(value) => setOfferFormData({ ...offerFormData, status: value as any })}>
+                      <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border-blue-200">
+                        <SelectItem value="active" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Active</SelectItem>
+                        <SelectItem value="inactive" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Inactive</SelectItem>
+                        <SelectItem value="scheduled" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Scheduled</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Target Audience</label>
+                    <Select value={offerFormData.targetAudience} onValueChange={(value) => setOfferFormData({ ...offerFormData, targetAudience: value as any })}>
+                      <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
+                        <SelectValue placeholder="Select audience" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border-blue-200">
+                        <SelectItem value="all" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">All Customers</SelectItem>
+                        <SelectItem value="new" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">New Customers</SelectItem>
+                        <SelectItem value="existing" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Existing Customers</SelectItem>
+                        <SelectItem value="vip" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">VIP Customers</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Minimum Purchase (KES)</label>
+                    <Input
+                      type="number"
+                      value={offerFormData.minimumPurchase}
+                      onChange={(e) => setOfferFormData({ ...offerFormData, minimumPurchase: parseInt(e.target.value) || 0 })}
+                      placeholder="0"
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Maximum Discount (KES)</label>
+                    <Input
+                      type="number"
+                      value={offerFormData.maximumDiscount}
+                      onChange={(e) => setOfferFormData({ ...offerFormData, maximumDiscount: parseInt(e.target.value) || 0 })}
+                      placeholder="0"
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Usage Limit</label>
+                    <Input
+                      type="number"
+                      value={offerFormData.usageLimit}
+                      onChange={(e) => setOfferFormData({ ...offerFormData, usageLimit: parseInt(e.target.value) || 0 })}
+                      placeholder="0"
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                    />
+                  </div>
+                </div>
+                <div className="flex space-x-2 pt-4 border-t border-blue-100">
+                  <Button 
+                    onClick={handleSaveOffer}
+                    className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {editingOffer ? 'Update Offer' : 'Create Offer'}
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-center space-x-2 ml-2 sm:ml-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsOfferMinimized(!isOfferMinimized)}
-                  className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
-                  title={isOfferMinimized ? 'Maximize' : 'Minimize'}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => { setIsOfferModalOpen(false); setIsOfferMinimized(false) }}
-                  className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
-                  title="Close"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </DialogHeader>
-          <div className="space-y-6 pt-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Offer Title *</label>
-                <Input
-                  value={offerFormData.title}
-                  onChange={(e) => setOfferFormData({ ...offerFormData, title: e.target.value })}
-                  placeholder="Enter offer title"
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Discount Percentage *</label>
-                <Input
-                  type="number"
-                  value={offerFormData.discountPercentage}
-                  onChange={(e) => setOfferFormData({ ...offerFormData, discountPercentage: parseInt(e.target.value) || 0 })}
-                  placeholder="0"
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-semibold text-blue-700 mb-2 block">Description *</label>
-              <Textarea
-                value={offerFormData.description}
-                onChange={(e) => setOfferFormData({ ...offerFormData, description: e.target.value })}
-                placeholder="Enter offer description"
-                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                rows={3}
-              />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Start Date *</label>
-                <Input
-                  type="date"
-                  value={offerFormData.startDate}
-                  onChange={(e) => setOfferFormData({ ...offerFormData, startDate: e.target.value })}
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">End Date *</label>
-                <Input
-                  type="date"
-                  value={offerFormData.endDate}
-                  onChange={(e) => setOfferFormData({ ...offerFormData, endDate: e.target.value })}
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Status</label>
-                <Select value={offerFormData.status} onValueChange={(value) => setOfferFormData({ ...offerFormData, status: value as any })}>
-                  <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-blue-200">
-                    <SelectItem value="active" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Active</SelectItem>
-                    <SelectItem value="inactive" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Inactive</SelectItem>
-                    <SelectItem value="scheduled" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Scheduled</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Target Audience</label>
-                <Select value={offerFormData.targetAudience} onValueChange={(value) => setOfferFormData({ ...offerFormData, targetAudience: value as any })}>
-                  <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
-                    <SelectValue placeholder="Select audience" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-blue-200">
-                    <SelectItem value="all" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">All Customers</SelectItem>
-                    <SelectItem value="new" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">New Customers</SelectItem>
-                    <SelectItem value="existing" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Existing Customers</SelectItem>
-                    <SelectItem value="vip" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">VIP Customers</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Minimum Purchase (KES)</label>
-                <Input
-                  type="number"
-                  value={offerFormData.minimumPurchase}
-                  onChange={(e) => setOfferFormData({ ...offerFormData, minimumPurchase: parseInt(e.target.value) || 0 })}
-                  placeholder="0"
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Maximum Discount (KES)</label>
-                <Input
-                  type="number"
-                  value={offerFormData.maximumDiscount}
-                  onChange={(e) => setOfferFormData({ ...offerFormData, maximumDiscount: parseInt(e.target.value) || 0 })}
-                  placeholder="0"
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Usage Limit</label>
-                <Input
-                  type="number"
-                  value={offerFormData.usageLimit}
-                  onChange={(e) => setOfferFormData({ ...offerFormData, usageLimit: parseInt(e.target.value) || 0 })}
-                  placeholder="0"
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-                />
-              </div>
-            </div>
-            <div className="flex space-x-2 pt-4 border-t border-blue-100">
-              <Button 
-                onClick={handleSaveOffer}
-                className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {editingOffer ? 'Update Offer' : 'Create Offer'}
-              </Button>
             </div>
           </div>
         </DialogContent>
@@ -729,131 +745,147 @@ export default function AdminOffersPage() {
           if (!open) setIsBannerMinimized(false)
         }}
       >
-        <DialogContent className={`w-[95vw] max-w-2xl bg-white border-0 shadow-2xl overflow-y-auto mx-2 my-4 transition-all duration-300 ${isBannerMinimized ? 'max-h-16' : 'max-h-[85vh]'}`}>
-          <DialogHeader className="border-b border-blue-100 pb-2 sm:pb-3 lg:pb-4">
-            <div className="flex items-center justify-between">
-              <div className="flex-1 min-w-0">
-                <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold text-blue-800 truncate">
-                  {editingBanner ? 'Edit Banner' : 'Add New Banner'}
-                </DialogTitle>
-                {!isBannerMinimized && (
-                  <DialogDescription className="text-blue-600 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
-                    {editingBanner ? 'Update banner details' : 'Upload a new banner image'}
-                  </DialogDescription>
-                )}
+        <DialogContent className={`relative w-[95vw] max-w-2xl bg-transparent border-0 p-0 mx-2 my-4 transition-all duration-300 ${isBannerMinimized ? 'max-h-16' : 'max-h-[85vh]'} overflow-visible`}>
+          <div className="pointer-events-none absolute -inset-6 -z-10 opacity-70">
+            <div className="absolute -top-10 -left-10 h-40 w-40 bg-fuchsia-400/40 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute -bottom-14 -right-10 h-48 w-48 bg-cyan-400/40 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute top-1/2 -translate-y-1/2 right-1/3 h-32 w-32 bg-indigo-500/30 rounded-full blur-3xl animate-pulse"></div>
+          </div>
+          <div
+            className="relative rounded-2xl p-[2px]"
+            style={{
+              background: 'conic-gradient(from 180deg at 50% 50%, rgba(59,130,246,0.7), rgba(236,72,153,0.7), rgba(99,102,241,0.7), rgba(14,165,233,0.7), rgba(59,130,246,0.7))'
+            }}
+          >
+            <div
+              className={`rounded-2xl bg-white/95 backdrop-blur-md overflow-y-auto ${isBannerMinimized ? 'max-h-16' : 'max-h-[85vh]'} shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),0_0_60px_-20px_rgba(14,165,233,0.45),0_0_80px_-30px_rgba(99,102,241,0.4)]`}
+            >
+              <DialogHeader className="border-b border-blue-100/60 pb-2 sm:pb-3 lg:pb-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <DialogTitle className="text-base sm:text-lg lg:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 truncate">
+                      {editingBanner ? 'Edit Banner' : 'Add New Banner'}
+                    </DialogTitle>
+                    {!isBannerMinimized && (
+                      <DialogDescription className="text-blue-700/80 mt-1 sm:mt-2 text-xs sm:text-sm lg:text-base">
+                        {editingBanner ? 'Update banner details' : 'Upload a new banner image'}
+                      </DialogDescription>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-2 ml-2 sm:ml-4">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsBannerMinimized(!isBannerMinimized)}
+                      className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
+                      title={isBannerMinimized ? 'Maximize' : 'Minimize'}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => { setIsBannerModalOpen(false); setIsBannerMinimized(false) }}
+                      className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
+                      title="Close"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </DialogHeader>
+              <div className="space-y-6 pt-4 px-4 sm:px-6 lg:px-8 pb-6">
+                <div>
+                  <label className="text-sm font-semibold text-blue-700 mb-2 block">Banner Title *</label>
+                  <Input
+                    value={bannerFormData.title}
+                    onChange={(e) => setBannerFormData({ ...bannerFormData, title: e.target.value })}
+                    placeholder="Enter banner title"
+                    className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-blue-700 mb-2 block">Image URL *</label>
+                  <Input
+                    value={bannerFormData.imageUrl}
+                    onChange={(e) => setBannerFormData({ ...bannerFormData, imageUrl: e.target.value })}
+                    placeholder="https://example.com/banner-image.jpg"
+                    className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-blue-700 mb-2 block">Alt Text *</label>
+                  <Input
+                    value={bannerFormData.altText}
+                    onChange={(e) => setBannerFormData({ ...bannerFormData, altText: e.target.value })}
+                    placeholder="Enter alt text for accessibility"
+                    className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-blue-700 mb-2 block">Link URL</label>
+                  <Input
+                    value={bannerFormData.linkUrl}
+                    onChange={(e) => setBannerFormData({ ...bannerFormData, linkUrl: e.target.value })}
+                    placeholder="https://example.com/landing-page"
+                    className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
+                  />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Status</label>
+                    <Select value={bannerFormData.status} onValueChange={(value) => setBannerFormData({ ...bannerFormData, status: value as any })}>
+                      <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border-blue-200">
+                        <SelectItem value="active" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Active</SelectItem>
+                        <SelectItem value="inactive" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Inactive</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Position</label>
+                    <Select value={bannerFormData.position} onValueChange={(value) => setBannerFormData({ ...bannerFormData, position: value as any })}>
+                      <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
+                        <SelectValue placeholder="Select position" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border-blue-200">
+                        <SelectItem value="hero" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Hero</SelectItem>
+                        <SelectItem value="sidebar" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Sidebar</SelectItem>
+                        <SelectItem value="footer" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Footer</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-blue-700 mb-2 block">Start Date</label>
+                    <Input
+                      type="date"
+                      value={bannerFormData.startDate}
+                      onChange={(e) => setBannerFormData({ ...bannerFormData, startDate: e.target.value })}
+                      className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-blue-700 mb-2 block">End Date</label>
+                  <Input
+                    type="date"
+                    value={bannerFormData.endDate}
+                    onChange={(e) => setBannerFormData({ ...bannerFormData, endDate: e.target.value })}
+                    className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700"
+                  />
+                </div>
+                <div className="flex space-x-2 pt-4 border-t border-blue-100">
+                  <Button 
+                    onClick={handleSaveBanner}
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {editingBanner ? 'Update Banner' : 'Upload Banner'}
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-center space-x-2 ml-2 sm:ml-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsBannerMinimized(!isBannerMinimized)}
-                  className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600 hover:text-blue-800"
-                  title={isBannerMinimized ? 'Maximize' : 'Minimize'}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => { setIsBannerModalOpen(false); setIsBannerMinimized(false) }}
-                  className="h-8 w-8 p-0 hover:bg-red-100 text-red-600 hover:text-red-800"
-                  title="Close"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </DialogHeader>
-          <div className="space-y-6 pt-4">
-            <div>
-              <label className="text-sm font-semibold text-blue-700 mb-2 block">Banner Title *</label>
-              <Input
-                value={bannerFormData.title}
-                onChange={(e) => setBannerFormData({ ...bannerFormData, title: e.target.value })}
-                placeholder="Enter banner title"
-                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-semibold text-blue-700 mb-2 block">Image URL *</label>
-              <Input
-                value={bannerFormData.imageUrl}
-                onChange={(e) => setBannerFormData({ ...bannerFormData, imageUrl: e.target.value })}
-                placeholder="https://example.com/banner-image.jpg"
-                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-semibold text-blue-700 mb-2 block">Alt Text *</label>
-              <Input
-                value={bannerFormData.altText}
-                onChange={(e) => setBannerFormData({ ...bannerFormData, altText: e.target.value })}
-                placeholder="Enter alt text for accessibility"
-                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-semibold text-blue-700 mb-2 block">Link URL</label>
-              <Input
-                value={bannerFormData.linkUrl}
-                onChange={(e) => setBannerFormData({ ...bannerFormData, linkUrl: e.target.value })}
-                placeholder="https://example.com/landing-page"
-                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
-              />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Status</label>
-                <Select value={bannerFormData.status} onValueChange={(value) => setBannerFormData({ ...bannerFormData, status: value as any })}>
-                  <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-blue-200">
-                    <SelectItem value="active" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Active</SelectItem>
-                    <SelectItem value="inactive" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Position</label>
-                <Select value={bannerFormData.position} onValueChange={(value) => setBannerFormData({ ...bannerFormData, position: value as any })}>
-                  <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700">
-                    <SelectValue placeholder="Select position" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border-blue-200">
-                    <SelectItem value="hero" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Hero</SelectItem>
-                    <SelectItem value="sidebar" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Sidebar</SelectItem>
-                    <SelectItem value="footer" className="text-blue-700 hover:bg-blue-50 hover:text-blue-800">Footer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <label className="text-sm font-semibold text-blue-700 mb-2 block">Start Date</label>
-                <Input
-                  type="date"
-                  value={bannerFormData.startDate}
-                  onChange={(e) => setBannerFormData({ ...bannerFormData, startDate: e.target.value })}
-                  className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-semibold text-blue-700 mb-2 block">End Date</label>
-              <Input
-                type="date"
-                value={bannerFormData.endDate}
-                onChange={(e) => setBannerFormData({ ...bannerFormData, endDate: e.target.value })}
-                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700"
-              />
-            </div>
-            <div className="flex space-x-2 pt-4 border-t border-blue-100">
-              <Button 
-                onClick={handleSaveBanner}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {editingBanner ? 'Update Banner' : 'Upload Banner'}
-              </Button>
             </div>
           </div>
         </DialogContent>
