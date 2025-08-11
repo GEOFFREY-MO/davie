@@ -92,19 +92,34 @@ export default function CartPage() {
     }
   }
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (cartItems.length === 0) {
       toast.error('Your cart is empty')
       return
     }
     
-    setIsLoading(true)
-    // Simulate checkout process
-    setTimeout(() => {
+    const phoneNumber = prompt('Enter your M-Pesa phone number (e.g. 2547XXXXXXXX)')
+    if (!phoneNumber) return
+
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/payments/mpesa/stk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phoneNumber,
+          amount: Math.round(total),
+          accountReference: 'DAVIETECH',
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error || 'Failed to initiate STK')
+      toast.success('M-Pesa STK sent. Check your phone to complete payment.')
+    } catch (e: any) {
+      toast.error(e?.message || 'Payment failed')
+    } finally {
       setIsLoading(false)
-      toast.success('Redirecting to checkout...')
-      // Here you would redirect to checkout page
-    }, 1000)
+    }
   }
 
   // Calculate totals
