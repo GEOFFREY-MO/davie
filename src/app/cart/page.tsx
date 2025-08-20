@@ -5,6 +5,9 @@ import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react'
 import { Product } from '@/types'
@@ -57,6 +60,13 @@ export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>(mockCartItems)
   const [couponCode, setCouponCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [customer, setCustomer] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    collection: '',
+    notes: ''
+  })
 
   const updateQuantity = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) return
@@ -97,9 +107,26 @@ export default function CartPage() {
       toast.error('Your cart is empty')
       return
     }
-    
-    const phoneNumber = prompt('Enter your M-Pesa phone number (e.g. 2547XXXXXXXX)')
-    if (!phoneNumber) return
+
+    // Basic validation for guest checkout
+    if (!customer.name.trim() || !customer.email.trim() || !customer.phone.trim() || !customer.collection.trim()) {
+      toast.error('Please fill in name, email, phone and collection location')
+      return
+    }
+    // Very light email/phone checks
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email)) {
+      toast.error('Please enter a valid email')
+      return
+    }
+    if (!/^(?:254|0)7\d{8}$/.test(customer.phone)) {
+      toast.error('Enter phone as 2547XXXXXXXX or 07XXXXXXXX')
+      return
+    }
+
+    // Normalize phone to international format 2547XXXXXXXX
+    const normalizedPhone = customer.phone.startsWith('0')
+      ? `254${customer.phone.slice(1)}`
+      : customer.phone
 
     try {
       setIsLoading(true)
@@ -107,9 +134,16 @@ export default function CartPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          phoneNumber,
+          phoneNumber: normalizedPhone,
           amount: Math.round(total),
           accountReference: 'DAVIETECH',
+          // Extra metadata (ignored by API today but useful for order creation)
+          customer: {
+            name: customer.name,
+            email: customer.email,
+            collection: customer.collection,
+            notes: customer.notes,
+          }
         }),
       })
       const data = await res.json()
@@ -253,6 +287,82 @@ export default function CartPage() {
               </div>
             </div>
 
+            {/* Customer Details */}
+            <div className="lg:col-span-1">
+              <div className="bg-[#08153A] rounded-lg p-6 sticky top-24 mb-8">
+                <h2 className="text-xl font-semibold mb-4">Customer Details</h2>
+
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="name" className="block text-sm mb-2">Full Name</Label>
+                    <Input
+                      id="name"
+                      placeholder="e.g. Jane Doe"
+                      value={customer.name}
+                      onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
+                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="email" className="block text-sm mb-2">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={customer.email}
+                      onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
+                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="phone" className="block text-sm mb-2">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="2547XXXXXXXX or 07XXXXXXXX"
+                      value={customer.phone}
+                      onChange={(e) => setCustomer({ ...customer, phone: e.target.value.replace(/\s/g, '') })}
+                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="block text-sm mb-2">Place of Collection</Label>
+                    <Select
+                      value={customer.collection}
+                      onValueChange={(val) => setCustomer({ ...customer, collection: val })}
+                    >
+                      <SelectTrigger className="w-full bg-white/10 border-white/20 text-white">
+                        <SelectValue placeholder="Select a location" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#0b1a4a] text-white border-white/20">
+                        <SelectItem value="nairobi-cbd">Nairobi CBD Pickup</SelectItem>
+                        <SelectItem value="westlands">Westlands Pickup</SelectItem>
+                        <SelectItem value="kilimani">Kilimani Pickup</SelectItem>
+                        <SelectItem value="delivery">Delivery (enter details below)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="notes" className="block text-sm mb-2">Notes (address, delivery instructions, etc.)</Label>
+                    <Textarea
+                      id="notes"
+                      rows={3}
+                      placeholder="Apartment, street, preferred time, etc."
+                      value={customer.notes}
+                      onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
+                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                    />
+                  </div>
+
+                  <p className="text-xs text-gray-400">We use your details for order updates and fulfillment. No account needed.</p>
+                </div>
+              </div>
+            </div>
+
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-[#08153A] rounded-lg p-6 sticky top-24">
@@ -314,7 +424,7 @@ export default function CartPage() {
                   onClick={handleCheckout}
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Processing...' : 'Proceed to Checkout'}
+                  {isLoading ? 'Processing...' : 'Confirm & Pay'}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
 
