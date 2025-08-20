@@ -22,7 +22,6 @@ export function HeroSection() {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Welcome to
                 <span className="block text-[hsl(var(--color-accent))]">DAVIETECH</span>
                 YOUR ONE-STOP TECH HUB!
               </h1>
