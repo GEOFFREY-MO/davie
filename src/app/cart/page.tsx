@@ -370,7 +370,7 @@ export default function CartPage() {
             <div className="rounded-md bg-white/5 p-3 border border-white/10">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-200">Create an account for faster checkout and order history.</p>
-                <Button size="sm" variant="secondary" onClick={() => signIn()} className="bg-white text-black hover:bg-white/90">
+                <Button size="sm" variant="secondary" onClick={() => (window.location.href = '/signup')} className="bg-white text-black hover:bg-white/90">
                   Sign in
                 </Button>
               </div>
