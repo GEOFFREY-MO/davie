@@ -15,6 +15,8 @@ import { toast } from 'sonner'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useCart } from '@/components/providers/cart-provider'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { signIn } from 'next-auth/react'
 
 interface CartItem {
   product: Product
@@ -35,6 +37,19 @@ export default function CartPage() {
     collection: '',
     notes: ''
   })
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+  const [saveInfo, setSaveInfo] = useState(true)
+
+  // Prefill customer from previous checkout
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('davie.customer.v1')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        setCustomer(prev => ({ ...prev, ...parsed }))
+      }
+    } catch {}
+  }, [])
 
   const updateQuantity = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) return
@@ -111,7 +126,12 @@ export default function CartPage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || 'Failed to initiate STK')
+      // Save info for next purchase if enabled
+      if (saveInfo) {
+        try { localStorage.setItem('davie.customer.v1', JSON.stringify(customer)) } catch {}
+      }
       toast.success('M-Pesa STK sent. Check your phone to complete payment.')
+      setIsCheckoutOpen(false)
     } catch (e: any) {
       toast.error(e?.message || 'Payment failed')
     } finally {
@@ -250,82 +270,6 @@ export default function CartPage() {
               </div>
             </div>
 
-            {/* Customer Details */}
-            <div className="lg:col-span-1">
-              <div className="bg-[#08153A] rounded-lg p-6 sticky top-24 mb-8">
-                <h2 className="text-xl font-semibold mb-4">Customer Details</h2>
-
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="name" className="block text-sm mb-2">Full Name</Label>
-                    <Input
-                      id="name"
-                      placeholder="e.g. Jane Doe"
-                      value={customer.name}
-                      onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="email" className="block text-sm mb-2">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={customer.email}
-                      onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="phone" className="block text-sm mb-2">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="2547XXXXXXXX or 07XXXXXXXX"
-                      value={customer.phone}
-                      onChange={(e) => setCustomer({ ...customer, phone: e.target.value.replace(/\s/g, '') })}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                    />
-                  </div>
-
-                  <div>
-                    <Label className="block text-sm mb-2">Place of Collection</Label>
-                    <Select
-                      value={customer.collection}
-                      onValueChange={(val) => setCustomer({ ...customer, collection: val })}
-                    >
-                      <SelectTrigger className="w-full bg-white/10 border-white/20 text-white">
-                        <SelectValue placeholder="Select a location" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-[#0b1a4a] text-white border-white/20">
-                        <SelectItem value="nairobi-cbd">Nairobi CBD Pickup</SelectItem>
-                        <SelectItem value="westlands">Westlands Pickup</SelectItem>
-                        <SelectItem value="kilimani">Kilimani Pickup</SelectItem>
-                        <SelectItem value="delivery">Delivery (enter details below)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="notes" className="block text-sm mb-2">Notes (address, delivery instructions, etc.)</Label>
-                    <Textarea
-                      id="notes"
-                      rows={3}
-                      placeholder="Apartment, street, preferred time, etc."
-                      value={customer.notes}
-                      onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
-                      className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
-                    />
-                  </div>
-
-                  <p className="text-xs text-gray-400">We use your details for order updates and fulfillment. No account needed.</p>
-                </div>
-              </div>
-            </div>
-
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-[#08153A] rounded-lg p-6 sticky top-24">
@@ -384,7 +328,7 @@ export default function CartPage() {
                 {/* Checkout Button */}
                 <Button 
                   className="w-full bg-[#00FFEF] text-black hover:bg-[#00FFEF]/90 h-12 text-lg"
-                  onClick={handleCheckout}
+                  onClick={() => setIsCheckoutOpen(true)}
                   disabled={isLoading}
                 >
                   {isLoading ? 'Processing...' : 'Confirm & Pay'}
@@ -414,6 +358,105 @@ export default function CartPage() {
           </div>
         )}
       </main>
+
+      {/* Checkout Modal with Customer Details */}
+      <Dialog open={isCheckoutOpen} onOpenChange={setIsCheckoutOpen}>
+        <DialogContent className="max-w-xl bg-[#08153A] text-white border-white/20">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Customer Details</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-5 mt-2">
+            <div className="rounded-md bg-white/5 p-3 border border-white/10">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-200">Create an account for faster checkout and order history.</p>
+                <Button size="sm" variant="secondary" onClick={() => signIn()} className="bg-white text-black hover:bg-white/90">
+                  Sign in
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="modal-name" className="block text-sm mb-2">Full Name</Label>
+                <Input
+                  id="modal-name"
+                  placeholder="e.g. Jane Doe"
+                  value={customer.name}
+                  onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="modal-email" className="block text-sm mb-2">Email</Label>
+                <Input
+                  id="modal-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={customer.email}
+                  onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="modal-phone" className="block text-sm mb-2">Phone Number</Label>
+                <Input
+                  id="modal-phone"
+                  type="tel"
+                  placeholder="2547XXXXXXXX or 07XXXXXXXX"
+                  value={customer.phone}
+                  onChange={(e) => setCustomer({ ...customer, phone: e.target.value.replace(/\s/g, '') })}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                />
+              </div>
+
+              <div>
+                <Label className="block text-sm mb-2">Place of Collection</Label>
+                <Select
+                  value={customer.collection}
+                  onValueChange={(val) => setCustomer({ ...customer, collection: val })}
+                >
+                  <SelectTrigger className="w-full bg-white/10 border-white/20 text-white">
+                    <SelectValue placeholder="Select a location" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#0b1a4a] text-white border-white/20">
+                    <SelectItem value="nairobi-cbd">Nairobi CBD Pickup</SelectItem>
+                    <SelectItem value="westlands">Westlands Pickup</SelectItem>
+                    <SelectItem value="kilimani">Kilimani Pickup</SelectItem>
+                    <SelectItem value="delivery">Delivery (enter details below)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="modal-notes" className="block text-sm mb-2">Notes (address, delivery instructions, etc.)</Label>
+                <Textarea
+                  id="modal-notes"
+                  rows={3}
+                  placeholder="Apartment, street, preferred time, etc."
+                  value={customer.notes}
+                  onChange={(e) => setCustomer({ ...customer, notes: e.target.value })}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-400"
+                />
+              </div>
+
+              <label className="flex items-center gap-2 text-sm select-none">
+                <input type="checkbox" checked={saveInfo} onChange={(e) => setSaveInfo(e.target.checked)} />
+                Save my information for next time
+              </label>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button variant="outline" className="bg-white/10 border-white/20 hover:bg-white/20" onClick={() => setIsCheckoutOpen(false)}>Cancel</Button>
+              <Button className="bg-[#00FFEF] text-black hover:bg-[#00FFEF]/90" onClick={handleCheckout} disabled={isLoading}>
+                {isLoading ? 'Processing…' : 'Pay Now'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
