@@ -14,50 +14,18 @@ import { Product } from '@/types'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useCart } from '@/components/providers/cart-provider'
 
 interface CartItem {
   product: Product
   quantity: number
 }
 
-// Mock cart data
-const mockCartItems: CartItem[] = [
-  {
-    product: {
-      id: '1',
-      name: 'Wireless Bluetooth Headphones',
-      description: 'Premium wireless headphones with noise cancellation and 30-hour battery life.',
-      price: 15000,
-      category: 'Electronics',
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-      stock: 25,
-      featured: true,
-      bestSeller: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    quantity: 2
-  },
-  {
-    product: {
-      id: '3',
-      name: 'Premium Coffee Maker',
-      description: 'Automatic coffee maker with programmable settings and thermal carafe.',
-      price: 12000,
-      category: 'Home & Kitchen',
-      image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=400&fit=crop',
-      stock: 8,
-      featured: false,
-      bestSeller: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    quantity: 1
-  }
-]
+// Cart items come from the shared CartProvider
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>(mockCartItems)
+  const { items, setItemQuantity, removeItem: removeItemFromCart, clear } = useCart()
+  const cartItems: CartItem[] = items.map(it => ({ product: it.product, quantity: it.quantity }))
   const [couponCode, setCouponCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [customer, setCustomer] = useState({
@@ -70,21 +38,16 @@ export default function CartPage() {
 
   const updateQuantity = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) return
-    
-    setCartItems(prev => prev.map(item => 
-      item.product.id === productId 
-        ? { ...item, quantity: newQuantity }
-        : item
-    ))
+    setItemQuantity(productId, newQuantity)
   }
 
   const removeItem = (productId: string) => {
-    setCartItems(prev => prev.filter(item => item.product.id !== productId))
+    removeItemFromCart(productId)
     toast.success('Item removed from cart')
   }
 
   const clearCart = () => {
-    setCartItems([])
+    clear()
     toast.success('Cart cleared')
   }
 

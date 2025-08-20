@@ -7,10 +7,12 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useSession } from 'next-auth/react'
+import { useCart } from '@/components/providers/cart-provider'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { data: session } = useSession()
+  const { itemCount } = useCart()
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
@@ -72,7 +74,7 @@ export function Navbar() {
               <Button variant="ghost" size="sm" className="relative">
                 <ShoppingCart className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 bg-[hsl(var(--color-accent))] text-[hsl(var(--color-accent-foreground))] text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  0
+                  {itemCount}
                 </span>
               </Button>
             </Link>

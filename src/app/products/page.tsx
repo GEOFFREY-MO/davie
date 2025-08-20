@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Grid, List, Search, Filter } from 'lucide-react'
+import { useCart } from '@/components/providers/cart-provider'
 
 interface Product {
   id: string
@@ -23,6 +24,7 @@ interface Product {
 }
 
 export default function ProductsPage() {
+  const { addItem } = useCart()
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -84,8 +86,7 @@ export default function ProductsPage() {
   }, [products, searchTerm, selectedCategory, sortOrder])
 
   const addToCart = (product: Product) => {
-    // Mock add to cart functionality
-    console.log('Added to cart:', product.name)
+    addItem(product, 1)
   }
 
   return (
