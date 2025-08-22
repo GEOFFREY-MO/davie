@@ -7,6 +7,7 @@ import { PromotionalOffers } from '@/components/promotional/promotional-offers'
 import FeaturedProducts from '@/components/product/featured-products'
 import BestSellers from '@/components/product/best-sellers'
 import { Footer } from '@/components/layout/footer'
+import { FeatureStrip } from '@/components/home/feature-strip'
 
 export default function HomePage() {
   return (
@@ -14,17 +15,19 @@ export default function HomePage() {
       <Navbar />
       <main className="pt-16">
         <HeroSection />
-        
-        {/* Banner Carousel */}
-        <section className="w-full py-8">
+
+        {/* Put banners and promos immediately after hero */}
+        <section className="w-full py-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <BannerCarousel />
           </div>
         </section>
 
-        {/* Promotional Offers */}
         <PromotionalOffers />
-        
+
+        {/* Feature strip fades on scroll, placed right before products */}
+        <FeatureStrip />
+
         <FeaturedProducts />
         <BestSellers />
       </main>
