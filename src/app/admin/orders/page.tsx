@@ -200,6 +200,22 @@ export default function AdminOrdersPage() {
     void run()
   }
 
+  const handleDeleteOrder = (orderId: string) => {
+    const run = async () => {
+      try {
+        const res = await fetch(`/api/orders/${orderId}`, { method: 'DELETE' })
+        if (!res.ok) throw new Error('Delete failed')
+        const refreshed = await fetch('/api/orders', { cache: 'no-store' })
+        if (refreshed.ok) setOrders(await refreshed.json())
+        toast.success('Order deleted')
+      } catch (e) {
+        console.error(e)
+        toast.error('Failed to delete order')
+      }
+    }
+    void run()
+  }
+
   const getStatusColor = (status: Order['status']) => {
     switch (status) {
       case 'pending': return 'bg-yellow-100 text-yellow-800'
@@ -482,6 +498,15 @@ export default function AdminOrdersPage() {
                     >
                       <Edit className="h-3 w-3 lg:h-4 lg:w-4" />
                       <span className="hidden lg:inline ml-2">Edit</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDeleteOrder(order.id)}
+                      className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300 transition-all duration-300 cursor-pointer text-xs lg:text-sm px-2 lg:px-3"
+                    >
+                      <X className="h-3 w-3 lg:h-4 lg:w-4" />
+                      <span className="hidden lg:inline ml-2">Delete</span>
                     </Button>
                   </div>
                 </div>
