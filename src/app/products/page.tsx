@@ -32,6 +32,37 @@ export default function ProductsPage() {
   const [sortOrder, setSortOrder] = useState('name')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
+  const applyFilters = () => {
+    let filtered = products
+
+    if (searchTerm) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(product => product.category === selectedCategory)
+    }
+
+    filtered = [...filtered].sort((a, b) => {
+      switch (sortOrder) {
+        case 'name':
+          return a.name.localeCompare(b.name)
+        case 'price-low':
+          return a.price - b.price
+        case 'price-high':
+          return b.price - a.price
+        default:
+          return 0
+      }
+    })
+
+    setFilteredProducts(filtered)
+  }
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -52,37 +83,7 @@ export default function ProductsPage() {
   }, [])
 
   useEffect(() => {
-    let filtered = products
-
-    // Filter by search term
-    if (searchTerm) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    }
-
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product => product.category === selectedCategory)
-    }
-
-    // Sort products
-    filtered.sort((a, b) => {
-      switch (sortOrder) {
-        case 'name':
-          return a.name.localeCompare(b.name)
-        case 'price-low':
-          return a.price - b.price
-        case 'price-high':
-          return b.price - a.price
-        default:
-          return 0
-      }
-    })
-
-    setFilteredProducts(filtered)
+    applyFilters()
   }, [products, searchTerm, selectedCategory, sortOrder])
 
   const addToCart = (product: Product) => {
@@ -119,6 +120,7 @@ export default function ProductsPage() {
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') applyFilters() }}
                   className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-[#00FFEF] focus:ring-[#00FFEF]"
                 />
               </div>
@@ -169,6 +171,13 @@ export default function ProductsPage() {
                   }
                 >
                   <List className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={applyFilters}
+                  className="bg-[#00FFEF] hover:bg-[#00FFEF]/90 text-black"
+                >
+                  Search
                 </Button>
               </div>
             </div>
