@@ -8,11 +8,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useSession } from 'next-auth/react'
 import { useCart } from '@/components/providers/cart-provider'
+import { useRouter } from 'next/navigation'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { data: session } = useSession()
   const { itemCount } = useCart()
+  const [navQuery, setNavQuery] = useState('')
+  const router = useRouter()
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
@@ -57,14 +60,34 @@ export function Navbar() {
           </div>
 
           {/* Search Bar */}
-          <div className="hidden md:flex items-center space-x-4 flex-1 max-w-md mx-8">
+          <div className="hidden md:flex items-center space-x-2 flex-1 max-w-md mx-8">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search products..."
+                value={navQuery}
+                onChange={(e) => setNavQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const q = navQuery.trim()
+                    router.push(q ? `/products?search=${encodeURIComponent(q)}` : '/products')
+                    setIsMenuOpen(false)
+                  }
+                }}
                 className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus:bg-white/20 focus:border-[hsl(var(--color-accent))]"
               />
             </div>
+            <Button
+              size="sm"
+              className="bg-[hsl(var(--color-accent))] text-[hsl(var(--color-accent-foreground))]"
+              onClick={() => {
+                const q = navQuery.trim()
+                router.push(q ? `/products?search=${encodeURIComponent(q)}` : '/products')
+                setIsMenuOpen(false)
+              }}
+            >
+              Search
+            </Button>
           </div>
 
           {/* Right Side Actions */}
@@ -120,12 +143,34 @@ export function Navbar() {
               </Link>
               
               {/* Mobile Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Search products..."
-                  className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus:bg-white/20 focus:border-[hsl(var(--color-accent))]"
-                />
+              <div className="flex items-center space-x-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                  <Input
+                    placeholder="Search products..."
+                    value={navQuery}
+                    onChange={(e) => setNavQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const q = navQuery.trim()
+                        router.push(q ? `/products?search=${encodeURIComponent(q)}` : '/products')
+                        setIsMenuOpen(false)
+                      }
+                    }}
+                    className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/70 focus:bg-white/20 focus:border-[hsl(var(--color-accent))]"
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  className="bg-[hsl(var(--color-accent))] text-[hsl(var(--color-accent-foreground))]"
+                  onClick={() => {
+                    const q = navQuery.trim()
+                    router.push(q ? `/products?search=${encodeURIComponent(q)}` : '/products')
+                    setIsMenuOpen(false)
+                  }}
+                >
+                  Search
+                </Button>
               </div>
             </div>
           </div>

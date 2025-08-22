@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Grid, List, Search, Filter } from 'lucide-react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useCart } from '@/components/providers/cart-provider'
 
 interface Product {
@@ -25,6 +26,8 @@ interface Product {
 
 export default function ProductsPage() {
   const { addItem } = useCart()
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -81,6 +84,14 @@ export default function ProductsPage() {
 
     fetchProducts()
   }, [])
+
+  // Initialize search from URL (e.g., /products?search=phone)
+  useEffect(() => {
+    const q = searchParams?.get('search') || ''
+    if (q) {
+      setSearchTerm(q)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     applyFilters()
