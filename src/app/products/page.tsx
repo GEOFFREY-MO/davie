@@ -94,14 +94,6 @@ export default function ProductsPage() {
       <Navbar />
       
       <main className="pt-16">
-        {/* Header */}
-        <div className="bg-[#00008B] text-white py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold mb-2">Our Products</h1>
-            <p className="text-white/80">Discover amazing tech products at DAVIETECH</p>
-          </div>
-        </div>
-
         {/* Promotional Offers Section */}
         <div className="bg-gradient-to-r from-[#00008B] to-[#00008B]/90 py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
