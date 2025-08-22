@@ -3,6 +3,7 @@ export interface Product {
   name: string;
   description: string;
   price: number; // in KES
+  originalPrice?: number; // optional: previous price for discounts
   category: string;
   image: string;
   stock: number;

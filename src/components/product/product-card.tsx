@@ -246,9 +246,22 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 text-lg">Price:</span>
-                  <span className="text-4xl font-bold text-[#00008B]">
-                    KES {product.price.toLocaleString()}
-                  </span>
+                  <div className="text-right">
+                    {typeof (product as any).originalPrice === 'number' && (product as any).originalPrice > product.price ? (
+                      <div className="flex items-baseline space-x-2">
+                        <span className="text-sm line-through text-red-600">
+                          Was KES {(product as any).originalPrice.toLocaleString()}
+                        </span>
+                        <span className="text-4xl font-bold text-green-700">
+                          Now KES {product.price.toLocaleString()}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-4xl font-bold text-black">
+                        KES {product.price.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -371,9 +384,20 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 </div>
                 
                 <div className="text-right">
-                  <span className="text-2xl font-bold text-primary block mb-2">
-                    KES {product.price.toLocaleString()}
-                  </span>
+                  {typeof (product as any).originalPrice === 'number' && (product as any).originalPrice > product.price ? (
+                    <>
+                      <span className="text-sm line-through text-red-600 block">
+                        Was KES {(product as any).originalPrice.toLocaleString()}
+                      </span>
+                      <span className="text-2xl font-bold text-green-700 block mb-2">
+                        Now KES {product.price.toLocaleString()}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-2xl font-bold text-black block mb-2">
+                      KES {product.price.toLocaleString()}
+                    </span>
+                  )}
                   <Button 
                     className="bg-[#00008B] hover:bg-[#00008B]/90 text-white font-semibold px-6 py-2 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
                     style={{ cursor: 'pointer' }}
