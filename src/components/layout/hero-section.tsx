@@ -19,7 +19,7 @@ export function HeroSection() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         <div className="space-y-8">
           {/* Marquee headline */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm">
+          <div className="relative overflow-hidden rounded-2xl">
             <div className="marquee h-16 md:h-20 flex items-center">
               <div className="marquee-track text-2xl md:text-4xl font-extrabold tracking-wide">
                 YOUR ONE-STOP TECH HUB!
@@ -53,8 +53,8 @@ export function HeroSection() {
 
       <style jsx>{`
         @keyframes marqueeMove {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
         }
         .marquee { position: relative; overflow: hidden; }
         .marquee-track {
