@@ -47,6 +47,17 @@ export default function AdminDashboard() {
       }
     }
     load()
+    // Subscribe to SSE for real-time stats refresh
+    const evt = new EventSource('/api/updates/stream')
+    evt.onmessage = (e) => {
+      try {
+        const payload = JSON.parse(e.data)
+        if (payload?.type === 'orders:changed' || payload?.type === 'products:changed' || payload?.type === 'stats:changed') {
+          load()
+        }
+      } catch {}
+    }
+    return () => evt.close()
   }, [])
 
   if (status === 'loading') {

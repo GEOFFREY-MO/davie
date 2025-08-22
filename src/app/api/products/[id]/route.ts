@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth'
 import { db } from '@/lib/db'
+import { broadcastEvent } from '@/app/api/updates/stream/route'
 
 export async function GET(
   request: NextRequest,
@@ -52,7 +53,8 @@ export async function PUT(
       where: { id },
       data: body
     })
-
+    broadcastEvent({ type: 'products:changed' })
+    broadcastEvent({ type: 'stats:changed' })
     return NextResponse.json(product)
   } catch (error) {
     console.error('Error updating product:', error)
@@ -106,7 +108,8 @@ export async function DELETE(
     await db.product.delete({
       where: { id }
     })
-
+    broadcastEvent({ type: 'products:changed' })
+    broadcastEvent({ type: 'stats:changed' })
     return NextResponse.json({ message: 'Product deleted successfully' })
   } catch (error) {
     console.error('Error deleting product:', error)

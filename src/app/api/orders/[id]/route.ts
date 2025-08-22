@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth'
+import { broadcastEvent } from '@/app/api/updates/stream/route'
 
 export async function GET(
   _request: NextRequest,
@@ -42,6 +43,8 @@ export async function PUT(
         notes,
       },
     })
+    broadcastEvent({ type: 'orders:changed' })
+    broadcastEvent({ type: 'stats:changed' })
     return NextResponse.json(updated)
   } catch (e) {
     console.error('Error updating order', e)
@@ -60,6 +63,8 @@ export async function DELETE(
     }
     const { id } = await params
     await db.order.delete({ where: { id } })
+    broadcastEvent({ type: 'orders:changed' })
+    broadcastEvent({ type: 'stats:changed' })
     return NextResponse.json({ success: true })
   } catch (e) {
     console.error('Error deleting order', e)

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth/auth'
 import { db } from '@/lib/db'
+import { broadcastEvent } from '@/app/api/updates/stream/route'
 
 // GET - Public access to products (for customers)
 export async function GET(request: NextRequest) {
@@ -87,7 +88,8 @@ export async function POST(request: NextRequest) {
         bestSeller: bestSeller || false
       }
     })
-
+    broadcastEvent({ type: 'products:changed' })
+    broadcastEvent({ type: 'stats:changed' })
     return NextResponse.json(product, { status: 201 })
   } catch (error) {
     console.error('Error creating product:', error)
