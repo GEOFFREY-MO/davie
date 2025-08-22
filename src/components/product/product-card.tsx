@@ -510,9 +510,22 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-base sm:text-lg md:text-xl font-bold text-primary">
-              KES {product.price.toLocaleString()}
-            </span>
+            <div className="text-left">
+              {typeof (product as any).originalPrice === 'number' && (product as any).originalPrice > product.price ? (
+                <>
+                  <span className="block text-[10px] sm:text-xs line-through text-red-600">
+                    Was KES {(product as any).originalPrice.toLocaleString()}
+                  </span>
+                  <span className="block text-base sm:text-lg md:text-xl font-bold text-green-700">
+                    Now KES {product.price.toLocaleString()}
+                  </span>
+                </>
+              ) : (
+                <span className="text-base sm:text-lg md:text-xl font-bold text-black">
+                  KES {product.price.toLocaleString()}
+                </span>
+              )}
+            </div>
             <span className="text-xs sm:text-sm text-gray-600">
               {product.stock} in stock
             </span>
