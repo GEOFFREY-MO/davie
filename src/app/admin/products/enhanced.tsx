@@ -64,43 +64,18 @@ export default function EnhancedProductsPage() {
   }, [session, status, router])
 
   useEffect(() => {
-    const mockProducts: Product[] = [
-      {
-        id: '1',
-        name: 'Premium Wireless Headphones',
-        description: 'High-quality wireless headphones with noise cancellation.',
-        price: 15000,
-        category: 'Electronics',
-        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-        stock: 25,
-        featured: true,
-        bestSeller: true,
-      },
-      {
-        id: '2',
-        name: 'Smart Fitness Watch',
-        description: 'Advanced fitness tracking with heart rate monitoring.',
-        price: 25000,
-        category: 'Electronics',
-        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
-        stock: 15,
-        featured: true,
-        bestSeller: true,
-      },
-      {
-        id: '3',
-        name: 'Designer Leather Bag',
-        description: 'Handcrafted leather bag with premium materials.',
-        price: 8500,
-        category: 'Fashion',
-        image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop',
-        stock: 30,
-        featured: true,
-        bestSeller: false,
-      },
-    ]
-    setProducts(mockProducts)
-    setFilteredProducts(mockProducts)
+    const load = async () => {
+      try {
+        const res = await fetch('/api/products')
+        if (!res.ok) throw new Error('Failed to fetch products')
+        const data: Product[] = await res.json()
+        setProducts(data)
+        setFilteredProducts(data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    load()
   }, [])
 
   useEffect(() => {
@@ -120,28 +95,35 @@ export default function EnhancedProductsPage() {
     setFilteredProducts(filtered)
   }, [products, searchTerm, selectedCategory])
 
-  const handleAddProduct = () => {
+  const handleAddProduct = async () => {
     if (!formData.name || !formData.price || !formData.category) {
       toast.error('Please fill in all required fields')
       return
     }
-
-    const newProduct: Product = {
-      id: Date.now().toString(),
-      name: formData.name,
-      description: formData.description,
-      price: parseFloat(formData.price),
-      category: formData.category,
-      image: formData.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-      stock: parseInt(formData.stock) || 0,
-      featured: formData.featured,
-      bestSeller: formData.bestSeller,
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          description: formData.description,
+          price: formData.price,
+          category: formData.category,
+          image: formData.image,
+          stock: formData.stock,
+          featured: formData.featured,
+          bestSeller: formData.bestSeller,
+        })
+      })
+      if (!res.ok) throw new Error('Failed to create product')
+      const created: Product = await res.json()
+      setProducts(prev => [created, ...prev])
+      setIsModalOpen(false)
+      resetForm()
+      toast.success('Product added successfully!')
+    } catch (e) {
+      toast.error('Failed to add product')
     }
-
-    setProducts([...products, newProduct])
-    setIsModalOpen(false)
-    resetForm()
-    toast.success('Product added successfully!')
   }
 
   const handleEditProduct = (product: Product) => {
@@ -159,36 +141,44 @@ export default function EnhancedProductsPage() {
     setIsModalOpen(true)
   }
 
-  const handleUpdateProduct = () => {
+  const handleUpdateProduct = async () => {
     if (!editingProduct) return
-
-    const updatedProducts = products.map(product =>
-      product.id === editingProduct.id
-        ? {
-            ...product,
-            name: formData.name,
-            description: formData.description,
-            price: parseFloat(formData.price),
-            category: formData.category,
-            image: formData.image,
-            stock: parseInt(formData.stock) || 0,
-            featured: formData.featured,
-            bestSeller: formData.bestSeller,
-          }
-        : product
-    )
-
-    setProducts(updatedProducts)
-    setIsModalOpen(false)
-    setEditingProduct(null)
-    resetForm()
-    toast.success('Product updated successfully!')
+    try {
+      const res = await fetch(`/api/products/${editingProduct.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          description: formData.description,
+          price: parseFloat(formData.price),
+          category: formData.category,
+          image: formData.image,
+          stock: parseInt(formData.stock) || 0,
+          featured: formData.featured,
+          bestSeller: formData.bestSeller,
+        })
+      })
+      if (!res.ok) throw new Error('Failed to update product')
+      const updated: Product = await res.json()
+      setProducts(prev => prev.map(p => (p.id === updated.id ? updated : p)))
+      setIsModalOpen(false)
+      setEditingProduct(null)
+      resetForm()
+      toast.success('Product updated successfully!')
+    } catch (e) {
+      toast.error('Failed to update product')
+    }
   }
 
-  const handleDeleteProduct = (productId: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      setProducts(products.filter(product => product.id !== productId))
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm('Are you sure you want to delete this product?')) return
+    try {
+      const res = await fetch(`/api/products/${productId}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed to delete')
+      setProducts(prev => prev.filter(p => p.id !== productId))
       toast.success('Product deleted successfully!')
+    } catch (e) {
+      toast.error('Failed to delete product')
     }
   }
 
