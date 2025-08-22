@@ -115,14 +115,11 @@ export function BannerCarousel() {
           ))
         ) : (
           <>
-            {/* Track for multiple banners */}
-            <div
-              className="flex h-full w-full transition-transform duration-700 ease-in-out"
-              style={{ transform: `translateX(-${index * 100}%)`, width: `${bannerCount * 100}%` }}
-            >
-              {banners.map((banner) => {
-                const slide = (
-                  <div className="relative w-full h-40 md:h-64 shrink-0">
+            {/* Crossfade slides to guarantee full 5s visibility per banner */}
+            <div className="relative w-full h-40 md:h-64">
+              {banners.map((banner, i) => {
+                const content = (
+                  <div className="absolute inset-0 transition-opacity duration-700" style={{ opacity: i === index ? 1 : 0 }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={banner.imageUrl}
@@ -139,12 +136,12 @@ export function BannerCarousel() {
                 )
 
                 return banner.linkUrl ? (
-                  <a key={banner.id} href={banner.linkUrl} className="w-full" aria-label={banner.title}>
-                    {slide}
+                  <a key={banner.id} href={banner.linkUrl} className="block w-full h-full" aria-label={banner.title}>
+                    {content}
                   </a>
                 ) : (
-                  <div key={banner.id} className="w-full">
-                    {slide}
+                  <div key={banner.id} className="w-full h-full">
+                    {content}
                   </div>
                 )
               })}
