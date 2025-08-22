@@ -52,10 +52,10 @@ interface Order {
   customerPhone: string
   shippingAddress: string
   items: OrderItem[]
-  subtotal: number
-  shipping: number
-  tax: number
-  total: number
+  subtotal?: number
+  shipping?: number
+  tax?: number
+  total?: number
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
   paymentMethod: 'mpesa' | 'card' | 'cash'
   paymentStatus: 'pending' | 'paid' | 'failed'
@@ -231,7 +231,8 @@ export default function AdminOrdersPage() {
     }
   }
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return '—'
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -239,6 +240,11 @@ export default function AdminOrdersPage() {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  const formatAmount = (value?: number | null) => {
+    if (typeof value === 'number' && Number.isFinite(value)) return value.toLocaleString()
+    return '0'
   }
 
   if (status === 'loading') {
@@ -415,7 +421,7 @@ export default function AdminOrdersPage() {
                         <div className="lg:text-right">
                           <p className="text-sm lg:text-lg font-bold text-gray-900 flex items-center">
                             <DollarSign className="h-3 w-3 lg:h-4 lg:w-4 mr-1" />
-                            KES {order.total.toLocaleString()}
+                            KES {formatAmount(order.total)}
                           </p>
                           <div className="flex flex-wrap items-center gap-1 lg:space-x-2 mt-1 lg:mt-2">
                             <Badge className={`${getStatusColor(order.status)} text-xs`}>
@@ -573,7 +579,7 @@ export default function AdminOrdersPage() {
                     <CardTitle className="text-sm font-semibold text-purple-800">Total Amount</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-lg font-bold text-purple-800">KES {selectedOrder.total.toLocaleString()}</p>
+                    <p className="text-lg font-bold text-purple-800">KES {formatAmount(selectedOrder.total)}</p>
                   </CardContent>
                 </Card>
               </div>
@@ -630,8 +636,8 @@ export default function AdminOrdersPage() {
                           <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-gray-900">KES {item.price.toLocaleString()}</p>
-                          <p className="text-sm text-gray-600">Total: KES {item.total.toLocaleString()}</p>
+                          <p className="font-semibold text-gray-900">KES {formatAmount(item.price)}</p>
+                          <p className="text-sm text-gray-600">Total: KES {formatAmount(item.total)}</p>
                         </div>
                       </div>
                     ))}
@@ -648,20 +654,20 @@ export default function AdminOrdersPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-700">Subtotal:</span>
-                      <span className="font-semibold text-gray-900">KES {selectedOrder.subtotal.toLocaleString()}</span>
+                      <span className="font-semibold text-gray-900">KES {formatAmount(selectedOrder.subtotal)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-700">Shipping:</span>
-                      <span className="font-semibold text-gray-900">KES {selectedOrder.shipping.toLocaleString()}</span>
+                      <span className="font-semibold text-gray-900">KES {formatAmount(selectedOrder.shipping)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-700">Tax:</span>
-                      <span className="font-semibold text-gray-900">KES {selectedOrder.tax.toLocaleString()}</span>
+                      <span className="font-semibold text-gray-900">KES {formatAmount(selectedOrder.tax)}</span>
                     </div>
                     <div className="border-t border-blue-200 pt-2">
                       <div className="flex justify-between">
                         <span className="text-lg font-bold text-blue-800">Total:</span>
-                        <span className="text-lg font-bold text-blue-800">KES {selectedOrder.total.toLocaleString()}</span>
+                        <span className="text-lg font-bold text-blue-800">KES {formatAmount(selectedOrder.total)}</span>
                       </div>
                     </div>
                   </div>
