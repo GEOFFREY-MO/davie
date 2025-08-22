@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart, Star, Eye, X, ZoomIn, ZoomOut, RotateCw, ChevronDown, ChevronUp } from 'lucide-react'
+import { ShoppingCart, Eye, X, ZoomIn, ZoomOut, RotateCw, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -219,19 +219,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h2>
               </div>
 
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      className={`h-6 w-6 ${
-                        i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                      }`} 
-                    />
-                  ))}
-                  <span className="text-gray-600 ml-2 text-lg">(4.0)</span>
-                </div>
-              </div>
+              {/* Rating removed */}
 
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -363,23 +351,8 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                   </p>
                   
                   <div className="flex items-center space-x-4 mb-4">
-                    <div className="flex items-center space-x-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          className={`h-4 w-4 ${
-                            i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                          }`} 
-                        />
-                      ))}
-                      <span className="text-sm text-gray-600 ml-1">(4.0)</span>
-                    </div>
-                    <span className="text-sm text-gray-600">
-                      Category: {product.category}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      Stock: {product.stock}
-                    </span>
+                    <span className="text-sm text-gray-600">Category: {product.category}</span>
+                    <span className="text-sm text-gray-600">Stock: {product.stock}</span>
                   </div>
                 </div>
                 
@@ -492,21 +465,8 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
             </p>
           </div>
 
-          <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <div className="flex items-center space-x-1">
-              {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                    i < 4 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                  }`} 
-                />
-              ))}
-              <span className="text-xs text-gray-600 ml-1">(4.0)</span>
-            </div>
-            <span className="text-xs sm:text-sm text-gray-600 truncate ml-2">
-              {product.category}
-            </span>
+          <div className="flex items-center justify-end mb-2 sm:mb-3">
+            <span className="text-xs sm:text-sm text-gray-600 truncate ml-2">{product.category}</span>
           </div>
 
           <div className="flex items-center justify-between">
