@@ -350,7 +350,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                     {product.description}
                   </p>
                   
-                  <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex items-center justify-center space-x-4 mb-4">
                     <span className="text-sm text-gray-600">Category: {product.category}</span>
                     <span className="text-sm text-gray-600">Stock: {product.stock}</span>
                   </div>
@@ -465,8 +465,8 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
             </p>
           </div>
 
-          <div className="flex items-center justify-end mb-2 sm:mb-3">
-            <span className="text-xs sm:text-sm text-gray-600 truncate ml-2">{product.category}</span>
+          <div className="flex items-center justify-center mb-2 sm:mb-3">
+            <span className="text-xs sm:text-sm text-gray-600 truncate">{product.category}</span>
           </div>
 
           <div className="flex items-center justify-between">
