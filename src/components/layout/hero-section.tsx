@@ -20,8 +20,8 @@ export function HeroSection() {
         <div className="space-y-8">
           {/* Marquee headline */}
           <div className="relative overflow-hidden rounded-2xl">
-            <div className="marquee h-12 md:h-16 flex items-center">
-              <div className="marquee-track text-xl md:text-3xl font-extrabold tracking-wide bg-clip-text text-transparent"
+            <div className="marquee h-10 md:h-12 flex items-center">
+              <div className="marquee-track text-lg md:text-2xl font-extrabold tracking-wide bg-clip-text text-transparent"
                    style={{ backgroundImage: 'linear-gradient(90deg, #F59E0B, #10B981, #8B5CF6)' }}>
                 YOUR ONE-STOP TECH HUB!
               </div>
@@ -32,20 +32,20 @@ export function HeroSection() {
           <div className="flex justify-center">
             <Link href="/products">
               <Button 
-                size="lg" 
-                className="relative bg-yellow-400 hover:bg-yellow-500 text-black font-black text-lg md:text-xl px-8 md:px-10 py-4 md:py-6 rounded-2xl shadow-2xl hover:shadow-yellow-400/50 transform hover:scale-105 transition-all duration-300 cursor-pointer border-4 border-yellow-300"
+                size="sm" 
+                className="relative bg-yellow-400 hover:bg-yellow-500 text-black font-black text-base md:text-lg px-6 md:px-8 py-3 md:py-4 rounded-2xl shadow-xl hover:shadow-yellow-400/40 transform hover:scale-105 transition-all duration-300 cursor-pointer border-2 md:border-4 border-yellow-300"
                 style={{ 
                   cursor: 'pointer',
                   background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%)',
-                  boxShadow: '0 10px 25px rgba(251, 191, 36, 0.4), 0 0 0 4px rgba(251, 191, 36, 0.2)',
+                  boxShadow: '0 8px 20px rgba(251, 191, 36, 0.35), 0 0 0 3px rgba(251, 191, 36, 0.2)',
                   textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
                   clipPath: 'polygon(0% 0%, 100% 0%, 95% 50%, 100% 100%, 0% 100%, 5% 50%)'
                 }}
               >
                 <span className="relative z-10">SHOP NOW</span>
-                <ArrowRight className="ml-3 h-5 w-5 md:h-6 md:w-6 relative z-10" />
-                <div className="absolute inset-0 bg-yellow-300 rounded-2xl transform rotate-1 scale-105 opacity-50"></div>
-                <div className="absolute inset-0 bg-yellow-200 rounded-2xl transform -rotate-1 scale-105 opacity-30"></div>
+                <ArrowRight className="ml-3 h-4 w-4 md:h-5 md:w-5 relative z-10" />
+                <div className="absolute inset-0 bg-yellow-300 rounded-2xl transform rotate-1 scale-105 opacity-40"></div>
+                <div className="absolute inset-0 bg-yellow-200 rounded-2xl transform -rotate-1 scale-105 opacity-25"></div>
               </Button>
             </Link>
           </div>

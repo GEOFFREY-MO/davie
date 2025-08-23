@@ -126,18 +126,18 @@ export function PromotionalOffers() {
   }
 
   return (
-    <section className="w-full py-12 bg-gradient-to-r from-[#00008B] to-[#00008B]/90">
+    <section className="w-full py-6 bg-gradient-to-r from-[#00008B] to-[#00008B]/90">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-xl md:text-2xl font-bold text-white mb-2">
             Special Offers & Deals
           </h2>
-          <p className="text-xl text-white/80">
+          <p className="text-sm md:text-base text-white/80">
             Don't miss out on these amazing promotions!
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
           {offers.map((offer) => (
             <div key={offer.id} className="relative group">
               {/* Ambient colorful glow orbs (yellow, orange, green, purple) */}
@@ -156,11 +156,11 @@ export function PromotionalOffers() {
                     'conic-gradient(from 180deg at 50% 50%, rgba(245,158,11,0.65), rgba(249,115,22,0.65), rgba(16,185,129,0.65), rgba(168,85,247,0.65), rgba(245,158,11,0.65))',
                 }}
               >
-                <div className="rounded-2xl bg-white/95 backdrop-blur-md p-6 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),0_0_60px_-25px_rgba(56,189,248,0.45),0_0_80px_-30px_rgba(168,85,247,0.4)]">
+                <div className="rounded-2xl bg-white/95 backdrop-blur-md p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.35),0_0_60px_-25px_rgba(56,189,248,0.45),0_0_80px_-30px_rgba(168,85,247,0.4)]">
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">
                     {offer.title}
                   </h3>
                   <div className="flex items-center space-x-2 mb-3">
@@ -173,35 +173,35 @@ export function PromotionalOffers() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 flex items-center drop-shadow-sm">
-                    <Percent className="h-6 w-6 mr-1" />
+                  <div className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 via-purple-700 to-pink-700 flex items-center drop-shadow-sm">
+                    <Percent className="h-5 w-5 mr-1" />
                     {offer.discountPercentage}%
                   </div>
                 </div>
               </div>
 
               {/* Description */}
-              <p className="text-gray-600 mb-4">
+              <p className="text-sm text-gray-600 mb-3">
                 {offer.description}
               </p>
 
               {/* Details */}
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center text-sm text-gray-600">
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center text-xs text-gray-600">
                   <Calendar className="h-4 w-4 mr-2 text-[#00FFEF]" />
                   <span>
                     {formatDate(offer.startDate)} - {formatDate(offer.endDate)}
                   </span>
                 </div>
                 
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-xs text-gray-600">
                   <Users className="h-4 w-4 mr-2 text-[#00FFEF]" />
                   <span>
                     {(offer.usedCount ?? 0)} / {(offer.usageLimit ?? 0)} used
                   </span>
                 </div>
                 
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-xs text-gray-600">
                   <DollarSign className="h-4 w-4 mr-2 text-[#00FFEF]" />
                   <span>
                     Min: KES {formatNumber(offer.minimumOrderAmount ?? offer.minimumPurchase)}
@@ -210,7 +210,7 @@ export function PromotionalOffers() {
               </div>
 
               {/* Progress bar */}
-              <div className="mb-6">
+              <div className="mb-4">
                 <div className="flex justify-between text-xs text-gray-500 mb-1">
                   <span>Usage</span>
                   <span>{computeUsagePercent(offer.usedCount, offer.usageLimit)}%</span>
@@ -227,7 +227,7 @@ export function PromotionalOffers() {
 
               {/* Action button */}
               <Button
-                className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-bold py-3 text-lg shadow-[0_10px_25px_rgba(59,130,246,0.35)] hover:shadow-[0_15px_35px_rgba(59,130,246,0.45)] transform hover:scale-105 transition-all duration-300 cursor-pointer border-2 border-[#00FFEF]/20"
+                className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-bold py-2 text-sm shadow-[0_8px_18px_rgba(59,130,246,0.28)] hover:shadow-[0_10px_24px_rgba(59,130,246,0.35)] transform hover:scale-[1.02] transition-all duration-300 cursor-pointer border border-[#00FFEF]/20"
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
                   // Navigate to products page or apply offer
