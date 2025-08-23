@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search')
     const featured = searchParams.get('featured')
     const bestSeller = searchParams.get('bestSeller')
+    const inOffer = searchParams.get('inOffer') === 'true'
     const takeParam = searchParams.get('take')
     const take = takeParam ? Math.max(1, Math.min(12, parseInt(takeParam, 10) || 0)) : undefined
 
@@ -40,10 +41,24 @@ export async function GET(request: NextRequest) {
       whereClause.bestSeller = true
     }
 
+    // Constrain to active offers if requested
+    if (inOffer) {
+      whereClause.offers = {
+        some: {
+          offer: {
+            status: 'ACTIVE',
+            startDate: { lte: new Date() },
+            endDate: { gte: new Date() },
+          }
+        }
+      }
+    }
+
     const products = await db.product.findMany({
       where: whereClause,
       orderBy: { createdAt: 'desc' },
       take,
+      include: inOffer ? { offers: { include: { offer: true } } } : undefined,
     })
 
     return NextResponse.json(products)

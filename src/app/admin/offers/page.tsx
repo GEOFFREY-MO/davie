@@ -30,6 +30,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Image from 'next/image'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface Offer {
   id: string
@@ -58,6 +59,15 @@ interface Banner {
   startDate: string
   endDate: string
   createdAt: string
+}
+
+interface Product {
+  id: string
+  name: string
+  price: number
+  originalPrice?: number | null
+  category: string
+  image: string
 }
 
 export default function AdminOffersPage() {
@@ -93,6 +103,8 @@ export default function AdminOffersPage() {
     startDate: '',
     endDate: ''
   })
+  const [products, setProducts] = useState<Product[]>([])
+  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([])
 
   useEffect(() => {
     if (status === 'loading') return
@@ -104,9 +116,10 @@ export default function AdminOffersPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [offersRes, bannersRes] = await Promise.all([
+        const [offersRes, bannersRes, productsRes] = await Promise.all([
           fetch('/api/offers', { cache: 'no-store' }),
           fetch('/api/banners', { cache: 'no-store' }),
+          fetch('/api/products?take=100', { cache: 'no-store' }),
         ])
         if (offersRes.ok) {
           const offersData = await offersRes.json()
@@ -116,8 +129,12 @@ export default function AdminOffersPage() {
           const bannersData = await bannersRes.json()
           setBanners(bannersData)
         }
+        if (productsRes.ok) {
+          const productsData = await productsRes.json()
+          setProducts(productsData)
+        }
       } catch (err) {
-        console.error('Failed loading offers/banners', err)
+        console.error('Failed loading offers/banners/products', err)
       }
     }
     load()
@@ -137,6 +154,7 @@ export default function AdminOffersPage() {
       maximumDiscount: 0,
       usageLimit: 0
     })
+    setSelectedProductIds([])
     setIsOfferModalOpen(true)
   }
 
@@ -154,6 +172,15 @@ export default function AdminOffersPage() {
       maximumDiscount: offer.maximumDiscount || 0,
       usageLimit: offer.usageLimit || 0
     })
+    // Fetch with products to preselect
+    fetch(`/api/offers/${offer.id}?withProducts=true`, { cache: 'no-store' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.products) {
+          setSelectedProductIds(data.products.map((p: any) => p.productId))
+        }
+      })
+      .catch(() => {})
     setIsOfferModalOpen(true)
   }
 
@@ -169,7 +196,7 @@ export default function AdminOffersPage() {
           const res = await fetch(`/api/offers/${editingOffer.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(offerFormData),
+            body: JSON.stringify({ ...offerFormData, productIds: selectedProductIds }),
           })
           if (!res.ok) throw new Error('Failed to update offer')
           toast.success('Offer updated successfully!')
@@ -177,7 +204,7 @@ export default function AdminOffersPage() {
           const res = await fetch('/api/offers', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(offerFormData),
+            body: JSON.stringify({ ...offerFormData, productIds: selectedProductIds }),
           })
           if (!res.ok) throw new Error('Failed to create offer')
           toast.success('Offer created successfully!')
@@ -186,6 +213,7 @@ export default function AdminOffersPage() {
         if (refreshed.ok) setOffers(await refreshed.json())
         setIsOfferModalOpen(false)
         setEditingOffer(null)
+        setSelectedProductIds([])
       } catch (e) {
         console.error(e)
         toast.error('Save failed')
@@ -706,6 +734,30 @@ export default function AdminOffersPage() {
                       placeholder="0"
                       className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 text-blue-700 placeholder-blue-400"
                     />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-blue-700 mb-2 block">Select Products for this Offer</label>
+                  <div className="max-h-64 overflow-auto rounded border border-blue-100 p-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {products.map((p) => {
+                        const checked = selectedProductIds.includes(p.id)
+                        return (
+                          <label key={p.id} className="flex items-center space-x-2 text-blue-800 text-sm cursor-pointer">
+                            <input
+                              type="checkbox"
+                              className="accent-blue-600"
+                              checked={checked}
+                              onChange={(e) => {
+                                setSelectedProductIds(prev => e.target.checked ? [...prev, p.id] : prev.filter(id => id !== p.id))
+                              }}
+                            />
+                            <span className="truncate">{p.name}</span>
+                            <span className="ml-auto text-xs text-blue-600">KES {p.price.toLocaleString()}</span>
+                          </label>
+                        )
+                      })}
+                    </div>
                   </div>
                 </div>
                 <div className="flex space-x-2 pt-4 border-t border-blue-100">
