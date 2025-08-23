@@ -8,6 +8,7 @@ import FeaturedProducts from '@/components/product/featured-products'
 import BestSellers from '@/components/product/best-sellers'
 import { Footer } from '@/components/layout/footer'
 import { FeatureStrip } from '@/components/home/feature-strip'
+import { HomeSpotlight } from '@/components/product/home-spotlight'
 
 export default function HomePage() {
   return (
@@ -20,6 +21,7 @@ export default function HomePage() {
             <BannerCarousel />
           </div>
         </section>
+        <HomeSpotlight />
         <PromotionalOffers />
 
         {/* Hero marquee + CTA now comes after promos */}

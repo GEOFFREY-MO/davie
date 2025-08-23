@@ -12,6 +12,8 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search')
     const featured = searchParams.get('featured')
     const bestSeller = searchParams.get('bestSeller')
+    const takeParam = searchParams.get('take')
+    const take = takeParam ? Math.max(1, Math.min(12, parseInt(takeParam, 10) || 0)) : undefined
 
     let whereClause: any = {}
 
@@ -40,7 +42,8 @@ export async function GET(request: NextRequest) {
 
     const products = await db.product.findMany({
       where: whereClause,
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      take,
     })
 
     return NextResponse.json(products)
