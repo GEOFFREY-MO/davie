@@ -332,7 +332,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="rounded-full bg-white/90 hover:bg-white text-gray-900"
+                  className="rounded-full bg-white/90 hover:bg-white text-gray-900 cursor-pointer"
                   onClick={handleEyeClick}
                 >
                   <Eye className="h-4 w-4" />
@@ -415,7 +415,7 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
               <Button
                 size="sm"
                 variant="secondary"
-                className="rounded-full bg-white/90 hover:bg-white text-gray-900"
+                className="rounded-full bg-white/90 hover:bg-white text-gray-900 cursor-pointer"
                 onClick={handleEyeClick}
               >
                 <Eye className="h-4 w-4" />
