@@ -117,7 +117,7 @@ export default function ProductsPage() {
                 Take advantage of these amazing deals while shopping!
               </p>
             </div>
-            <PromotionalOffers />
+            <PromotionalOffers headerOnly />
           </div>
         </div>
 

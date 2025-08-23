@@ -22,7 +22,7 @@ export default function HomePage() {
           </div>
         </section>
         <HomeSpotlight />
-        <PromotionalOffers />
+        <PromotionalOffers headerOnly />
 
         {/* Hero marquee + CTA now comes after promos */}
         <HeroSection />

@@ -23,7 +23,7 @@ interface Offer {
   code?: string
 }
 
-export function PromotionalOffers() {
+export function PromotionalOffers({ headerOnly = false }: { headerOnly?: boolean }) {
   const [offers, setOffers] = useState<Offer[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -122,9 +122,7 @@ export function PromotionalOffers() {
     )
   }
 
-  if (offers.length === 0) {
-    return null
-  }
+  // In headerOnly mode, always render the header/CTAs even if there are no offers
 
   return (
     <section className="w-full py-6 bg-gradient-to-r from-[#00008B] to-[#00008B]/90">
@@ -138,16 +136,26 @@ export function PromotionalOffers() {
               Don't miss out on these amazing promotions!
             </p>
           </div>
-          <Link href="/offers" className="md:ml-4">
+          <div className="flex items-center justify-center md:justify-end gap-2 md:ml-4">
             <Button
-              className="bg-[#56CC9D] hover:bg-[#56CC9D]/90 text-black font-bold px-4 py-2 text-sm rounded-lg border border-black/10 cursor-pointer"
+              className="bg-[#00008B] hover:bg-[#00008B]/90 text-white font-bold px-4 py-2 text-sm rounded-lg border border-white/10 cursor-pointer"
               style={{ cursor: 'pointer' }}
+              onClick={() => { window.location.href = '/products' }}
             >
-              Click to View Special Offers
+              Shop Now
             </Button>
-          </Link>
+            <Link href="/offers">
+              <Button
+                className="bg-[#56CC9D] hover:bg-[#56CC9D]/90 text-black font-bold px-4 py-2 text-sm rounded-lg border border-black/10 cursor-pointer"
+                style={{ cursor: 'pointer' }}
+              >
+                Click to View Special Offers
+              </Button>
+            </Link>
+          </div>
         </div>
 
+        {!headerOnly && offers.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
           {offers.map((offer) => (
             <div key={offer.id} className="relative group">
@@ -252,6 +260,7 @@ export function PromotionalOffers() {
             </div>
           ))}
         </div>
+        )}
       </div>
     </section>
   )
