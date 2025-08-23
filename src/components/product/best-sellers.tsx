@@ -59,7 +59,7 @@ export default function BestSellers({ compact = false }: BestSellersProps) {
               <p className="text-lg text-gray-700">Our most popular products loved by customers</p>
             </div>
           )}
-          <div className={compact ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'}>
+          <div className={compact ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'}>
             {[...Array(3)].map((_, i) => (
               <div key={i} className="animate-pulse">
                 <div className={compact ? 'bg-gray-200 h-36 rounded-lg mb-2' : 'bg-gray-200 h-64 rounded-lg mb-4'}></div>
@@ -101,7 +101,7 @@ export default function BestSellers({ compact = false }: BestSellersProps) {
           </div>
         )}
         
-        <div className={compact ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2' : 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8'}>
+        <div className={compact ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2' : 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8'}>
           {products.map((product) => (
             <ProductCard
               key={product.id}
