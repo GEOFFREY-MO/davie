@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Percent, Users, Calendar, DollarSign } from 'lucide-react'
+import Link from 'next/link'
 
 interface Offer {
   id: string
@@ -128,13 +129,23 @@ export function PromotionalOffers() {
   return (
     <section className="w-full py-6 bg-gradient-to-r from-[#00008B] to-[#00008B]/90">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-xl md:text-2xl font-bold text-white mb-2">
-            Special Offers & Deals
-          </h2>
-          <p className="text-sm md:text-base text-white/80">
-            Don't miss out on these amazing promotions!
-          </p>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+          <div className="text-center md:text-left mb-3 md:mb-0">
+            <h2 className="text-xl md:text-2xl font-bold text-white">
+              Special Offers & Deals
+            </h2>
+            <p className="text-sm md:text-base text-white/80">
+              Don't miss out on these amazing promotions!
+            </p>
+          </div>
+          <Link href="/offers" className="md:ml-4">
+            <Button
+              className="bg-[#56CC9D] hover:bg-[#56CC9D]/90 text-black font-bold px-4 py-2 text-sm rounded-lg border border-black/10 cursor-pointer"
+              style={{ cursor: 'pointer' }}
+            >
+              Click to View Special Offers
+            </Button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
