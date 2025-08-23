@@ -125,25 +125,25 @@ export function PromotionalOffers({ headerOnly = false }: { headerOnly?: boolean
   // In headerOnly mode, always render the header/CTAs even if there are no offers
 
   const sectionClass = headerOnly
-    ? 'w-full bg-gradient-to-r from-[#00008B] to-[#00008B]/90 py-2 lg:py-0 lg:h-[150px] flex items-center'
+    ? 'w-full bg-gradient-to-r from-[#00008B] to-[#00008B]/90 py-1 lg:py-0 lg:h-[120px] flex items-center'
     : 'w-full py-6 bg-gradient-to-r from-[#00008B] to-[#00008B]/90'
 
   return (
     <section className={sectionClass}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-0">
-          <div className="text-center md:text-left mb-3 md:mb-0">
-            <h2 className={headerOnly ? 'text-lg md:text-xl font-bold text-white' : 'text-xl md:text-2xl font-bold text-white'}>
+          <div className="text-center md:text-left mb-1 md:mb-0">
+            <h2 className={headerOnly ? 'text-sm md:text-base font-bold text-white' : 'text-xl md:text-2xl font-bold text-white'}>
               Special Offers & Deals
             </h2>
-            <p className={headerOnly ? 'text-xs md:text-sm text-white/80' : 'text-sm md:text-base text-white/80'}>
+            <p className={headerOnly ? 'text-[11px] md:text-xs text-white/80' : 'text-sm md:text-base text-white/80'}>
               Don't miss out on these amazing promotions!
             </p>
           </div>
           <div className="flex items-center justify-center md:justify-end gap-2 md:ml-4">
             <Link href="/offers">
               <Button
-                className="bg-[#56CC9D] hover:bg-[#56CC9D]/90 text-black font-bold px-4 py-2 text-sm rounded-lg border border-black/10 cursor-pointer"
+                className="bg-[#56CC9D] hover:bg-[#56CC9D]/90 text-black font-bold px-3 py-1.5 text-xs rounded-lg border border-black/10 cursor-pointer"
                 style={{ cursor: 'pointer' }}
               >
                 Click to View Special Offers

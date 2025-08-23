@@ -16,12 +16,12 @@ export function HeroSection() {
         ></div>
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="space-y-8">
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        <div className="space-y-4">
           {/* Marquee headline */}
           <div className="relative overflow-hidden rounded-2xl">
-            <div className="marquee h-10 md:h-12 flex items-center">
-              <div className="marquee-track text-lg md:text-2xl font-extrabold tracking-wide bg-clip-text text-transparent"
+            <div className="marquee h-8 md:h-10 flex items-center">
+              <div className="marquee-track text-base md:text-xl font-extrabold tracking-wide bg-clip-text text-transparent"
                    style={{ backgroundImage: 'linear-gradient(90deg, #F59E0B, #10B981, #8B5CF6)' }}>
                 YOUR ONE-STOP TECH HUB!
               </div>
@@ -33,17 +33,17 @@ export function HeroSection() {
             <Link href="/products">
               <Button 
                 size="sm" 
-                className="relative bg-yellow-400 hover:bg-yellow-500 text-black font-black text-base md:text-lg px-6 md:px-8 py-3 md:py-4 rounded-2xl shadow-xl hover:shadow-yellow-400/40 transform hover:scale-105 transition-all duration-300 cursor-pointer border-2 md:border-4 border-yellow-300"
+                className="relative bg-yellow-400 hover:bg-yellow-500 text-black font-black text-sm md:text-base px-5 md:px-7 py-2.5 md:py-3 rounded-2xl shadow-xl hover:shadow-yellow-400/40 transform hover:scale-105 transition-all duration-300 cursor-pointer border-2 md:border-3 border-yellow-300"
                 style={{ 
                   cursor: 'pointer',
                   background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%)',
-                  boxShadow: '0 8px 20px rgba(251, 191, 36, 0.35), 0 0 0 3px rgba(251, 191, 36, 0.2)',
+                  boxShadow: '0 6px 16px rgba(251, 191, 36, 0.30), 0 0 0 2px rgba(251, 191, 36, 0.18)',
                   textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
                   clipPath: 'polygon(0% 0%, 100% 0%, 95% 50%, 100% 100%, 0% 100%, 5% 50%)'
                 }}
               >
                 <span className="relative z-10">SHOP NOW</span>
-                <ArrowRight className="ml-3 h-4 w-4 md:h-5 md:w-5 relative z-10" />
+                <ArrowRight className="ml-3 h-3 w-3 md:h-4 md:w-4 relative z-10" />
                 <div className="absolute inset-0 bg-yellow-300 rounded-2xl transform rotate-1 scale-105 opacity-40"></div>
                 <div className="absolute inset-0 bg-yellow-200 rounded-2xl transform -rotate-1 scale-105 opacity-25"></div>
               </Button>
