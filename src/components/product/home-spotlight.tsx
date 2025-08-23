@@ -35,11 +35,11 @@ export function HomeSpotlight() {
   if (!products.length) return null
 
   return (
-    <section className="py-8 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+    <section className="py-4 bg-white">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
           {products.map((p) => (
-            <ProductCard key={p.id} product={p as any} onAddToCart={(prod) => addItem(prod)} />
+            <ProductCard key={p.id} product={p as any} onAddToCart={(prod) => addItem(prod)} compact />
           ))}
         </div>
       </div>
