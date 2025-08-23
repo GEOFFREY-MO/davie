@@ -16,12 +16,12 @@ export function HeroSection() {
         ></div>
       </div>
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
-        <div className="space-y-4">
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3 lg:py-4">
+        <div className="space-y-1">
           {/* Marquee headline */}
           <div className="relative overflow-hidden rounded-2xl">
-            <div className="marquee h-8 md:h-10 flex items-center">
-              <div className="marquee-track text-base md:text-xl font-extrabold tracking-wide bg-clip-text text-transparent"
+            <div className="marquee h-7 md:h-9 flex items-center">
+              <div className="marquee-track text-sm md:text-lg font-extrabold tracking-wide bg-clip-text text-transparent"
                    style={{ backgroundImage: 'linear-gradient(90deg, #F59E0B, #10B981, #8B5CF6)' }}>
                 YOUR ONE-STOP TECH HUB!
               </div>
