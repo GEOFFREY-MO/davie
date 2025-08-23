@@ -20,8 +20,9 @@ export function HeroSection() {
         <div className="space-y-8">
           {/* Marquee headline */}
           <div className="relative overflow-hidden rounded-2xl">
-            <div className="marquee h-16 md:h-20 flex items-center">
-              <div className="marquee-track text-2xl md:text-4xl font-extrabold tracking-wide">
+            <div className="marquee h-12 md:h-16 flex items-center">
+              <div className="marquee-track text-xl md:text-3xl font-extrabold tracking-wide bg-clip-text text-transparent"
+                   style={{ backgroundImage: 'linear-gradient(90deg, #F59E0B, #10B981, #8B5CF6)' }}>
                 YOUR ONE-STOP TECH HUB!
               </div>
             </div>
@@ -32,7 +33,7 @@ export function HeroSection() {
             <Link href="/products">
               <Button 
                 size="lg" 
-                className="relative bg-yellow-400 hover:bg-yellow-500 text-black font-black text-xl px-10 py-6 rounded-2xl shadow-2xl hover:shadow-yellow-400/50 transform hover:scale-105 transition-all duration-300 cursor-pointer border-4 border-yellow-300"
+                className="relative bg-yellow-400 hover:bg-yellow-500 text-black font-black text-lg md:text-xl px-8 md:px-10 py-4 md:py-6 rounded-2xl shadow-2xl hover:shadow-yellow-400/50 transform hover:scale-105 transition-all duration-300 cursor-pointer border-4 border-yellow-300"
                 style={{ 
                   cursor: 'pointer',
                   background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%)',
@@ -42,7 +43,7 @@ export function HeroSection() {
                 }}
               >
                 <span className="relative z-10">SHOP NOW</span>
-                <ArrowRight className="ml-3 h-6 w-6 relative z-10" />
+                <ArrowRight className="ml-3 h-5 w-5 md:h-6 md:w-6 relative z-10" />
                 <div className="absolute inset-0 bg-yellow-300 rounded-2xl transform rotate-1 scale-105 opacity-50"></div>
                 <div className="absolute inset-0 bg-yellow-200 rounded-2xl transform -rotate-1 scale-105 opacity-30"></div>
               </Button>
