@@ -40,7 +40,7 @@ export default function SignupPage() {
       toast.success('Account created')
       const result = await signIn('credentials', { email, password, redirect: false })
       if (result?.error) {
-        router.push('/admin/login')
+        router.push('/login')
       } else {
         router.push('/')
       }
