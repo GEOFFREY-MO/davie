@@ -36,7 +36,11 @@ export default function HomePage() {
             <FeaturedProducts compact />
           </div>
         </section>
-        <BestSellers />
+        <section className="w-full py-4 bg-gray-50">
+          <div className="max-w-4xl mx-auto px-4">
+            <BestSellers compact />
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
