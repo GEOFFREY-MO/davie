@@ -21,7 +21,7 @@ export function FeatureStrip() {
       className="w-full py-6"
       style={{ opacity: fade, transform: `translateY(${(1 - fade) * -10}px)`, transition: 'opacity 200ms linear, transform 200ms linear' }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-3 gap-3 sm:gap-6">
           <div className="flex items-center space-x-2 sm:space-x-3 bg-white/10 border border-white/20 rounded-xl p-3 sm:p-4">
             <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
