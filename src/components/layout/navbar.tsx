@@ -24,7 +24,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
                     {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3 cursor-pointer">
             <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
               <Image
                 src="/davietech-logo.jpg"
@@ -41,19 +41,19 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
                          <Link 
                href="/" 
-               className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200"
+               className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200 cursor-pointer"
              >
                Home
              </Link>
              <Link 
                href="/products" 
-               className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200"
+               className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200 cursor-pointer"
              >
                Products
              </Link>
              <Link 
                href="/contact" 
-               className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200"
+               className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200 cursor-pointer"
              >
                Contact
              </Link>
@@ -79,7 +79,7 @@ export function Navbar() {
             </div>
             <Button
               size="sm"
-              className="bg-[hsl(var(--color-accent))] text-[hsl(var(--color-accent-foreground))]"
+              className="bg-[hsl(var(--color-accent))] text-[hsl(var(--color-accent-foreground))] cursor-pointer"
               onClick={() => {
                 const q = navQuery.trim()
                 router.push(q ? `/products?search=${encodeURIComponent(q)}` : '/products')
@@ -93,8 +93,8 @@ export function Navbar() {
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             {/* Cart */}
-            <Link href="/cart">
-              <Button variant="ghost" size="sm" className="relative">
+            <Link href="/cart" className="cursor-pointer">
+              <Button variant="ghost" size="sm" className="relative cursor-pointer">
                 <ShoppingCart className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 bg-[hsl(var(--color-accent))] text-[hsl(var(--color-accent-foreground))] text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {itemCount}
@@ -108,7 +108,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="md:hidden cursor-pointer"
               onClick={toggleMenu}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -122,21 +122,21 @@ export function Navbar() {
             <div className="flex flex-col space-y-4">
               <Link 
                 href="/" 
-                className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200"
+                className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200 cursor-pointer"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link 
                 href="/products" 
-                className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200"
+                className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200 cursor-pointer"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Products
               </Link>
               <Link 
                 href="/contact" 
-                className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200"
+                className="hover:text-[hsl(var(--color-accent))] transition-colors duration-200 cursor-pointer"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
@@ -162,7 +162,7 @@ export function Navbar() {
                 </div>
                 <Button
                   size="sm"
-                  className="bg-[hsl(var(--color-accent))] text-[hsl(var(--color-accent-foreground))]"
+                  className="bg-[hsl(var(--color-accent))] text-[hsl(var(--color-accent-foreground))] cursor-pointer"
                   onClick={() => {
                     const q = navQuery.trim()
                     router.push(q ? `/products?search=${encodeURIComponent(q)}` : '/products')
