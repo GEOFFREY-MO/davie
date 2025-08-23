@@ -21,7 +21,11 @@ interface Product {
   bestSeller: boolean
 }
 
-export default function FeaturedProducts() {
+interface FeaturedProductsProps {
+  compact?: boolean
+}
+
+export default function FeaturedProducts({ compact = false }: FeaturedProductsProps) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const router = useRouter()
@@ -30,7 +34,8 @@ export default function FeaturedProducts() {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const response = await fetch('/api/products?featured=true')
+        const takeParam = compact ? '&take=20' : ''
+        const response = await fetch(`/api/products?featured=true${takeParam}`)
         if (response.ok) {
           const data = await response.json()
           setProducts(data)
@@ -49,18 +54,20 @@ export default function FeaturedProducts() {
 
   if (loading) {
     return (
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
-            <p className="text-lg text-gray-700">Discover our handpicked selection of premium items</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className={compact ? 'py-6 bg-white' : 'py-16 bg-white'}>
+        <div className={compact ? 'max-w-4xl mx-auto px-4' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'}>
+          {!compact && (
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+              <p className="text-lg text-gray-700">Discover our handpicked selection of premium items</p>
+            </div>
+          )}
+          <div className={compact ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'}>
             {[...Array(3)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="bg-gray-200 h-64 rounded-lg mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className={compact ? 'bg-gray-200 h-36 rounded-lg mb-2' : 'bg-gray-200 h-64 rounded-lg mb-4'}></div>
+                <div className={compact ? 'h-3 bg-gray-200 rounded mb-1' : 'h-4 bg-gray-200 rounded mb-2'}></div>
+                <div className={compact ? 'h-3 bg-gray-200 rounded w-2/3' : 'h-4 bg-gray-200 rounded w-3/4'}></div>
               </div>
             ))}
           </div>
@@ -71,12 +78,14 @@ export default function FeaturedProducts() {
 
   if (products.length === 0) {
     return (
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
-            <p className="text-lg text-gray-700">Discover our handpicked selection of premium items</p>
-          </div>
+      <section className={compact ? 'py-6 bg-white' : 'py-16 bg-white'}>
+        <div className={compact ? 'max-w-4xl mx-auto px-4' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'}>
+          {!compact && (
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+              <p className="text-lg text-gray-700">Discover our handpicked selection of premium items</p>
+            </div>
+          )}
           <div className="text-center py-12">
             <p className="text-gray-600">No featured products available at the moment.</p>
           </div>
@@ -86,32 +95,37 @@ export default function FeaturedProducts() {
   }
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
-          <p className="text-lg text-gray-700">Discover our handpicked selection of premium items</p>
-        </div>
+    <section className={compact ? 'py-6 bg-white' : 'py-16 bg-white'}>
+      <div className={compact ? 'max-w-4xl mx-auto px-4' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'}>
+        {!compact && (
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+            <p className="text-lg text-gray-700">Discover our handpicked selection of premium items</p>
+          </div>
+        )}
         
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+        <div className={compact ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2' : 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8'}>
           {products.map((product) => (
             <ProductCard
               key={product.id}
               product={product as any}
               viewMode="grid"
               onAddToCart={(p) => addItem(p)}
+              compact={compact}
             />
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <Button
-            onClick={() => router.push('/products')}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
-          >
-            View All Products
-          </Button>
-        </div>
+        {!compact && (
+          <div className="text-center mt-12">
+            <Button
+              onClick={() => router.push('/products')}
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              View All Products
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   )

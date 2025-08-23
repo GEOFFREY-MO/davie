@@ -30,7 +30,12 @@ export default function HomePage() {
         {/* Feature strip fades on scroll, placed right before products */}
         <FeatureStrip />
 
-        <FeaturedProducts />
+        {/* Compact products block immediately under hero/banner area */}
+        <section className="w-full py-4 bg-white">
+          <div className="max-w-4xl mx-auto px-4">
+            <FeaturedProducts compact />
+          </div>
+        </section>
         <BestSellers />
       </main>
       <Footer />

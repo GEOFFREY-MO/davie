@@ -13,9 +13,10 @@ interface ProductCardProps {
   product: Product
   onAddToCart?: (product: Product) => void
   viewMode?: 'grid' | 'list'
+  compact?: boolean
 }
 
-export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: ProductCardProps) {
+export function ProductCard({ product, onAddToCart, viewMode = 'grid', compact = false }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(1)
@@ -393,11 +394,11 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
   return (
     <>
       <Card 
-        className="group overflow-hidden card-hover"
+        className={compact ? 'group overflow-hidden card-hover' : 'group overflow-hidden card-hover'}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="relative aspect-square overflow-hidden">
+        <div className={compact ? 'relative overflow-hidden' : 'relative aspect-square overflow-hidden'} style={compact ? {height: 120} : {}}>
           <Image
             src={product.image}
             alt={product.name}
@@ -455,51 +456,51 @@ export function ProductCard({ product, onAddToCart, viewMode = 'grid' }: Product
           )}
         </div>
 
-        <CardContent className="p-2 sm:p-3 md:p-4">
+        <CardContent className={compact ? 'p-2' : 'p-2 sm:p-3 md:p-4'}>
           <div className="mb-2">
-            <h3 className="font-semibold text-sm sm:text-base md:text-lg line-clamp-1 group-hover:text-primary transition-colors text-gray-900">
+            <h3 className={compact ? 'font-semibold text-xs line-clamp-1 group-hover:text-primary transition-colors text-gray-900' : 'font-semibold text-sm sm:text-base md:text-lg line-clamp-1 group-hover:text-primary transition-colors text-gray-900'}>
               {product.name}
             </h3>
-            <p className="text-gray-700 text-xs sm:text-sm line-clamp-2 mt-1">
+            <p className={compact ? 'text-gray-700 text-[10px] line-clamp-1 mt-0.5' : 'text-gray-700 text-xs sm:text-sm line-clamp-2 mt-1'}>
               {product.description}
             </p>
           </div>
 
-          <div className="flex items-center justify-center mb-2 sm:mb-3">
-            <span className="text-xs sm:text-sm text-gray-600 truncate">{product.category}</span>
+          <div className={compact ? 'flex items-center justify-center mb-1' : 'flex items-center justify-center mb-2 sm:mb-3'}>
+            <span className={compact ? 'text-[10px] text-gray-600 truncate' : 'text-xs sm:text-sm text-gray-600 truncate'}>{product.category}</span>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className={compact ? 'flex items-center justify-between' : 'flex items-center justify-between'}>
             <div className="text-left">
               {typeof (product as any).originalPrice === 'number' && (product as any).originalPrice > product.price ? (
                 <>
-                  <span className="block text-[10px] sm:text-xs line-through text-red-600">
+                  <span className={compact ? 'block text-[10px] line-through text-red-600' : 'block text-[10px] sm:text-xs line-through text-red-600'}>
                     Was KES {(product as any).originalPrice.toLocaleString()}
                   </span>
-                  <span className="block text-base sm:text-lg md:text-xl font-bold text-green-700">
+                  <span className={compact ? 'block text-sm font-bold text-green-700' : 'block text-base sm:text-lg md:text-xl font-bold text-green-700'}>
                     Now KES {product.price.toLocaleString()}
                   </span>
                 </>
               ) : (
-                <span className="text-base sm:text-lg md:text-xl font-bold text-black">
+                <span className={compact ? 'text-sm font-bold text-black' : 'text-base sm:text-lg md:text-xl font-bold text-black'}>
                   KES {product.price.toLocaleString()}
                 </span>
               )}
             </div>
-            <span className="text-xs sm:text-sm text-gray-600">
+            <span className={compact ? 'text-[10px] text-gray-600' : 'text-xs sm:text-sm text-gray-600'}>
               {product.stock} in stock
             </span>
           </div>
         </CardContent>
 
-        <CardFooter className="p-2 sm:p-3 md:p-4 pt-0">
+        <CardFooter className={compact ? 'p-2 pt-0' : 'p-2 sm:p-3 md:p-4 pt-0'}>
           <Button 
-            className="w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-semibold py-2 sm:py-3 text-xs sm:text-sm md:text-base shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+            className={compact ? 'w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-semibold py-1.5 text-[11px] shadow hover:shadow-md transform hover:scale-105 transition-all duration-300 cursor-pointer' : 'w-full bg-[#00008B] hover:bg-[#00008B]/90 text-white font-semibold py-2 sm:py-3 text-xs sm:text-sm md:text-base shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer'}
             style={{ cursor: 'pointer' }}
             onClick={handleAddToCart}
             disabled={product.stock === 0}
           >
-            <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <ShoppingCart className={compact ? 'h-3 w-3 mr-1' : 'h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2'} />
             {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
           </Button>
         </CardFooter>
