@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
+import { Facebook, X, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 
 export function Footer() {
   return (
@@ -30,7 +30,7 @@ export function Footer() {
                 <Facebook className="h-3 w-3 sm:h-4 sm:w-4" />
               </Link>
               <Link href="#" className="hover:text-cyan-400 transition-colors duration-200">
-                <Twitter className="h-3 w-3 sm:h-4 sm:w-4" />
+                <X className="h-3 w-3 sm:h-4 sm:w-4" />
               </Link>
               <Link href="#" className="hover:text-cyan-400 transition-colors duration-200">
                 <Instagram className="h-3 w-3 sm:h-4 sm:w-4" />

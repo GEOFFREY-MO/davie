@@ -249,7 +249,7 @@ export default function ContactPage() {
                     Facebook
                   </Button>
                   <Button variant="outline" size="sm" className="bg-white/10 border-white/20 hover:bg-white/20">
-                    Twitter
+                    X
                   </Button>
                   <Button variant="outline" size="sm" className="bg-white/10 border-white/20 hover:bg-white/20">
                     Instagram
