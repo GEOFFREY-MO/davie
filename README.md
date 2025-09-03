@@ -1,24 +1,28 @@
 # DAVIETECH - Your One-Stop Tech Hub
 
-A full-featured, visually stunning ecommerce web application for technology products, built with Next.js 14, TypeScript, Tailwind CSS, and shadcn/ui components.
+A full-featured, production-ready ecommerce web application for technology products, built with Next.js 14, TypeScript, Tailwind CSS, and shadcn/ui components — now fully wired to a real database, protected admin APIs, and real-time updates.
 
 ## 🎯 Features
 
 ### Public Storefront
-- **Modern Design**: Clean, responsive design with custom color scheme
-- **Product Catalog**: Browse products with filtering and search
-- **Product Details**: Detailed product pages with images and descriptions
-- **Shopping Cart**: Add/remove items with real-time updates
-- **Checkout Process**: Streamlined checkout with multiple payment options
-- **Responsive Design**: Mobile-first approach for all devices
+- **Modern Design**: Clean, responsive design (Poppins/Inter) and compact grids
+- **Dynamic Catalog**: Products come from Prisma DB (no mock data)
+- **Powerful Search/Filters**: Navbar search + products-page filters
+- **Was/Now Pricing**: Discounted items show red strikethrough “Was” + green “Now”
+- **Real‑time Updates (SSE)**: Offers/Banners auto-refresh via `/api/updates/stream`
+- **Banner Carousel**: Single-slide, full-width, 5s auto-advance with crossfade
+- **Shopping Cart**: LocalStorage-backed cart with `CartProvider`
+- **Checkout**: Clean “Customer Details” modal (guest checkout supported)
+- **Responsive Design**: Mobile-first with compact components
 
 ### Admin Panel
-- **Secure Authentication**: Protected admin routes with NextAuth
-- **Dashboard**: Overview of sales, orders, and analytics
-- **Product Management**: CRUD operations for products
-- **Order Management**: View and manage customer orders
-- **Offer Management**: Create and manage promotional offers
-- **User Management**: Admin user management (optional)
+- **Secure Authentication**: NextAuth with role checks (ADMIN-only mutations)
+- **Dashboard (Live Stats)**: `/api/admin/stats` for totals + 30‑day deltas; live via SSE
+- **Products**: Full CRUD via `/api/products`
+- **Offers**: Link selected products; discounts applied/reverted automatically
+- **Banners**: Full CRUD; public banner carousel updates instantly
+- **Orders**: Admin GET/PUT/DELETE with safe number formatting on UI
+- **Real‑time Broadcasts**: Offers/Banners/Products/Stats trigger SSE events
 
 ## 🎨 Design System
 
@@ -44,7 +48,9 @@ A full-featured, visually stunning ecommerce web application for technology prod
 - **Styling**: Tailwind CSS
 - **UI Components**: shadcn/ui + Radix UI
 - **Database**: Prisma + SQLite
-- **Authentication**: NextAuth.js
+- **Authentication**: NextAuth.js (JWT sessions; role-based)
+- **Realtime**: Server-Sent Events (SSE)
+- **Payments**: M‑Pesa Daraja (STK Push + callbacks)
 - **Icons**: Lucide React
 - **Forms**: React Hook Form + Zod
 - **Notifications**: Sonner
@@ -68,15 +74,23 @@ A full-featured, visually stunning ecommerce web application for technology prod
    DATABASE_URL="file:./dev.db"
    NEXTAUTH_URL="http://localhost:3000"
    NEXTAUTH_SECRET="your-secret-key-here-change-in-production"
+
+    # Optional: M‑Pesa (Daraja) — required to test STK
+    DARAJA_CONSUMER_KEY="your-consumer-key"
+    DARAJA_CONSUMER_SECRET="your-consumer-secret"
+    MPESA_SHORTCODE="174379"                  # sandbox or your shortcode
+    MPESA_PASSKEY="your-lipa-na-mpesa-passkey"
+    MPESA_CALLBACK_URL="http://localhost:3000/api/payments/mpesa/callback"
    ```
 
 4. **Initialize the database**
    ```bash
-   # Set environment variable and push schema
-   $env:DATABASE_URL="file:./dev.db"; npx prisma db push
-   
-   # Seed the database with sample data
-   $env:DATABASE_URL="file:./dev.db"; npm run db:seed
+   # Apply migrations and generate client
+   npx prisma migrate dev --name init
+   npx prisma generate
+
+   # If drift or errors occur
+   # npx prisma migrate reset --force
    ```
 
 5. **Start the development server**
@@ -89,7 +103,7 @@ A full-featured, visually stunning ecommerce web application for technology prod
 
 ## 🔐 Admin Access
 
-### Demo Credentials
+### Demo Credentials (example)
 - **Email**: admin@davietech.com
 - **Password**: admin123
 
@@ -117,9 +131,9 @@ src/
 │   ├── product/          # Product-related components
 │   ├── admin/            # Admin-specific components
 │   └── ui/               # shadcn/ui components
-├── lib/                  # Utility libraries
-│   ├── auth/             # Authentication setup
-│   └── db/               # Database client
+├── lib/                  # Utilities
+│   ├── auth/             # NextAuth config
+│   └── mpesa.ts          # Daraja helpers (STK/Auth)
 └── types/                # TypeScript type definitions
 ```
 
@@ -129,36 +143,26 @@ src/
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
-- `npm run db:push` - Push database schema
-- `npm run db:seed` - Seed database with sample data
+- `npm run db:push` - Push schema (alt)
+- `npm run db:seed` - Seed (if you add seed data)
 
-## 🎯 Key Features Implementation
+## 🎯 Current Status
 
-### Phase 1: Public Storefront MVP ✅
-- [x] Responsive navigation with search
-- [x] Hero section with call-to-action
-- [x] Featured products carousel
-- [x] Best sellers section
-- [x] Product cards with hover effects
-- [x] Shopping cart functionality
-- [x] Checkout process
-- [x] Contact page
+### Completed
+- [x] Real product data via Prisma (no mock data)
+- [x] Admin-protected APIs (products, offers, banners, orders)
+- [x] Offers link products and apply discounts (Was/Now pricing)
+- [x] Banner carousel with 5s crossfade loop
+- [x] SSE real-time updates (offers/banners/products/stats)
+- [x] Admin dashboard stats with 30‑day changes + recent orders
+- [x] LocalStorage cart + `CartProvider`
+- [x] Customer signup/login (separate from admin)
+- [x] Compact, responsive product grids; search/filters wired
 
-### Phase 2: Admin Panel ✅
-- [x] Secure admin authentication
-- [x] Admin dashboard with statistics
-- [x] Product management interface
-- [x] Order management system
-- [x] Protected admin routes
-- [x] Admin-only navigation
-
-### Phase 3: Advanced Features (Future)
-- [ ] Product filtering and search
-- [ ] Discount management
-- [ ] Email notifications
-- [ ] Analytics dashboard
-- [ ] M-PESA integration
-- [ ] Role-based access control
+### In Progress / Next
+- [ ] M‑Pesa live configuration and production callback URLs
+- [ ] Advanced analytics and email notifications
+- [ ] More payment options
 
 ## 🎨 Customization
 
@@ -175,12 +179,30 @@ Update the color scheme in `src/app/globals.css`:
 ### Components
 All components are built with shadcn/ui and can be customized by modifying the component files in `src/components/ui/`.
 
-## 🔒 Security Features
+## 🔒 Security & Access Control
 
-- **Protected Routes**: Admin routes are protected with middleware
+- **Protected Admin APIs**: Role checks via NextAuth session/JWT
 - **Authentication**: Secure login with bcrypt password hashing
 - **Session Management**: JWT-based sessions with NextAuth
-- **Input Validation**: Form validation with Zod schemas
+- **Input Validation**: Form validation with Zod (areas)
+
+## 🔌 API Overview
+
+- `GET /api/products` — List products (supports filters such as `featured`, `bestSeller`, `take`)
+- `GET /api/products/[id]` — Get product
+- `GET/POST /api/offers` — Public list; ADMIN create (links `productIds` and applies discounts)
+- `GET/PUT/DELETE /api/offers/[id]` — Public read; ADMIN update/delete (updates linked products)
+- `GET/POST /api/banners` — Public list; ADMIN create
+- `GET/PUT/DELETE /api/banners/[id]` — Public read; ADMIN update/delete
+- `GET /api/orders` — ADMIN only
+- `GET/PUT/DELETE /api/orders/[id]` — ADMIN only
+- `GET /api/admin/stats` — ADMIN only (dashboard totals, deltas, recent orders)
+- `GET /api/updates/stream` — Server-Sent Events stream (offers/banners/products/stats)
+- `POST /api/auth/register` — Customer signup
+- `POST /api/payments/mpesa/stk` — Initiate M‑Pesa STK Push
+- `POST /api/payments/mpesa/callback` — STK callback URL
+- `POST /api/payments/mpesa/c2b/register|validation|confirmation` — C2B endpoints (optional)
+- `POST /api/payments/mpesa/transaction-status` — Transaction status query
 
 ## 📱 Responsive Design
 
@@ -223,4 +245,4 @@ For support and questions:
 
 ---
 
-**Built with ❤️ using Next.js 14, TypeScript, and Tailwind CSS**
+**Built with ❤️ using Next.js 14, TypeScript, Tailwind CSS, Prisma, and SSE**
